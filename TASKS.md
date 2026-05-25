@@ -28,19 +28,19 @@ Status:
 | GDUI-020 | Done | Definir tokens minimos de cor, espacamento, raio, tipografia e escala. | `theme.gdui.json` |
 | GDUI-021 | Done | Definir sintaxe responsiva para props com prefixos. | `md:*`, `lg:*`, `tv:*` aceitos pelo parser de atributos. |
 | GDUI-022 | Done | Normalizar props responsivas para metadata. | `metadata/gdui_responsive` gerado e testado em `tools/gdui/tests/responsive.test.js`. |
-| GDUI-023 | Partial | Implementar breakpoints documentados. | `responsive_runtime.gd` existe; falta teste Godot automatizado. |
+| GDUI-023 | Done | Implementar breakpoints documentados. | `responsive_runtime.gd` validado por `npm run test:responsive`. |
 | GDUI-024 | Done | Adicionar exemplo de grid responsivo. | `examples/responsive-grid.gdui.html` |
 | GDUI-025 | Done | Criar testes de AST responsiva. | `tools/gdui/tests/responsive.test.js` |
-| GDUI-026 | Planned | Validar runtime minimo aplicando breakpoint correto. | Ainda sem cena/teste de runtime. |
+| GDUI-026 | Done | Validar runtime minimo aplicando breakpoint correto. | `tools/godot/test_responsive_runtime.gd` aplica `lg` e `tv` em Godot headless. |
 
 ## v0.3 - Theme `.tres`
 
 | ID | Status | Task | Evidencia |
 | --- | --- | --- | --- |
 | GDUI-030 | Done | Criar `theme.gdui.json`. | `theme.gdui.json` |
-| GDUI-031 | Partial | Definir schema de tokens. | Contrato inicial existe no exporter/spec; falta JSON Schema formal. |
+| GDUI-031 | Done | Definir schema de tokens. | `theme.gdui.schema.json` + `validateThemeTokens`. |
 | GDUI-032 | Done | Implementar exportador `Theme .tres`. | `tools/gdui/src/exporters/theme.js` + `scenes/theme.tres` |
-| GDUI-033 | Partial | Migrar variants para Theme. | `PrimaryButton` e `Card` existem no Theme; falta reduzir overrides locais e ampliar estados. |
+| GDUI-033 | Partial | Migrar variants para Theme. | `PrimaryButton`, `Card` e estados de Button existem no Theme; falta reduzir overrides locais no `.tscn`. |
 | GDUI-034 | Done | Adicionar exemplo com tema compartilhado. | `examples/themed-menu.gdui.html` |
 
 ## v0.4 - Eventos e actions

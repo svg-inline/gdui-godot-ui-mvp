@@ -29,8 +29,8 @@ func apply_current_breakpoint() -> void:
 	if root == null:
 		root = self
 	var width := get_viewport().get_visible_rect().size.x
-	var breakpoint := _resolve_breakpoint(width)
-	_apply_recursive(root, breakpoint)
+	var active_breakpoint := _resolve_breakpoint(width)
+	_apply_recursive(root, active_breakpoint)
 
 func _resolve_breakpoint(width: float) -> String:
 	var current := "sm"
@@ -39,13 +39,13 @@ func _resolve_breakpoint(width: float) -> String:
 			current = key
 	return current
 
-func _apply_recursive(node: Node, breakpoint: String) -> void:
+func _apply_recursive(node: Node, active_breakpoint: String) -> void:
 	if node.has_meta("gdui_responsive"):
-		_apply_node(node, breakpoint, String(node.get_meta("gdui_responsive")))
+		_apply_node(node, active_breakpoint, String(node.get_meta("gdui_responsive")))
 	for child in node.get_children():
-		_apply_recursive(child, breakpoint)
+		_apply_recursive(child, active_breakpoint)
 
-func _apply_node(node: Node, breakpoint: String, json_text: String) -> void:
+func _apply_node(node: Node, active_breakpoint: String, json_text: String) -> void:
 	var parsed = JSON.parse_string(json_text)
 	if typeof(parsed) != TYPE_DICTIONARY:
 		return
@@ -54,7 +54,7 @@ func _apply_node(node: Node, breakpoint: String, json_text: String) -> void:
 	for key in ["sm", "md", "lg", "xl", "tv"]:
 		if parsed.has(key):
 			selected.merge(parsed[key], true)
-		if key == breakpoint:
+		if key == active_breakpoint:
 			break
 
 	for prop in selected.keys():

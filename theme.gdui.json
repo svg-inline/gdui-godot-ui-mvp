@@ -2,10 +2,16 @@
   "colors": {
     "surface": "#111827",
     "surfaceAlt": "#1e293b",
+    "surfaceHover": "#263449",
+    "surfacePressed": "#0f172a",
     "text": "#f8fafc",
     "muted": "#cbd5e1",
     "primary": "#38bdf8",
+    "primaryHover": "#7dd3fc",
+    "primaryPressed": "#0284c7",
     "primaryText": "#020617",
+    "disabled": "#475569",
+    "disabledText": "#94a3b8",
     "border": "#334155"
   },
   "spacing": {

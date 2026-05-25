@@ -1,0 +1,42 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://gdui.local/theme.gdui.schema.json",
+  "title": "Gdui Theme Tokens",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["colors", "spacing", "radius", "fontSizes"],
+  "properties": {
+    "colors": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "string",
+        "pattern": "^#([0-9a-fA-F]{3}|[0-9a-fA-F]{4}|[0-9a-fA-F]{6}|[0-9a-fA-F]{8})$"
+      },
+      "required": ["surface", "surfaceAlt", "text", "primary", "primaryText", "border"]
+    },
+    "spacing": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "number",
+        "minimum": 0
+      },
+      "required": ["sm", "md", "lg"]
+    },
+    "radius": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "number",
+        "minimum": 0
+      },
+      "required": ["md", "lg"]
+    },
+    "fontSizes": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "number",
+        "minimum": 1
+      },
+      "required": ["body", "title", "button"]
+    }
+  }
+}

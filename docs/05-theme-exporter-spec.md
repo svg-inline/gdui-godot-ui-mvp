@@ -33,6 +33,12 @@ Implementado inicialmente em `theme.gdui.json`:
 }
 ```
 
+O schema formal fica em:
+
+```text
+theme.gdui.schema.json
+```
+
 ## Saída
 
 O exportador deve criar:
@@ -64,8 +70,9 @@ theme_type_variation = &"PrimaryButton"
 Estado atual:
 
 - `PrimaryButton/base_type = &"Button"` e estilo normal sao gerados.
+- Estados `hover`, `pressed` e `disabled` sao gerados para `Button`.
+- Estados `hover`, `pressed` e `disabled` sao gerados para `PrimaryButton`.
 - `Card/base_type = &"PanelContainer"` e estilo de panel sao gerados.
-- Estados `hover`, `pressed`, `disabled` ainda nao foram adicionados.
 
 ## Regra de prioridade
 
@@ -82,7 +89,4 @@ Estado atual:
 
 ## Pendencias
 
-- Criar JSON Schema formal para `theme.gdui.json`.
-- Validar tokens antes de exportar.
-- Gerar estados de `Button`.
 - Reduzir overrides locais no `.tscn` quando houver token equivalente.

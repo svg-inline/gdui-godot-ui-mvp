@@ -9,6 +9,7 @@ const candidates = process.platform === 'win32'
 let lastError = null;
 const logDir = '.godot-smoke-user';
 fs.mkdirSync(logDir, { recursive: true });
+const script = process.argv[2] || 'tools/godot/smoke_load_scenes.gd';
 
 for (const executable of candidates) {
   const result = spawnSync(executable, [
@@ -18,7 +19,7 @@ for (const executable of candidates) {
     '--path',
     '.',
     '--script',
-    'tools/godot/smoke_load_scenes.gd',
+    script,
   ], {
     encoding: 'utf8',
     stdio: 'inherit',

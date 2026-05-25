@@ -32,13 +32,12 @@ Existe base tecnica, mas ainda nao esta fechada como feature confiavel.
 
 | Task | Falta | Resultado esperado |
 | --- | --- | --- |
-| GDUI-023 | Validar breakpoints no runtime. | `responsive_runtime.gd` aplica overrides sem erro. |
-| GDUI-026 | Cena ou teste de runtime responsivo. | Grid muda colunas conforme viewport. |
+| GDUI-026 | Expandir cobertura do runtime responsivo. | Validar mais propriedades e casos reais de viewport/foco. |
 
 Notas:
 
 - A sintaxe responsiva e a metadata no Scene AST ja estao testadas.
-- O runtime existe, mas precisa prova comportamental em Godot real.
+- `npm run test:responsive` valida `columns`, `gap`, `font-size` e `visible` em Godot headless.
 - Navegacao por foco para TV ainda deve ser tratada depois.
 
 ## Theme `.tres`
@@ -47,14 +46,13 @@ Esta e a maior lacuna de produto.
 
 | Task | Falta | Resultado esperado |
 | --- | --- | --- |
-| GDUI-031 | JSON Schema formal para tokens. | Validacao previsivel antes de exportar. |
 | GDUI-033 | Ampliar variants usando Theme. | `variant="primary"` deixa de depender so de override local. |
 
 Notas:
 
-- `theme.gdui.json`, exporter inicial e `scenes/theme.tres` ja existem.
-- O Theme atual cobre Label, Button, PrimaryButton, PanelContainer e Card.
-- Falta schema formal, estados de Button e reducao gradual de overrides locais no `.tscn`.
+- `theme.gdui.json`, `theme.gdui.schema.json`, exporter inicial e `scenes/theme.tres` ja existem.
+- O Theme atual cobre Label, Button, estados de Button, PrimaryButton, PanelContainer e Card.
+- Falta reducao gradual de overrides locais no `.tscn` quando houver token equivalente.
 
 ## Actions e eventos
 
@@ -121,9 +119,9 @@ Notas:
 ## Ordem recomendada
 
 1. `GDUI-007`: levar smoke test Godot para CI/versoes alvo.
-2. `GDUI-031`, `GDUI-033`: endurecer Theme `.tres`.
+2. `GDUI-033`: reduzir overrides locais usando Theme `.tres`.
 3. `GDUI-054`, `GDUI-056`: criar dock e warnings no Godot.
-4. `GDUI-025`, `GDUI-026`: testar responsividade.
+4. `GDUI-026`: ampliar cobertura de responsividade/foco.
 5. `GDUI-042`, `GDUI-043`: validar actions em cena real.
 
 ## Nao fazer agora

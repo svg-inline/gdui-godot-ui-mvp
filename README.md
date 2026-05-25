@@ -76,6 +76,7 @@ npm run studio
 | `npm run studio` | Inicia o Gdui Studio local para editar e previsualizar `.gdui.html`. |
 | `npm test` | Roda testes básicos do parser/exporter. |
 | `npm run test:godot` | Usa Godot headless para carregar e instanciar as cenas geradas. |
+| `npm run test:responsive` | Usa Godot headless para validar o runtime responsivo. |
 
 ## Componentes suportados no MVP
 

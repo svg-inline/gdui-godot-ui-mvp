@@ -3,13 +3,13 @@ import path from 'node:path';
 import { parseMarkup } from './parser.js';
 import { normalizeToSceneAst } from './normalizer.js';
 import { exportTscn } from './exporters/tscn.js';
-import { compileThemeFile, exportTheme } from './exporters/theme.js';
+import { compileThemeFile, exportTheme, validateThemeTokens } from './exporters/theme.js';
 import { cloneWithoutPrivateKeys } from './utils.js';
 
 export { parseMarkup } from './parser.js';
 export { normalizeToSceneAst } from './normalizer.js';
 export { exportTscn } from './exporters/tscn.js';
-export { compileThemeFile, exportTheme } from './exporters/theme.js';
+export { compileThemeFile, exportTheme, validateThemeTokens } from './exporters/theme.js';
 
 export function compileSource(source, options = {}) {
   const markupAst = parseMarkup(source);
