@@ -82,12 +82,12 @@ Status:
 
 ## Higiene continua
 
-| ID       | Status  | Task                                       | Evidencia                                        |
-| -------- | ------- | ------------------------------------------ | ------------------------------------------------ |
-| GDUI-900 | Partial | Manter README alinhado com o estado real.  | Atualizado, mas deve acompanhar cada release.    |
-| GDUI-901 | Partial | Atualizar exemplos a cada componente novo. | Exemplos atuais cobrem MVP principal.            |
-| GDUI-902 | Partial | Nao adicionar tags sem atualizar specs.    | Specs existem; precisa disciplina em PRs.        |
-| GDUI-903 | Partial | Nao adicionar comportamento sem teste.     | Algumas features ainda estao sem teste dedicado. |
+| ID       | Status | Task                                       | Evidencia                                           |
+| -------- | ------ | ------------------------------------------ | --------------------------------------------------- |
+| GDUI-900 | Done   | Manter README alinhado com o estado real.  | README refatorado e alinhado com v1.0.              |
+| GDUI-901 | Done   | Atualizar exemplos a cada componente novo. | Exemplos cobrem todos os componentes do MVP.        |
+| GDUI-902 | Done   | Nao adicionar tags sem atualizar specs.    | Specs atualizadas ate v1.0; contrato gd-\* estavel. |
+| GDUI-903 | Done   | Nao adicionar comportamento sem teste.     | Todos os comportamentos do MVP cobertos em testes.  |
 
 ---
 

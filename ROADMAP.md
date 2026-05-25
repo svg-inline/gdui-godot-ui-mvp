@@ -105,6 +105,8 @@ Hoje o desenvolvedor precisa adicionar manualmente `gdui.config.json`, `theme.gd
 
 ### v1.0 - Publicação
 
+> ✓ Concluído
+
 Objetivo: tornar o addon distribuível e documentado para a comunidade Godot.
 
 - Publicar addon no Asset Library do Godot.
