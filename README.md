@@ -8,47 +8,45 @@ Compilador experimental de UI declarativa para Godot 4.x.
 
 Este projeto usa tags `gd-*` inspiradas em HTML, mas a saída é cena nativa Godot. Não é conversor universal de HTML/CSS e não usa WebView como saída principal.
 
-## Como testar dentro de um projeto Godot
+## Como usar o addon em um projeto Godot
 
-Copie estas pastas/arquivos para a raiz do seu projeto Godot:
-
-```text
-addons/gdui/
-tools/gdui/
-ui/
-scenes/
-package.json
-gdui.config.json
-```
-
-Depois rode na raiz do projeto Godot:
+### 1. Gerar o bundle (apenas uma vez, no repositório de desenvolvimento)
 
 ```bash
-npm run compile
+npm install           # instala devDependencies (esbuild)
+npm run build:addon   # empacota compilador em addons/gdui/compiler/
 ```
 
-Isso compila os arquivos em `ui/*.gdui.html` para `scenes/*.tscn`.
+### 2. Copiar o addon
 
-Abra no Godot:
+Copie **apenas** `addons/gdui/` para a raiz do projeto Godot de destino. Nenhuma outra pasta ou arquivo é necessário.
 
-```text
-scenes/InventoryScreen.tscn
-scenes/MainMenuScreen.tscn
-scenes/SettingsScreen.tscn
-scenes/ResponsiveGridScreen.tscn
-```
+### 3. Ativar no editor Godot
+
+1. Abra **Project > Project Settings > Plugins**.
+2. Ative o plugin **Gdui**.
+3. Na primeira ativação, o plugin cria automaticamente `gdui.config.json` e `theme.gdui.json` com valores padrão.
+4. Use o dock **Gdui** para criar seus arquivos `.gdui.html`, compilar e ajustar configurações.
+
+> O Node.js precisa estar disponível no PATH.
+
+### Para testar neste repositório
+
+Abra o projeto no Godot normalmente. As cenas de exemplo já estão em `scenes/`.
 
 ## Usando pelo editor Godot
 
-1. Copie o projeto para a raiz do Godot.
-2. Abra `Project > Project Settings > Plugins`.
-3. Ative o plugin `Gdui`.
-4. Use o menu `Project > Tools > Gdui: Compile all UI`.
-5. Opcionalmente use `Project > Tools > Gdui: Start Studio` para abrir o editor local no navegador.
+Após ativar o plugin, o dock **Gdui** oferece:
 
-O addon chama o compilador Node. Então o `node` precisa estar disponível no PATH.
+- **Compile UI** — compila os `.gdui.html` do `inputDir` para `.tscn`.
+- **Compile Theme** — gera `theme.tres` a partir de `theme.gdui.json`.
+- **Start / Open / Stop Studio** — servidor local de autoria no navegador.
+- **Project Config** — edita `inputDir` e `outputDir` sem abrir JSON.
+- **Init Project** — recria `gdui.config.json` e `theme.gdui.json` se necessário.
 
-O addon tambem adiciona um dock `Gdui` com comandos para compilar UI, compilar Theme, iniciar/parar o Studio e ver logs/warnings do compilador.
+Os mesmos comandos estão disponíveis em **Project > Tools > Gdui: ...**.
+
+O Node.js precisa estar disponível no PATH.
 
 ## Gdui Studio local
 
@@ -72,19 +70,20 @@ npm run studio
 
 ## Comandos
 
-| Comando | Descrição |
-| --- | --- |
-| `npm run compile` | Compila todos os arquivos de `ui/` para `scenes/`. |
-| `npm run compile:sample` | Compila apenas `ui/inventory.gdui.html`. |
-| `npm run compile:theme` | Gera `scenes/theme.tres` a partir de `theme.gdui.json`. |
-| `npm run check` | Imprime AST e Scene AST no terminal. |
-| `npm run check:theme` | Imprime o `Theme .tres` gerado no terminal. |
-| `npm run studio` | Inicia o Gdui Studio local para editar e previsualizar `.gdui.html`. |
-| `npm test` | Roda testes básicos do parser/exporter. |
-| `npm run test:godot` | Usa Godot headless para carregar e instanciar as cenas geradas. |
-| `npm run test:responsive` | Usa Godot headless para validar o runtime responsivo. |
-| `npm run test:actions` | Usa Godot headless para validar `metadata/action` com `action_router.gd`. |
-| `npm run test:bindings` | Usa Godot headless para validar `metadata/gdui_bindings` com `binding_runtime.gd`. |
+| Comando                   | Descrição                                                                          |
+| ------------------------- | ---------------------------------------------------------------------------------- |
+| `npm run compile`         | Compila todos os arquivos de `ui/` para `scenes/`.                                 |
+| `npm run compile:sample`  | Compila apenas `ui/inventory.gdui.html`.                                           |
+| `npm run compile:theme`   | Gera `scenes/theme.tres` a partir de `theme.gdui.json`.                            |
+| `npm run check`           | Imprime AST e Scene AST no terminal.                                               |
+| `npm run check:theme`     | Imprime o `Theme .tres` gerado no terminal.                                        |
+| `npm run build:addon`     | Empacota o compilador em `addons/gdui/compiler/` para distribuição self-contained. |
+| `npm run studio`          | Inicia o Gdui Studio local para editar e previsualizar `.gdui.html`.               |
+| `npm test`                | Roda testes básicos do parser/exporter.                                            |
+| `npm run test:godot`      | Usa Godot headless para carregar e instanciar as cenas geradas.                    |
+| `npm run test:responsive` | Usa Godot headless para validar o runtime responsivo.                              |
+| `npm run test:actions`    | Usa Godot headless para validar `metadata/action` com `action_router.gd`.          |
+| `npm run test:bindings`   | Usa Godot headless para validar `metadata/gdui_bindings` com `binding_runtime.gd`. |
 
 ## CI
 
@@ -104,21 +103,25 @@ Ele baixa versões alvo do Godot 4.x no runner Linux e publica o log headless co
 
 ## Componentes suportados no MVP
 
-| Markup | Godot |
-| --- | --- |
-| `gd-screen` | `Control` |
-| `gd-control` | `Control` |
-| `gd-container` | `MarginContainer` |
-| `gd-vbox` | `VBoxContainer` |
-| `gd-hbox` | `HBoxContainer` |
-| `gd-panel` | `PanelContainer` |
-| `gd-card` | `PanelContainer` |
-| `gd-label` | `Label` |
-| `gd-button` | `Button` |
-| `gd-scroll` | `ScrollContainer` |
-| `gd-grid` | `GridContainer` |
-| `gd-texture` | `TextureRect` com `metadata/source_image` |
-| `gd-spacer` | `Control` |
+| Markup         | Godot                                                  |
+| -------------- | ------------------------------------------------------ |
+| `gd-screen`    | `Control`                                              |
+| `gd-control`   | `Control`                                              |
+| `gd-container` | `MarginContainer`                                      |
+| `gd-vbox`      | `VBoxContainer`                                        |
+| `gd-hbox`      | `HBoxContainer`                                        |
+| `gd-panel`     | `PanelContainer`                                       |
+| `gd-card`      | `PanelContainer`                                       |
+| `gd-label`     | `Label`                                                |
+| `gd-button`    | `Button`                                               |
+| `gd-scroll`    | `ScrollContainer`                                      |
+| `gd-grid`      | `GridContainer`                                        |
+| `gd-texture`   | `TextureRect` com `ExtResource` para caminhos `res://` |
+| `gd-spacer`    | `Control`                                              |
+| `gd-input`     | `LineEdit`                                             |
+| `gd-option`    | `OptionButton`                                         |
+| `gd-progress`  | `ProgressBar`                                          |
+| `gd-slider`    | `HSlider` / `VSlider`                                  |
 
 ## Props básicas
 
@@ -178,17 +181,19 @@ Use estes documentos para acompanhar o que esta implementado e o que ainda falta
 - Sem JavaScript runtime.
 - Sem CSS Grid completo.
 - Sem `calc()`, `clamp()`, `var()`, `rem`, `em`, `vh`, `vw`.
-- `gd-texture` ainda não cria `ExtResource`.
 - `Theme .tres` existe em versão inicial para tokens centrais e variações básicas.
 
 ## Estrutura
 
 ```text
-addons/gdui/                 addon Godot básico
+addons/gdui/                 addon Godot (plugin, dock, runtime)
+addons/gdui/compiler/        compilador bundled para distribuição (gerado por build:addon)
 addons/gdui/server/          servidor Node local do Gdui Studio
-tools/gdui/                  compilador Node
+packages/compiler/           parser + normalizer + utils
+packages/godot-exporter/     exportador .tscn
+packages/theme-exporter/     exportador Theme .tres
+tools/gdui/                  CLI de desenvolvimento (fonte dos bundles)
 ui/                          arquivos .gdui.html de teste
 scenes/                      cenas .tscn geradas
 docs/                        documentação técnica
-playground/                  preview web simples
 ```

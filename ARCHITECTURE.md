@@ -106,23 +106,23 @@ O Studio pode ter preview web auxiliar, edicao de arquivos e diagnosticos. Ele n
 packages/compiler        parser, validação, AST
 packages/godot-exporter  Scene AST e .tscn
 packages/theme-exporter  Theme .tres
-packages/components      contrato dos gd-*
+packages/components      contrato dos gd-* (futuro)
 packages/runtime         helpers opcionais de actions e responsividade
 addons/gdui              integração com editor Godot
+addons/gdui/compiler     bundles Node self-contained (gerados por build:addon)
 ```
 
 ## Estado atual
 
-O MVP atual concentra a implementação em `src/`:
+A implementação segue a arquitetura alvo de pacotes (v0.9 concluída):
 
-- `src/parser.js`
-- `src/mapping.js`
-- `src/exporters/tscn.js`
-- `src/index.js`
+- `packages/compiler/src/` — parser, normalizer, components, utils
+- `packages/godot-exporter/src/` — exportador `.tscn`
+- `packages/theme-exporter/src/` — exportador Theme `.tres`
+- `tools/gdui/src/index.js` — orquestrador + CLI (importa os pacotes via npm workspaces)
+- `addons/gdui/compiler/` — bundles self-contained gerados por `npm run build:addon`
 
-A evolução deve extrair esses módulos para a arquitetura alvo sem mudar o contrato público de uma vez.
-
-O servidor atual vive em `addons/gdui/server/` porque sua responsabilidade e integrar a experiencia do addon. A logica de compilacao permanece em `tools/gdui/src/` e deve migrar futuramente para `packages/compiler` e `packages/godot-exporter`.
+O servidor em `addons/gdui/server/studio-server.js` carrega o compilador dinamicamente: prefere o bundle `addons/gdui/compiler/lib.mjs` (addon distribuído) e cai de volta para `tools/gdui/src/index.js` em ambiente de desenvolvimento.
 
 ## Aprendizados do GTML
 

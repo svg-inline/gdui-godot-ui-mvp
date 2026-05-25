@@ -6,18 +6,34 @@ Criar um addon Godot para compilar `.gdui.html` dentro do editor e gerar `.tscn`
 
 O addon tambem pode iniciar o Gdui Studio: um servidor Node local para autoria e previsualizacao no navegador. Esse Studio nao muda o contrato principal do produto; ele e uma ferramenta auxiliar para escrever `.gdui.html` e acionar a geracao de `.tscn`.
 
-## Estrutura alvo
+## Estrutura
 
 ```text
 addons/gdui/
   plugin.cfg
-  plugin.gd
-  import_plugin.gd
+  plugin.gd          — EditorPlugin: dock, menus, auto-init, validação
+  import_plugin.gd   — importer experimental (desativado por padrão)
+  dock.gd            — painel Gdui: compile, studio, project config, init
+  compiler/
+    gdui.js          — CLI bundled (CJS, sem dependências externas)
+    lib.mjs          — biblioteca bundled para import() dinâmico
   server/
     studio-server.js
   runtime/
     action_router.gd
+    binding_runtime.gd
+    responsive_runtime.gd
 ```
+
+## Build do addon
+
+Os arquivos `compiler/gdui.js` e `compiler/lib.mjs` são gerados por:
+
+```bash
+npm run build:addon
+```
+
+Esse comando usa esbuild para empacotar toda a cadeia de pacotes (`packages/compiler`, `packages/godot-exporter`, `packages/theme-exporter`, `tools/gdui/src/`) em dois arquivos sem dependências externas. Após o build, apenas `addons/gdui/` precisa ser distribuído.
 
 ## Fluxo confiavel atual
 
@@ -68,16 +84,30 @@ Saída:
 res://ui/inventory.tscn
 ```
 
+## Carregamento do compilador
+
+O `studio-server.js` carrega o compilador dinamicamente:
+
+1. Prefere `addons/gdui/compiler/lib.mjs` (bundle distribuído).
+2. Cai de volta para `tools/gdui/src/index.js` em ambiente de desenvolvimento (sem build).
+
+O `plugin.gd` resolve o CLI pelo mesmo padrão:
+
+1. `addons/gdui/compiler/gdui.js` (bundle).
+2. `tools/gdui/bin/gdui.js` (fallback dev).
+
 ## Configuração
 
-Opções futuras:
+Na primeira ativação, o plugin cria automaticamente:
 
-- Caminho do compilador.
-- Pasta de saída.
-- Porta do Studio.
-- Auto-start do Studio ao ativar o addon.
-- Gerar Theme.
-- Falhar em warnings.
+- `gdui.config.json` — `inputDir`, `outputDir`, `failOnWarning`.
+- `theme.gdui.json` — tokens de cor, espaçamento, raio e tipografia.
+
+Ambos os arquivos são validados na ativação; erros aparecem no log e no status da dock.
+
+O dock permite editar `inputDir`/`outputDir` diretamente e salvar via botão **Save Config**.
+O botão **Init Project** recria os arquivos a qualquer momento.
+
 - Mostrar AST.
 
 ## Runtime opcional

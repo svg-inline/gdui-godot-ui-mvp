@@ -63,6 +63,8 @@
 
 ### v0.8 - Componentes de Input
 
+> ✓ Concluído
+
 Objetivo: desbloquear casos reais de UI interativa com inputs nativos Godot.
 
 - `gd-input` → `LineEdit` (campo de texto).
@@ -73,6 +75,8 @@ Objetivo: desbloquear casos reais de UI interativa com inputs nativos Godot.
 - Atualizar specs, testes e exemplos para cada componente novo.
 
 ### v0.9 - Reestruturação de Pacotes
+
+> ✓ Concluído
 
 Objetivo: aproximar o código da arquitetura obrigatória definida em AGENTS.md.
 
@@ -85,6 +89,8 @@ Objetivo: aproximar o código da arquitetura obrigatória definida em AGENTS.md.
 
 ### v0.10 - Setup Automático do Projeto
 
+> ✓ Concluído
+
 Objetivo: eliminar a necessidade de criar arquivos de configuração manualmente ao adotar o addon.
 
 Hoje o desenvolvedor precisa adicionar manualmente `gdui.config.json`, `theme.gdui.json` e `theme.gdui.schema.json` ao projeto. Isso é barreira de adoção.
@@ -94,6 +100,8 @@ Hoje o desenvolvedor precisa adicionar manualmente `gdui.config.json`, `theme.gd
 - Criar tela de configuração na dock do Gdui: editar paths de `inputDir`/`outputDir`, visualizar e salvar tokens de tema sem editar JSON à mão.
 - Botão "Inicializar Projeto Gdui" na dock para rodar o setup a qualquer momento em projetos existentes.
 - Validar `gdui.config.json` e `theme.gdui.json` na ativação e mostrar erros no painel antes de tentar compilar.
+- Compilador empacotado em `addons/gdui/compiler/` via `npm run build:addon` (esbuild, sem dependências externas).
+- Addon self-contained: apenas `addons/gdui/` precisa ser copiado para um novo projeto Godot.
 
 ### v1.0 - Publicação
 
