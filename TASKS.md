@@ -114,13 +114,13 @@ Status:
 
 ## v0.10 - Setup Automático do Projeto
 
-| ID       | Status  | Task                                                                                          | Evidencia                                            |
-| -------- | ------- | --------------------------------------------------------------------------------------------- | ---------------------------------------------------- |
-| GDUI-095 | Planned | Gerar `gdui.config.json` padrão automaticamente na primeira ativação do plugin.               | Hoje deve ser criado manualmente.                    |
-| GDUI-096 | Planned | Gerar `theme.gdui.json` inicial com tokens padrão na primeira ativação do plugin.             | Hoje deve ser criado manualmente.                    |
-| GDUI-097 | Planned | Tela de configuração na dock: editar `inputDir`/`outputDir` e tokens de tema sem editar JSON. | —                                                    |
-| GDUI-098 | Planned | Botão "Inicializar Projeto Gdui" na dock para projetos existentes sem configuração.           | —                                                    |
-| GDUI-099 | Planned | Validar `gdui.config.json` e `theme.gdui.json` na ativação e exibir erros no painel.          | Hoje erros de config só aparecem ao tentar compilar. |
+| ID       | Status | Task                                                                                          | Evidencia                                                                         |
+| -------- | ------ | --------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------- |
+| GDUI-095 | Done   | Gerar `gdui.config.json` padrão automaticamente na primeira ativação do plugin.               | `_ensure_project_files()` em `plugin.gd`; escreve defaults se arquivo não existe. |
+| GDUI-096 | Done   | Gerar `theme.gdui.json` inicial com tokens padrão na primeira ativação do plugin.             | Mesmo `_ensure_project_files()`; escreve `_get_default_theme()`.                  |
+| GDUI-097 | Done   | Tela de configuração na dock: editar `inputDir`/`outputDir` e tokens de tema sem editar JSON. | Seção "Project Config" na dock com LineEdit + "Save Config".                      |
+| GDUI-098 | Done   | Botão "Inicializar Projeto Gdui" na dock para projetos existentes sem configuração.           | Botão "Init Project" chama `initialize_project_files()`.                          |
+| GDUI-099 | Done   | Validar `gdui.config.json` e `theme.gdui.json` na ativação e exibir erros no painel.          | `_validate_project_files()` — erros aparecem no log e status da dock.             |
 
 ## v1.0 - Publicação
 

@@ -10,6 +10,8 @@ var log_output: TextEdit
 var start_studio_button: Button
 var open_studio_button: Button
 var stop_studio_button: Button
+var input_dir_field: LineEdit
+var output_dir_field: LineEdit
 
 func setup(owner: EditorPlugin) -> void:
 	plugin = owner
@@ -68,6 +70,51 @@ func _ready() -> void:
 	studio_label.text = "Studio: stopped"
 	studio_label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	add_child(studio_label)
+
+	# ── GDUI-097: Project Config panel ────────────────────────────────────────
+	add_child(HSeparator.new())
+
+	var config_title := Label.new()
+	config_title.text = "Project Config"
+	config_title.theme_type_variation = &"HeaderSmall"
+	add_child(config_title)
+
+	var input_row := HBoxContainer.new()
+	add_child(input_row)
+	var input_lbl := Label.new()
+	input_lbl.text = "Input dir:"
+	input_lbl.custom_minimum_size = Vector2(72, 0)
+	input_row.add_child(input_lbl)
+	input_dir_field = LineEdit.new()
+	input_dir_field.placeholder_text = "ui"
+	input_dir_field.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	input_row.add_child(input_dir_field)
+
+	var output_row := HBoxContainer.new()
+	add_child(output_row)
+	var output_lbl := Label.new()
+	output_lbl.text = "Output dir:"
+	output_lbl.custom_minimum_size = Vector2(72, 0)
+	output_row.add_child(output_lbl)
+	output_dir_field = LineEdit.new()
+	output_dir_field.placeholder_text = "scenes"
+	output_dir_field.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	output_row.add_child(output_dir_field)
+
+	var cfg_btns := HBoxContainer.new()
+	add_child(cfg_btns)
+
+	var save_cfg_btn := Button.new()
+	save_cfg_btn.text = "Save Config"
+	save_cfg_btn.tooltip_text = "Save inputDir / outputDir to gdui.config.json."
+	save_cfg_btn.pressed.connect(_on_save_config_pressed)
+	cfg_btns.add_child(save_cfg_btn)
+
+	var init_btn := Button.new()
+	init_btn.text = "Init Project"
+	init_btn.tooltip_text = "Create gdui.config.json and theme.gdui.json if missing."
+	init_btn.pressed.connect(_on_init_project_pressed)
+	cfg_btns.add_child(init_btn)
 
 	log_output = TextEdit.new()
 	log_output.editable = false
@@ -133,3 +180,24 @@ func _on_open_studio_pressed() -> void:
 func _on_stop_studio_pressed() -> void:
 	if plugin and plugin.has_method("stop_studio"):
 		plugin.call("stop_studio")
+
+# GDUI-097: fill config fields from loaded config dict
+func refresh_config(config: Dictionary) -> void:
+	if input_dir_field:
+		input_dir_field.text = config.get("inputDir", "ui")
+	if output_dir_field:
+		output_dir_field.text = config.get("outputDir", "scenes")
+
+# GDUI-097: save button handler
+func _on_save_config_pressed() -> void:
+	if plugin and plugin.has_method("save_config"):
+		plugin.call("save_config", {
+			"inputDir": input_dir_field.text if input_dir_field else "ui",
+			"outputDir": output_dir_field.text if output_dir_field else "scenes",
+			"failOnWarning": false
+		})
+
+# GDUI-098: init button handler
+func _on_init_project_pressed() -> void:
+	if plugin and plugin.has_method("initialize_project_files"):
+		plugin.call("initialize_project_files")
