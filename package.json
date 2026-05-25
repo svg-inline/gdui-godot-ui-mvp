@@ -7,9 +7,12 @@
     "compile": "node tools/gdui/bin/gdui.js --input ui --output scenes",
     "compile:sample": "node tools/gdui/bin/gdui.js --input ui/inventory.gdui.html --output scenes/InventoryScreen.tscn",
     "compile:all": "node tools/gdui/bin/gdui.js --input ui --output scenes",
+    "compile:theme": "node tools/gdui/bin/gdui.js --theme theme.gdui.json --output scenes/theme.tres",
     "check": "node tools/gdui/bin/gdui.js --input ui/inventory.gdui.html --check",
+    "check:theme": "node tools/gdui/bin/gdui.js --theme theme.gdui.json --check",
     "studio": "node addons/gdui/server/studio-server.js --root .",
-    "test": "node --test tools/gdui/tests/*.test.js"
+    "test": "node --test tools/gdui/tests/*.test.js",
+    "test:godot": "node tools/godot/run-smoke.js"
   },
   "engines": {
     "node": ">=18.0.0"

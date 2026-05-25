@@ -1,0 +1,25 @@
+{
+  "colors": {
+    "surface": "#111827",
+    "surfaceAlt": "#1e293b",
+    "text": "#f8fafc",
+    "muted": "#cbd5e1",
+    "primary": "#38bdf8",
+    "primaryText": "#020617",
+    "border": "#334155"
+  },
+  "spacing": {
+    "sm": 8,
+    "md": 16,
+    "lg": 24
+  },
+  "radius": {
+    "md": 12,
+    "lg": 18
+  },
+  "fontSizes": {
+    "body": 16,
+    "title": 28,
+    "button": 16
+  }
+}

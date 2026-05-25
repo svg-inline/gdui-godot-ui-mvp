@@ -18,14 +18,13 @@ Prioridade maxima.
 
 | Task | Falta | Resultado esperado |
 | --- | --- | --- |
-| GDUI-005 | Snapshot tests para `.tscn` gerado. | Mudancas no exporter ficam visiveis e intencionais. |
-| GDUI-006 | Smoke test Godot abrindo cenas geradas. | Garantia de que `.tscn` abre editavel no Godot 4.x. |
+| GDUI-007 | Rodar smoke test Godot em CI e versoes alvo. | Garantia continua de que `.tscn` abre editavel no Godot 4.x. |
 
 Notas:
 
-- Os testes atuais cobrem parser e alguns trechos de exporter.
-- Falta testar arquivos completos como `InventoryScreen.tscn`.
-- O smoke test pode usar `godot.exe --headless` quando disponivel.
+- Os testes atuais cobrem parser, trechos de exporter e snapshots completos de `scenes/*.tscn`.
+- `npm run test:godot` carrega e instancia as cenas geradas via Godot headless, e tambem carrega `scenes/theme.tres`.
+- Falta transformar o smoke test em rotina de CI e validar em mais de uma versao Godot 4.x.
 
 ## Responsividade
 
@@ -33,15 +32,13 @@ Existe base tecnica, mas ainda nao esta fechada como feature confiavel.
 
 | Task | Falta | Resultado esperado |
 | --- | --- | --- |
-| GDUI-022 | Testar metadata responsiva no Scene AST. | `md:*`, `lg:*`, `tv:*` ficam estaveis no contrato. |
 | GDUI-023 | Validar breakpoints no runtime. | `responsive_runtime.gd` aplica overrides sem erro. |
-| GDUI-025 | Testes dedicados de AST responsiva. | Parser/normalizer nao quebram props responsivas. |
 | GDUI-026 | Cena ou teste de runtime responsivo. | Grid muda colunas conforme viewport. |
 
 Notas:
 
-- A sintaxe responsiva ja existe.
-- O runtime existe, mas precisa prova em Godot real.
+- A sintaxe responsiva e a metadata no Scene AST ja estao testadas.
+- O runtime existe, mas precisa prova comportamental em Godot real.
 - Navegacao por foco para TV ainda deve ser tratada depois.
 
 ## Theme `.tres`
@@ -50,18 +47,14 @@ Esta e a maior lacuna de produto.
 
 | Task | Falta | Resultado esperado |
 | --- | --- | --- |
-| GDUI-020 | Tokens minimos. | Base compartilhada para cor, spacing, radius e font size. |
-| GDUI-030 | `theme.gdui.json`. | Arquivo de autoria de tema. |
-| GDUI-031 | Schema de tokens. | Validacao previsivel. |
-| GDUI-032 | Exportador `Theme .tres`. | Godot recebe Theme nativo editavel. |
-| GDUI-033 | Variants usando Theme. | `variant="primary"` deixa de depender so de override local. |
-| GDUI-034 | Exemplo com tema compartilhado. | Demonstra valor real do Theme. |
+| GDUI-031 | JSON Schema formal para tokens. | Validacao previsivel antes de exportar. |
+| GDUI-033 | Ampliar variants usando Theme. | `variant="primary"` deixa de depender so de override local. |
 
 Notas:
 
-- Hoje `StyleBoxFlat` e overrides locais resolvem o MVP visual.
-- O diferencial de longo prazo pede Theme `.tres`.
-- Comecar pequeno: Label, Button, PanelContainer e Card.
+- `theme.gdui.json`, exporter inicial e `scenes/theme.tres` ja existem.
+- O Theme atual cobre Label, Button, PrimaryButton, PanelContainer e Card.
+- Falta schema formal, estados de Button e reducao gradual de overrides locais no `.tscn`.
 
 ## Actions e eventos
 
@@ -127,8 +120,8 @@ Notas:
 
 ## Ordem recomendada
 
-1. `GDUI-005`, `GDUI-006`: fechar confiabilidade do `.tscn`.
-2. `GDUI-020`, `GDUI-030`, `GDUI-031`, `GDUI-032`: iniciar Theme `.tres`.
+1. `GDUI-007`: levar smoke test Godot para CI/versoes alvo.
+2. `GDUI-031`, `GDUI-033`: endurecer Theme `.tres`.
 3. `GDUI-054`, `GDUI-056`: criar dock e warnings no Godot.
 4. `GDUI-025`, `GDUI-026`: testar responsividade.
 5. `GDUI-042`, `GDUI-043`: validar actions em cena real.

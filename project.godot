@@ -1,0 +1,9 @@
+; Engine configuration file.
+; This minimal project exists so headless Godot smoke tests can load generated scenes.
+
+config_version=5
+
+[application]
+
+config/name="gdui-godot-ui-mvp"
+config/features=PackedStringArray("4.3")

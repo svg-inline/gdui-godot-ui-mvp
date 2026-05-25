@@ -3,11 +3,13 @@ import path from 'node:path';
 import { parseMarkup } from './parser.js';
 import { normalizeToSceneAst } from './normalizer.js';
 import { exportTscn } from './exporters/tscn.js';
+import { compileThemeFile, exportTheme } from './exporters/theme.js';
 import { cloneWithoutPrivateKeys } from './utils.js';
 
 export { parseMarkup } from './parser.js';
 export { normalizeToSceneAst } from './normalizer.js';
 export { exportTscn } from './exporters/tscn.js';
+export { compileThemeFile, exportTheme } from './exporters/theme.js';
 
 export function compileSource(source, options = {}) {
   const markupAst = parseMarkup(source);
@@ -70,9 +72,36 @@ export function listGduiFiles(dir) {
 export async function runCli(argv = process.argv.slice(2)) {
   const args = parseArgs(argv);
   const cwd = process.cwd();
+  const theme = args.theme ? path.resolve(cwd, args.theme) : null;
   const input = path.resolve(cwd, args.input || args.i || 'ui');
   const output = args.output || args.o ? path.resolve(cwd, args.output || args.o) : null;
   const check = Boolean(args.check);
+
+  if (theme) {
+    if (!fs.existsSync(theme)) {
+      console.error(`[gdui] Theme input not found: ${theme}`);
+      process.exitCode = 1;
+      return;
+    }
+
+    try {
+      const outFile = output || path.resolve(cwd, 'scenes', 'theme.tres');
+      const result = compileThemeFile(theme, check ? null : outFile, args);
+      printWarnings(result.warnings);
+
+      if (check) {
+        console.log(result.content);
+        return;
+      }
+
+      console.log(`[gdui] ${path.relative(cwd, theme)} -> ${path.relative(cwd, outFile)}`);
+    } catch (error) {
+      console.error(`[gdui] ${error.message}`);
+      if (args.debug) console.error(error.stack);
+      process.exitCode = 1;
+    }
+    return;
+  }
 
   if (!fs.existsSync(input)) {
     console.error(`[gdui] Input not found: ${input}`);

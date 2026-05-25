@@ -17,30 +17,31 @@ Status:
 | GDUI-002 | Done | Gerar AST intermediaria. | `parseMarkup` + `normalizeToSceneAst` |
 | GDUI-003 | Done | Exportar `.tscn` textual. | `tools/gdui/src/exporters/tscn.js` |
 | GDUI-004 | Done | Criar exemplos basicos. | `examples/` e `ui/` |
-| GDUI-005 | Partial | Cobrir parser/exporter com testes automatizados. | Testes basicos existem; falta snapshot abrangente de `.tscn`. |
-| GDUI-006 | Partial | Validar cena gerada no Godot 4.x. | Scripts do addon foram checados com Godot CLI; falta smoke test abrindo cenas geradas. |
+| GDUI-005 | Done | Cobrir parser/exporter com testes automatizados. | Testes basicos + snapshot de `.tscn` em `tools/gdui/tests/tscn-snapshot.test.js`. |
+| GDUI-006 | Done | Validar cena gerada no Godot 4.x. | `npm run test:godot` carrega/instancia cenas geradas e o Theme gerado via Godot headless. |
+| GDUI-007 | Planned | Rodar smoke test Godot em CI e versoes alvo. | Teste local existe; falta automacao externa. |
 
 ## v0.2 - Design Tokens + Responsive Props basicas
 
 | ID | Status | Task | Evidencia |
 | --- | --- | --- | --- |
-| GDUI-020 | Planned | Definir tokens minimos de cor, espacamento, raio, tipografia e escala. | Aguardando `theme.gdui.json`. |
+| GDUI-020 | Done | Definir tokens minimos de cor, espacamento, raio, tipografia e escala. | `theme.gdui.json` |
 | GDUI-021 | Done | Definir sintaxe responsiva para props com prefixos. | `md:*`, `lg:*`, `tv:*` aceitos pelo parser de atributos. |
-| GDUI-022 | Partial | Normalizar props responsivas para metadata. | `metadata/gdui_responsive` gerado no Scene AST. |
+| GDUI-022 | Done | Normalizar props responsivas para metadata. | `metadata/gdui_responsive` gerado e testado em `tools/gdui/tests/responsive.test.js`. |
 | GDUI-023 | Partial | Implementar breakpoints documentados. | `responsive_runtime.gd` existe; falta teste Godot automatizado. |
 | GDUI-024 | Done | Adicionar exemplo de grid responsivo. | `examples/responsive-grid.gdui.html` |
-| GDUI-025 | Planned | Criar testes de AST responsiva. | Ainda sem teste dedicado. |
+| GDUI-025 | Done | Criar testes de AST responsiva. | `tools/gdui/tests/responsive.test.js` |
 | GDUI-026 | Planned | Validar runtime minimo aplicando breakpoint correto. | Ainda sem cena/teste de runtime. |
 
 ## v0.3 - Theme `.tres`
 
 | ID | Status | Task | Evidencia |
 | --- | --- | --- | --- |
-| GDUI-030 | Planned | Criar `theme.gdui.json`. | Nao implementado. |
-| GDUI-031 | Planned | Definir schema de tokens. | Especificado em `docs/05-theme-exporter-spec.md`. |
-| GDUI-032 | Planned | Implementar exportador `Theme .tres`. | Nao implementado. |
-| GDUI-033 | Planned | Migrar variants para Theme. | Hoje `variant` vira `theme_type_variation`, sem Theme gerado. |
-| GDUI-034 | Planned | Adicionar exemplo com tema compartilhado. | Nao implementado. |
+| GDUI-030 | Done | Criar `theme.gdui.json`. | `theme.gdui.json` |
+| GDUI-031 | Partial | Definir schema de tokens. | Contrato inicial existe no exporter/spec; falta JSON Schema formal. |
+| GDUI-032 | Done | Implementar exportador `Theme .tres`. | `tools/gdui/src/exporters/theme.js` + `scenes/theme.tres` |
+| GDUI-033 | Partial | Migrar variants para Theme. | `PrimaryButton` e `Card` existem no Theme; falta reduzir overrides locais e ampliar estados. |
+| GDUI-034 | Done | Adicionar exemplo com tema compartilhado. | `examples/themed-menu.gdui.html` |
 
 ## v0.4 - Eventos e actions
 

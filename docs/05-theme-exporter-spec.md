@@ -4,11 +4,11 @@
 
 Gerar um `Theme .tres` reutilizável para Godot 4.x a partir de tokens declarativos.
 
-O Theme exporter ainda é futuro, mas esta spec define o contrato esperado.
+O Theme exporter ja existe em versao inicial. Esta spec define o contrato esperado para evoluir de MVP para ferramenta mais completa.
 
 ## Arquivo de entrada
 
-Proposta:
+Implementado inicialmente em `theme.gdui.json`:
 
 ```json
 {
@@ -45,7 +45,13 @@ Com recursos como:
 
 - `Theme`
 - `StyleBoxFlat`
-- variações para `Button`, `Label` e `PanelContainer`
+- variações para `Button`, `Label`, `PanelContainer`, `Card` e `PrimaryButton`
+
+Comando atual:
+
+```bash
+npm run compile:theme
+```
 
 ## Variants
 
@@ -54,6 +60,12 @@ Com recursos como:
 ```text
 theme_type_variation = &"PrimaryButton"
 ```
+
+Estado atual:
+
+- `PrimaryButton/base_type = &"Button"` e estilo normal sao gerados.
+- `Card/base_type = &"PanelContainer"` e estilo de panel sao gerados.
+- Estados `hover`, `pressed`, `disabled` ainda nao foram adicionados.
 
 ## Regra de prioridade
 
@@ -67,3 +79,10 @@ theme_type_variation = &"PrimaryButton"
 - Não aceitar seletores arbitrários.
 - Não gerar Theme que dependa de WebView.
 - Não esconder estilo em scripts quando `Theme .tres` resolver.
+
+## Pendencias
+
+- Criar JSON Schema formal para `theme.gdui.json`.
+- Validar tokens antes de exportar.
+- Gerar estados de `Button`.
+- Reduzir overrides locais no `.tscn` quando houver token equivalente.

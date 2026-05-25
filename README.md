@@ -70,9 +70,12 @@ npm run studio
 | --- | --- |
 | `npm run compile` | Compila todos os arquivos de `ui/` para `scenes/`. |
 | `npm run compile:sample` | Compila apenas `ui/inventory.gdui.html`. |
+| `npm run compile:theme` | Gera `scenes/theme.tres` a partir de `theme.gdui.json`. |
 | `npm run check` | Imprime AST e Scene AST no terminal. |
+| `npm run check:theme` | Imprime o `Theme .tres` gerado no terminal. |
 | `npm run studio` | Inicia o Gdui Studio local para editar e previsualizar `.gdui.html`. |
 | `npm test` | Roda testes básicos do parser/exporter. |
+| `npm run test:godot` | Usa Godot headless para carregar e instanciar as cenas geradas. |
 
 ## Componentes suportados no MVP
 
@@ -125,7 +128,7 @@ Use estes documentos para acompanhar o que esta implementado e o que ainda falta
 - Sem CSS Grid completo.
 - Sem `calc()`, `clamp()`, `var()`, `rem`, `em`, `vh`, `vw`.
 - `gd-texture` ainda não cria `ExtResource`.
-- `Theme .tres` ainda é etapa futura.
+- `Theme .tres` existe em versão inicial para tokens centrais e variações básicas.
 
 ## Estrutura
 
