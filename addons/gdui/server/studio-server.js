@@ -40,6 +40,14 @@ const SUPPORTED_ATTRS = new Set([
   "disabled",
   "text",
   "state",
+  "placeholder",
+  "password",
+  "options",
+  "value",
+  "min-value",
+  "max-value",
+  "step",
+  "max-length",
 ]);
 const GODOT_ONLY_ATTRS = new Set(["action", "theme", "class", "tooltip"]);
 const PREVIEW_APPROX_ATTRS = new Set([
@@ -390,6 +398,35 @@ function renderPreviewNode(node) {
       return `<div class="gd-scroll" style="${styleAttr(sizeStyles(attrs))}">${children}</div>`;
     case "gd-texture":
       return `<div class="gd-texture" style="${styleAttr(sizeStyles(attrs))}">${escapeHtml(attrs.src || attrs.image || "Texture")}</div>`;
+    case "gd-input": {
+      const inputType = attrs.password === "true" ? "password" : "text";
+      const ph = attrs.placeholder
+        ? ` placeholder="${escapeHtml(attrs.placeholder)}"`
+        : "";
+      const maxLen = attrs["max-length"]
+        ? ` maxlength="${escapeHtml(attrs["max-length"])}"`
+        : "";
+      return `<input type="${inputType}" class="gd-input" style="${styleAttr(sizeStyles(attrs))}"${ph}${maxLen}${attrs.disabled === "true" ? " disabled" : ""}>`;
+    }
+    case "gd-option": {
+      const opts = (attrs.options || "")
+        .split(",")
+        .map((o) => `<option>${escapeHtml(o.trim())}</option>`)
+        .join("");
+      return `<select class="gd-option" style="${styleAttr(sizeStyles(attrs))}"${attrs.disabled === "true" ? " disabled" : ""}>${opts}</select>`;
+    }
+    case "gd-progress": {
+      const mn = parseFloat(attrs["min-value"] ?? attrs.min ?? "0");
+      const mx = parseFloat(attrs["max-value"] ?? attrs.max ?? "100");
+      const val = parseFloat(attrs.value ?? "0");
+      const pct = mx > mn ? (((val - mn) / (mx - mn)) * 100).toFixed(1) : "0";
+      return `<div class="gd-progress" style="${styleAttr(sizeStyles(attrs))}"><div class="gd-progress-fill" style="width:${pct}%"></div></div>`;
+    }
+    case "gd-slider": {
+      const slMin = attrs["min-value"] ?? attrs.min ?? "0";
+      const slMax = attrs["max-value"] ?? attrs.max ?? "100";
+      return `<input type="range" class="gd-slider" min="${escapeHtml(slMin)}" max="${escapeHtml(slMax)}" value="${escapeHtml(attrs.value ?? "50")}" step="${escapeHtml(attrs.step ?? "1")}" style="${styleAttr(sizeStyles(attrs))}"${attrs.disabled === "true" ? " disabled" : ""}>`;
+    }
     case "gd-spacer":
       return `<div class="gd-spacer" style="${styleAttr(sizeStyles(attrs))}"></div>`;
     case "gd-container":
@@ -414,6 +451,10 @@ function previewCss() {
     ".gd-scroll{display:block;overflow:auto;}",
     ".gd-texture{display:grid;place-items:center;min-height:96px;border:1px dashed #475569;color:#cbd5e1;background:#111827;}",
     ".gd-spacer{display:block;flex:1 1 auto;}",
+    ".gd-input,.gd-option{display:block;width:100%;padding:8px 12px;border:1px solid #475569;border-radius:6px;background:#1e293b;color:#f8fafc;font:inherit;}",
+    ".gd-progress{display:block;width:100%;height:18px;border-radius:9px;background:#1e293b;overflow:hidden;}",
+    ".gd-progress-fill{height:100%;background:#2f8f83;border-radius:9px;}",
+    ".gd-slider{display:block;width:100%;accent-color:#2f8f83;}",
     "@media (min-width:1025px){.gd-grid{grid-template-columns:repeat(4,minmax(0,1fr));}}",
   ].join("");
 }
@@ -901,7 +942,8 @@ function renderStudioHtml() {
         if (requestId === previewRequestId) preview.srcdoc = payload.html;
       }).catch((error) => {
         if (requestId === previewRequestId) {
-          preview.srcdoc = '<!doctype html><html><body style="margin:0;padding:16px;background:#0f172a;color:#fca5a5;font-family:system-ui,sans-serif;">' + error.message + '</body></html>';
+          const msg = error.message.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+          preview.srcdoc = '<!doctype html><html><body style="margin:0;padding:16px;background:#0f172a;color:#fca5a5;font-family:system-ui,sans-serif;">' + msg + '</body></html>';
         }
       });
     }
