@@ -85,6 +85,21 @@ Pequeno runtime Godot pode existir para:
 
 Ele não deve ser obrigatório para abrir e editar a cena.
 
+### Gdui Studio local
+
+O Studio e uma ferramenta de autoria iniciada pelo addon Godot ou por `npm run studio`.
+
+```text
+addon Godot
+  -> node addons/gdui/server/studio-server.js
+  -> navegador em 127.0.0.1
+  -> edita .gdui.html
+  -> chama compilador
+  -> atualiza .tscn editavel
+```
+
+O Studio pode ter preview web auxiliar, edicao de arquivos e diagnosticos. Ele nao e runtime do jogo, nao substitui `.tscn` e nao transforma o projeto em WebView.
+
 ## Mapeamento de pacotes alvo
 
 ```text
@@ -106,6 +121,8 @@ O MVP atual concentra a implementação em `src/`:
 - `src/index.js`
 
 A evolução deve extrair esses módulos para a arquitetura alvo sem mudar o contrato público de uma vez.
+
+O servidor atual vive em `addons/gdui/server/` porque sua responsabilidade e integrar a experiencia do addon. A logica de compilacao permanece em `tools/gdui/src/` e deve migrar futuramente para `packages/compiler` e `packages/godot-exporter`.
 
 ## Aprendizados do GTML
 

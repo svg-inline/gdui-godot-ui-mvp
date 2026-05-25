@@ -11,7 +11,7 @@ func _get_visible_name() -> String:
 	return "Gdui Markup"
 
 func _get_recognized_extensions() -> PackedStringArray:
-	return ["html"]
+	return PackedStringArray()
 
 func _get_save_extension() -> String:
 	return "tscn"
@@ -38,26 +38,4 @@ func _get_option_visibility(path: String, option_name: StringName, options: Dict
 	return true
 
 func _import(source_file: String, save_path: String, options: Dictionary, platform_variants: Array[String], gen_files: Array[String]) -> Error:
-	if not source_file.ends_with(".gdui.html"):
-		return ERR_FILE_UNRECOGNIZED
-
-	var root := ProjectSettings.globalize_path("res://")
-	var cli := root.path_join("tools/gdui/bin/gdui.js")
-	if not FileAccess.file_exists(cli):
-		push_error("[Gdui] Compiler not found: " + cli)
-		return ERR_FILE_NOT_FOUND
-
-	var source_path := ProjectSettings.globalize_path(source_file)
-	var output_path := ProjectSettings.globalize_path(source_file.replace(".gdui.html", ".tscn"))
-	var output: Array = []
-	var code := OS.execute("node", [cli, "--input", source_path, "--output", output_path], output, true, true)
-
-	for line in output:
-		print(line)
-
-	if code != OK:
-		push_error("[Gdui] Import failed for " + source_file)
-		return FAILED
-
-	gen_files.push_back(source_file.replace(".gdui.html", ".tscn"))
-	return OK
+	return ERR_UNAVAILABLE

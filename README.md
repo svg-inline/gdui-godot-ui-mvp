@@ -44,8 +44,25 @@ scenes/ResponsiveGridScreen.tscn
 2. Abra `Project > Project Settings > Plugins`.
 3. Ative o plugin `Gdui`.
 4. Use o menu `Project > Tools > Gdui: Compile all UI`.
+5. Opcionalmente use `Project > Tools > Gdui: Start Studio` para abrir o editor local no navegador.
 
 O addon chama o compilador Node. Então o `node` precisa estar disponível no PATH.
+
+## Gdui Studio local
+
+O addon pode iniciar um servidor Node local em:
+
+```text
+http://127.0.0.1:39147
+```
+
+Esse Studio serve para criar, editar e previsualizar arquivos `.gdui.html`. Ele e um apoio de autoria: a saida canonica do projeto continua sendo `.tscn` editavel gerado pelo compilador.
+
+Tambem e possivel iniciar fora do Godot:
+
+```bash
+npm run studio
+```
 
 ## Comandos
 
@@ -54,6 +71,7 @@ O addon chama o compilador Node. Então o `node` precisa estar disponível no PA
 | `npm run compile` | Compila todos os arquivos de `ui/` para `scenes/`. |
 | `npm run compile:sample` | Compila apenas `ui/inventory.gdui.html`. |
 | `npm run check` | Imprime AST e Scene AST no terminal. |
+| `npm run studio` | Inicia o Gdui Studio local para editar e previsualizar `.gdui.html`. |
 | `npm test` | Roda testes básicos do parser/exporter. |
 
 ## Componentes suportados no MVP
@@ -104,6 +122,7 @@ Props responsivas são preservadas como metadata para runtime futuro:
 
 ```text
 addons/gdui/                 addon Godot básico
+addons/gdui/server/          servidor Node local do Gdui Studio
 tools/gdui/                  compilador Node
 ui/                          arquivos .gdui.html de teste
 scenes/                      cenas .tscn geradas

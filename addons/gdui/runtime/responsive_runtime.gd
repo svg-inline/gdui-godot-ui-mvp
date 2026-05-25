@@ -1,3 +1,4 @@
+@tool
 extends Node
 class_name GduiResponsiveRuntime
 
@@ -15,10 +16,16 @@ const BREAKPOINTS := {
 func _ready() -> void:
 	if auto_apply_on_ready:
 		apply_current_breakpoint()
-	get_viewport().size_changed.connect(apply_current_breakpoint)
+	var viewport := get_viewport()
+	if viewport and not viewport.size_changed.is_connected(Callable(self, "apply_current_breakpoint")):
+		viewport.size_changed.connect(Callable(self, "apply_current_breakpoint"))
 
 func apply_current_breakpoint() -> void:
-	var root := get_node_or_null(root_path) if root_path != NodePath("") else get_tree().current_scene
+	var root: Node = null
+	if root_path != NodePath(""):
+		root = get_node_or_null(root_path)
+	else:
+		root = get_tree().current_scene
 	if root == null:
 		root = self
 	var width := get_viewport().get_visible_rect().size.x
@@ -36,8 +43,7 @@ func _apply_recursive(node: Node, breakpoint: String) -> void:
 	if node.has_meta("gdui_responsive"):
 		_apply_node(node, breakpoint, String(node.get_meta("gdui_responsive")))
 	for child in node.get_children():
-		if child is Node:
-			_apply_recursive(child, breakpoint)
+		_apply_recursive(child, breakpoint)
 
 func _apply_node(node: Node, breakpoint: String, json_text: String) -> void:
 	var parsed = JSON.parse_string(json_text)
@@ -66,4 +72,5 @@ func _apply_node(node: Node, breakpoint: String, json_text: String) -> void:
 				if node is Label or node is Button:
 					node.add_theme_font_size_override("font_size", int(value))
 			"visible":
-				node.visible = String(value).to_lower() != "false"
+				if node is CanvasItem:
+					node.visible = String(value).to_lower() != "false"

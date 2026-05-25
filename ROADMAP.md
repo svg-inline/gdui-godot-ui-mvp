@@ -39,6 +39,8 @@
 - Importer para `.gdui.html`.
 - Reimport automático pelo editor.
 - Painel simples para warnings e AST.
+- Servidor Node local iniciado pelo addon para abrir o Gdui Studio.
+- Studio com lista de `.gdui.html`, editor, preview web auxiliar e botao de compilar.
 - Saída editável como cena.
 - Live reload como conveniência, mantendo `.tscn` como artefato principal.
 
@@ -51,6 +53,6 @@
 
 ## v0.7 - Preview Studio
 
-- Preview no navegador como ferramenta de autoria.
+- Preview no navegador como ferramenta de autoria mais completa.
 - Comparação entre preview e saída Godot.
 - Diagnósticos visuais de componentes não suportados.
