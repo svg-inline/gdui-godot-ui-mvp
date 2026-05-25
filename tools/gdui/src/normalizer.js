@@ -9,6 +9,8 @@ import {
   toThemeVariation,
 } from './utils.js';
 
+const SUPPORTED_BINDINGS = new Set(['text', 'visible', 'disabled']);
+
 export function normalizeToSceneAst(markupAst, options = {}) {
   const counters = new Map();
   const warnings = [];
@@ -108,6 +110,12 @@ function applyCommonProps(node, warnings) {
       warnings.push(`${node.name}: action "${a.action}" should use dotted lowercase names like domain.intent.`);
     }
   }
+  if (node.tag === 'gd-screen' && a.state) {
+    p['metadata/gdui_state'] = godotString(a.state);
+    if (!isValidStateName(a.state)) {
+      warnings.push(`${node.name}: state "${a.state}" should use lowercase names like screen or inventory.session.`);
+    }
+  }
   if (a.tooltip) p.tooltip_text = godotString(a.tooltip);
 
   if (a.variant) {
@@ -120,6 +128,29 @@ function applyCommonProps(node, warnings) {
   if (Object.keys(node.responsive || {}).length) {
     p['metadata/gdui_responsive'] = godotString(JSON.stringify(node.responsive));
   }
+
+  const bindings = extractBindings(a, node, warnings);
+  if (Object.keys(bindings).length) {
+    p['metadata/gdui_bindings'] = godotString(JSON.stringify(bindings));
+  }
+}
+
+function extractBindings(attrs, node, warnings) {
+  const bindings = {};
+
+  for (const [key, value] of Object.entries(attrs)) {
+    const [prefix, prop] = key.split(':');
+    if (prefix !== 'bind' || !prop) continue;
+
+    if (!SUPPORTED_BINDINGS.has(prop)) {
+      warnings.push(`${node.name}: bind:${prop} is not supported in the MVP. Supported bindings: ${Array.from(SUPPORTED_BINDINGS).join(', ')}.`);
+      continue;
+    }
+
+    bindings[prop] = value;
+  }
+
+  return bindings;
 }
 
 function applySpecificProps(node, warnings) {
@@ -265,4 +296,8 @@ function alignmentToGodot(value) {
 
 function isValidActionName(value) {
   return /^[a-z][a-z0-9_-]*(\.[a-z][a-z0-9_-]*)+$/.test(String(value || ''));
+}
+
+function isValidStateName(value) {
+  return /^[a-z][a-z0-9_-]*(\.[a-z][a-z0-9_-]*)*$/.test(String(value || ''));
 }

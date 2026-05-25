@@ -25,6 +25,26 @@ test('warns for action names outside the dotted contract', () => {
   assert.match(result.warnings.join('\n'), /action "Play Now" should use dotted lowercase names/);
 });
 
+test('exports minimal state and supported bindings as metadata', () => {
+  const result = compileSource(`
+    <gd-screen name="Main" state="screen">
+      <gd-label name="Title" bind:text="screen.title" />
+      <gd-button name="Play" bind:disabled="screen.locked" />
+    </gd-screen>
+  `);
+
+  assert.match(result.tscn, /metadata\/gdui_state = "screen"/);
+  assert.match(result.tscn, /metadata\/gdui_bindings = "\{\\\"text\\\":\\\"screen\.title\\\"\}"/);
+  assert.match(result.tscn, /metadata\/gdui_bindings = "\{\\\"disabled\\\":\\\"screen\.locked\\\"\}"/);
+});
+
+test('warns for unsupported bindings', () => {
+  const result = compileSource('<gd-screen name="Main"><gd-label bind:color="screen.color" /></gd-screen>');
+
+  assert.doesNotMatch(result.tscn, /metadata\/gdui_bindings/);
+  assert.match(result.warnings.join('\n'), /bind:color is not supported/);
+});
+
 test('compiles panel stylebox subresource', () => {
   const result = compileSource('<gd-screen name="Main"><gd-panel name="Card" background="#111827" radius="12" padding="16" /></gd-screen>');
   assert.match(result.tscn, /\[sub_resource type="StyleBoxFlat"/);

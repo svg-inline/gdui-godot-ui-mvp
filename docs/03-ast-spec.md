@@ -45,7 +45,8 @@ Antes de exportar `.tscn`, a Markup AST é normalizada para uma árvore orientad
   "name": "PlayButton",
   "props": {
     "text": "\"Jogar\"",
-    "metadata/action": "\"menu.play\""
+    "metadata/action": "\"menu.play\"",
+    "metadata/gdui_bindings": "\"{\\\"disabled\\\":\\\"screen.locked\\\"}\""
   },
   "attrs": {
     "text": "Jogar",
@@ -61,4 +62,5 @@ Antes de exportar `.tscn`, a Markup AST é normalizada para uma árvore orientad
 - `name` deve ser seguro para `.tscn`.
 - `props` guarda propriedades já traduzidas.
 - `attrs` preserva os atributos originais para diagnósticos e exportadores futuros.
+- `metadata/gdui_state`, `metadata/gdui_bindings` e `metadata/gdui_responsive` preservam contratos de runtime Godot opcionais.
 - Referências circulares como `parent` não devem aparecer no JSON impresso.

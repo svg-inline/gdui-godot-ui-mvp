@@ -68,16 +68,16 @@ Status:
 
 | ID | Status | Task | Evidencia |
 | --- | --- | --- | --- |
-| GDUI-060 | Planned | Definir estado declarativo minimo. | Nao implementado. |
-| GDUI-061 | Planned | Definir bindings limitados. | Nao implementado. |
-| GDUI-062 | Planned | Atualizar UI por runtime Godot, nao WebView. | Nao implementado. |
+| GDUI-060 | Done | Definir estado declarativo minimo. | `state` em `gd-screen` gera `metadata/gdui_state`; contrato em `docs/12-reactivity-spec.md`. |
+| GDUI-061 | Done | Definir bindings limitados. | `bind:text`, `bind:visible` e `bind:disabled` geram `metadata/gdui_bindings` com testes. |
+| GDUI-062 | Done | Atualizar UI por runtime Godot, nao WebView. | `addons/gdui/runtime/binding_runtime.gd` aplica bindings e `npm run test:bindings` valida em Godot headless. |
 
 ## v0.7 - Preview Studio avancado
 
 | ID | Status | Task | Evidencia |
 | --- | --- | --- | --- |
-| GDUI-070 | Partial | Preview web como ferramenta de autoria. | Studio tem preview auxiliar com diagnósticos; ainda é aproximação web, não fonte de verdade. |
-| GDUI-071 | Planned | Comparar preview web com saida Godot. | Nao implementado. |
+| GDUI-070 | Done | Preview web como ferramenta de autoria. | Studio renderiza preview auxiliar a partir do AST, com diagnósticos e comparação textual; `.tscn` segue como fonte de verdade. |
+| GDUI-071 | Done | Comparar preview web com saida Godot. | Studio mostra comparacao textual entre preview auxiliar e comportamento Godot/exporter para Theme, actions, responsividade e TextureRect metadata. |
 | GDUI-072 | Done | Diagnosticar componentes nao suportados visualmente. | Studio mostra erros de parse/compile, warnings do compilador e atributos ignorados pelo exporter. |
 
 ## Higiene continua

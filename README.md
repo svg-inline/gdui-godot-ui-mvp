@@ -61,6 +61,8 @@ http://127.0.0.1:39147
 Esse Studio serve para criar, editar e previsualizar arquivos `.gdui.html`. Ele e um apoio de autoria: a saida canonica do projeto continua sendo `.tscn` editavel gerado pelo compilador.
 
 O painel de diagnosticos do Studio usa o parser/compilador para mostrar erros, warnings e atributos ignorados pelo exporter antes da compilacao.
+Ele tambem lista diferencas esperadas entre o preview web auxiliar e a saida Godot, como Theme, actions, responsividade runtime e TextureRect metadata.
+O preview e renderizado a partir do AST para ajudar na autoria, mas continua sendo aproximado; a saida canonica permanece o `.tscn` editavel.
 
 Tambem e possivel iniciar fora do Godot:
 
@@ -82,6 +84,7 @@ npm run studio
 | `npm run test:godot` | Usa Godot headless para carregar e instanciar as cenas geradas. |
 | `npm run test:responsive` | Usa Godot headless para validar o runtime responsivo. |
 | `npm run test:actions` | Usa Godot headless para validar `metadata/action` com `action_router.gd`. |
+| `npm run test:bindings` | Usa Godot headless para validar `metadata/gdui_bindings` com `binding_runtime.gd`. |
 
 ## CI
 
@@ -94,6 +97,7 @@ npm run compile:theme
 npm run test:godot
 npm run test:responsive
 npm run test:actions
+npm run test:bindings
 ```
 
 Ele baixa versões alvo do Godot 4.x no runner Linux e publica o log headless como artefato quando houver execução.
@@ -122,7 +126,7 @@ Suporte inicial:
 
 ```text
 name, id, anchor, visible, width, height, min-width, min-height,
-expand, class, variant, theme, tooltip, action, padding, gap, background,
+expand, class, variant, theme, state, tooltip, action, padding, gap, background,
 radius, border, border-color, color, font-size, align, wrap, columns
 ```
 
@@ -146,6 +150,19 @@ O runtime responsivo inicial existe em `addons/gdui/runtime/responsive_runtime.g
 `gd-card` sem estilo inline usa a variação `Card` do Theme. Se `background`, `radius`, `border`, `border-color` ou `padding` forem declarados no markup, o compilador ainda gera um `StyleBoxFlat` local para preservar a intenção da cena.
 
 Actions declaradas em `gd-button action="..."` sao exportadas como `metadata/action`. O helper `addons/gdui/runtime/action_router.gd` conecta botões e emite `action_triggered`; veja `examples/main_menu_actions.gd`.
+
+## Reatividade inicial
+
+O contrato inicial preserva estado e bindings como metadata para runtime Godot opcional:
+
+```html
+<gd-screen name="InventoryScreen" state="inventory">
+  <gd-label bind:text="inventory.title" />
+  <gd-button bind:disabled="inventory.locked" />
+</gd-screen>
+```
+
+No momento, bindings suportados sao `bind:text`, `bind:visible` e `bind:disabled`. O runtime opcional `addons/gdui/runtime/binding_runtime.gd` aplica esses valores em nodes Godot nativos.
 
 ## Status e pendencias
 

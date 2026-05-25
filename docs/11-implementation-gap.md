@@ -81,40 +81,41 @@ Tasks adiadas de proposito:
 
 ## Reatividade
 
-Ainda nao deve ser prioridade.
+O contrato declarativo inicial existe e o runtime Godot minimo aplica bindings.
 
-| Task | Falta | Resultado esperado |
+| Task | Estado | Resultado esperado |
 | --- | --- | --- |
-| GDUI-060 | Modelo de estado. | Escopo minimo de estado declarativo. |
-| GDUI-061 | Bindings limitados. | Sintaxe previsivel sem virar JavaScript runtime. |
-| GDUI-062 | Runtime Godot controlado. | Atualizacao de UI sem WebView. |
+| GDUI-060 | Done | `state` em `gd-screen` gera `metadata/gdui_state`. |
+| GDUI-061 | Done | `bind:text`, `bind:visible` e `bind:disabled` geram `metadata/gdui_bindings`. |
+| GDUI-062 | Done | `binding_runtime.gd` aplica bindings sem WebView e e validado por Godot headless. |
 
 Notas:
 
-- So avancar depois de `.tscn`, Theme, actions e addon estarem mais confiaveis.
+- O contrato esta em `docs/12-reactivity-spec.md`.
+- Cenas sem bindings continuam estaticas e nao precisam de runtime reativo.
+- Runtime atual cobre `text`, `visible` e `disabled`; listas, computed values e two-way binding continuam fora do escopo.
 
 ## Preview Studio avancado
 
-O preview atual e util, mas ainda e aproximado.
+O preview atual e util como ferramenta de autoria, mas ainda e aproximado.
 
-| Task | Falta | Resultado esperado |
+| Task | Estado | Resultado |
 | --- | --- | --- |
-| GDUI-070 | Melhorar preview web auxiliar. | Autoria mais confortavel; diagnosticos ja aparecem no Studio. |
-| GDUI-071 | Comparar preview com cena Godot. | Usuario entende diferencas entre preview e saida real. |
+| GDUI-070 | Done. | Studio renderiza preview auxiliar a partir do AST, com diagnosticos e comparacao textual. |
+| GDUI-071 | Done. | Studio mostra comparacao textual entre preview auxiliar e comportamento Godot/exporter. |
 | GDUI-072 | Done. | Studio mostra erros de parse/compile, warnings e atributos ignorados pelo exporter. |
 
 Notas:
 
 - O preview web nao deve virar fonte de verdade.
 - A fonte de verdade continua sendo `.gdui.html -> .tscn`.
-- Diagnosticos atuais vem do parser/compilador Node; comparacao visual contra a cena Godot ainda nao existe.
+- Preview e diagnosticos atuais vem do parser/compilador Node.
+- A comparacao atual e textual/contratual: destaca Theme, actions, responsividade runtime e TextureRect metadata. Comparacao visual por screenshot ainda nao existe.
 
 ## Ordem recomendada
 
-1. `GDUI-071`: comparar preview web com saida Godot.
-2. `GDUI-070`: continuar refinando autoria no Studio.
-3. `GDUI-060`, `GDUI-061`, `GDUI-062`: iniciar reatividade apenas depois das validacoes acima.
-4. `GDUI-051`, `GDUI-055`: reavaliar importer/live reimport apenas com contrato seguro sem loop.
+1. `GDUI-051`, `GDUI-055`: reavaliar importer/live reimport apenas com contrato seguro sem loop.
+2. Definir proxima versao alem do MVP: listas, inputs, ou empacotamento do addon.
 
 ## Nao fazer agora
 

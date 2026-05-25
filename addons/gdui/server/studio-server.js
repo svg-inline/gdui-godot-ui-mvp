@@ -7,6 +7,8 @@ import { pathToFileURL } from 'node:url';
 const DEFAULT_HOST = '127.0.0.1';
 const DEFAULT_PORT = 39147;
 const RESPONSIVE_PREFIXES = new Set(['sm', 'md', 'lg', 'xl', 'tv']);
+const BINDING_PREFIX = 'bind';
+const SUPPORTED_BINDINGS = new Set(['text', 'visible', 'disabled']);
 const SUPPORTED_ATTRS = new Set([
   'name',
   'id',
@@ -37,6 +39,21 @@ const SUPPORTED_ATTRS = new Set([
   'image',
   'disabled',
   'text',
+  'state',
+]);
+const GODOT_ONLY_ATTRS = new Set(['action', 'theme', 'class', 'tooltip']);
+const PREVIEW_APPROX_ATTRS = new Set([
+  'anchor',
+  'expand',
+  'padding',
+  'gap',
+  'background',
+  'radius',
+  'border',
+  'border-color',
+  'font-size',
+  'columns',
+  'wrap',
 ]);
 
 export function resolveProjectPath(root, requestedPath) {
@@ -71,12 +88,14 @@ export function collectMarkupDiagnostics(source, compiler) {
     ok: true,
     errors: [],
     warnings: [],
+    comparison: [],
   };
 
   try {
     const markupAst = compiler.parseMarkup(source);
     collectUnsupportedAttrs(markupAst, diagnostics.warnings);
     const result = compiler.compileSource(source);
+    diagnostics.comparison.push(...collectPreviewComparison(markupAst, result.sceneAst));
     for (const warning of result.warnings || []) {
       diagnostics.warnings.push({ kind: 'compiler-warning', message: warning });
     }
@@ -89,6 +108,35 @@ export function collectMarkupDiagnostics(source, compiler) {
   }
 
   return diagnostics;
+}
+
+export function collectPreviewComparison(markupAst, sceneAst) {
+  const items = [];
+  const sceneNodes = [];
+  collectSceneNodes(sceneAst, sceneNodes);
+  const nodeCount = sceneNodes.length;
+
+  items.push({
+    kind: 'godot-output',
+    message: `Godot output: ${nodeCount} native node(s), root ${sceneAst.type} "${sceneAst.name}".`,
+  });
+
+  collectMarkupComparison(markupAst, items);
+
+  const seen = new Set();
+  return items.filter((item) => {
+    const key = `${item.kind}:${item.message}`;
+    if (seen.has(key)) return false;
+    seen.add(key);
+    return true;
+  });
+}
+
+export function renderPreviewDocument(source, compiler) {
+  const markupAst = compiler.parseMarkup(source);
+  const body = renderPreviewNode(markupAst);
+
+  return `<!doctype html><html><head><meta charset="utf-8"><meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'unsafe-inline'; img-src data: file:;"><style>${previewCss()}</style></head><body>${body}</body></html>`;
 }
 
 function parseArgs(argv) {
@@ -215,11 +263,21 @@ async function diagnoseSource(root, source) {
   return collectMarkupDiagnostics(String(source || ''), compiler);
 }
 
+async function previewSource(root, source) {
+  const compiler = await loadCompiler(root);
+  return renderPreviewDocument(String(source || ''), compiler);
+}
+
 function collectUnsupportedAttrs(node, warnings) {
   for (const attr of Object.keys(node.attrs || {})) {
     const [prefix, prop] = attr.split(':');
     const isResponsive = Boolean(prop) && RESPONSIVE_PREFIXES.has(prefix);
+    const isBinding = Boolean(prop) && prefix === BINDING_PREFIX;
     const attrName = isResponsive ? prop : attr;
+
+    if (isBinding && SUPPORTED_BINDINGS.has(prop)) {
+      continue;
+    }
 
     if (!SUPPORTED_ATTRS.has(attrName)) {
       warnings.push({
@@ -234,6 +292,223 @@ function collectUnsupportedAttrs(node, warnings) {
   for (const child of node.children || []) {
     if (child.type === 'element') collectUnsupportedAttrs(child, warnings);
   }
+}
+
+function collectMarkupComparison(node, items) {
+  if (node.tag === 'gd-texture') {
+    items.push({
+      kind: 'preview-gap',
+      message: 'gd-texture is metadata-only in the Godot MVP; the web preview cannot confirm the final TextureRect resource.',
+    });
+  }
+
+  if (node.tag === 'gd-button' && node.attrs?.action) {
+    items.push({
+      kind: 'godot-only',
+      message: `action="${node.attrs.action}" is exported as metadata/action and handled by action_router.gd, not by the web preview.`,
+    });
+  }
+
+  for (const attr of Object.keys(node.attrs || {})) {
+    const [prefix, prop] = attr.split(':');
+    const isResponsive = Boolean(prop) && RESPONSIVE_PREFIXES.has(prefix);
+    const isBinding = Boolean(prop) && prefix === BINDING_PREFIX;
+    const attrName = isResponsive ? prop : attr;
+
+    if (isResponsive) {
+      items.push({
+        kind: 'runtime-only',
+        message: `${attr} is applied by responsive_runtime.gd in Godot; the web preview only approximates breakpoints.`,
+      });
+    } else if (isBinding) {
+      items.push({
+        kind: 'runtime-only',
+        message: `${attr} is exported as gdui_bindings metadata for the future Godot reactive runtime; the web preview does not execute bindings.`,
+      });
+    } else if (GODOT_ONLY_ATTRS.has(attrName)) {
+      items.push({
+        kind: 'godot-only',
+        message: `${attrName} affects Godot metadata/resource behavior and may not be visible in the web preview.`,
+      });
+    } else if (PREVIEW_APPROX_ATTRS.has(attrName)) {
+      items.push({
+        kind: 'preview-approx',
+        message: `${attrName} is approximated in the web preview; verify final layout in the generated .tscn.`,
+      });
+    }
+  }
+
+  for (const child of node.children || []) {
+    if (child.type === 'element') collectMarkupComparison(child, items);
+  }
+}
+
+function collectSceneNodes(node, out) {
+  out.push(node);
+  for (const child of node.children || []) collectSceneNodes(child, out);
+}
+
+function renderPreviewNode(node) {
+  const attrs = node.attrs || {};
+  const children = (node.children || [])
+    .filter((child) => child.type === 'element')
+    .map(renderPreviewNode)
+    .join('');
+
+  switch (node.tag) {
+    case 'gd-screen':
+      return `<main class="gd-screen" style="${styleAttr(screenStyles(attrs))}">${children}</main>`;
+    case 'gd-vbox':
+      return `<div class="gd-vbox" style="${styleAttr(layoutStyles(attrs, 'column'))}">${children}</div>`;
+    case 'gd-hbox':
+      return `<div class="gd-hbox" style="${styleAttr(layoutStyles(attrs, 'row'))}">${children}</div>`;
+    case 'gd-grid':
+      return `<div class="gd-grid" style="${styleAttr(gridStyles(attrs))}">${children}</div>`;
+    case 'gd-panel':
+      return `<section class="gd-panel" style="${styleAttr(panelStyles(attrs))}">${children}</section>`;
+    case 'gd-card':
+      return `<article class="gd-card" style="${styleAttr(panelStyles(attrs))}">${children}</article>`;
+    case 'gd-label':
+      return `<div class="gd-label" style="${styleAttr(labelStyles(attrs))}">${escapeHtml(attrs.text || '')}</div>`;
+    case 'gd-button':
+      return `<button class="gd-button" style="${styleAttr(buttonStyles(attrs))}"${attrs.disabled === 'true' ? ' disabled' : ''}>${escapeHtml(attrs.text || '')}</button>`;
+    case 'gd-scroll':
+      return `<div class="gd-scroll" style="${styleAttr(sizeStyles(attrs))}">${children}</div>`;
+    case 'gd-texture':
+      return `<div class="gd-texture" style="${styleAttr(sizeStyles(attrs))}">${escapeHtml(attrs.src || attrs.image || 'Texture')}</div>`;
+    case 'gd-spacer':
+      return `<div class="gd-spacer" style="${styleAttr(sizeStyles(attrs))}"></div>`;
+    case 'gd-container':
+    case 'gd-control':
+    default:
+      return `<div class="gd-control" style="${styleAttr(containerStyles(attrs))}">${children}</div>`;
+  }
+}
+
+function previewCss() {
+  return [
+    'html,body{margin:0;min-height:100%;background:#0f172a;color:#f8fafc;font-family:Inter,system-ui,sans-serif;}',
+    '*{box-sizing:border-box;}',
+    '.gd-screen{min-height:100vh;padding:32px;background:#0f172a;}',
+    '.gd-vbox{display:flex;flex-direction:column;gap:18px;}',
+    '.gd-hbox{display:flex;flex-direction:row;align-items:center;gap:16px;}',
+    '.gd-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;}',
+    '.gd-panel,.gd-card{display:block;background:#111827;border:1px solid #334155;border-radius:12px;padding:18px;}',
+    '.gd-label{display:block;color:#f8fafc;}',
+    '.gd-button{display:inline-flex;justify-content:center;align-items:center;min-height:42px;padding:0 16px;border:0;border-radius:6px;background:#2f8f83;color:#06110f;font:inherit;font-weight:700;}',
+    '.gd-button:disabled{opacity:.55;}',
+    '.gd-scroll{display:block;overflow:auto;}',
+    '.gd-texture{display:grid;place-items:center;min-height:96px;border:1px dashed #475569;color:#cbd5e1;background:#111827;}',
+    '.gd-spacer{display:block;flex:1 1 auto;}',
+    '@media (min-width:1025px){.gd-grid{grid-template-columns:repeat(4,minmax(0,1fr));}}',
+  ].join('');
+}
+
+function screenStyles(attrs) {
+  return {
+    ...sizeStyles(attrs),
+    background: attrs.background,
+    padding: attrs.padding ? cssBox(attrs.padding) : undefined,
+    display: attrs.visible === 'false' ? 'none' : undefined,
+  };
+}
+
+function layoutStyles(attrs, direction) {
+  return {
+    ...containerStyles(attrs),
+    display: attrs.visible === 'false' ? 'none' : 'flex',
+    'flex-direction': direction,
+    gap: cssNumber(attrs.gap),
+  };
+}
+
+function gridStyles(attrs) {
+  const columns = Math.max(1, Number.parseInt(attrs.columns || '2', 10) || 2);
+  return {
+    ...containerStyles(attrs),
+    display: attrs.visible === 'false' ? 'none' : 'grid',
+    'grid-template-columns': `repeat(${columns}, minmax(0, 1fr))`,
+    gap: cssNumber(attrs.gap),
+  };
+}
+
+function panelStyles(attrs) {
+  return {
+    ...containerStyles(attrs),
+    background: attrs.background,
+    padding: attrs.padding ? cssBox(attrs.padding) : undefined,
+    'border-radius': cssNumber(attrs.radius),
+    border: attrs.border ? `${stripUnit(attrs.border)}px solid ${attrs['border-color'] || '#334155'}` : undefined,
+  };
+}
+
+function containerStyles(attrs) {
+  return {
+    ...sizeStyles(attrs),
+    padding: attrs.padding ? cssBox(attrs.padding) : undefined,
+    display: attrs.visible === 'false' ? 'none' : undefined,
+  };
+}
+
+function labelStyles(attrs) {
+  return {
+    ...sizeStyles(attrs),
+    color: attrs.color,
+    'font-size': cssNumber(attrs['font-size']),
+    'text-align': attrs.align === 'center' || attrs.align === 'right' ? attrs.align : undefined,
+    'white-space': attrs.wrap === 'true' ? 'normal' : undefined,
+    display: attrs.visible === 'false' ? 'none' : undefined,
+  };
+}
+
+function buttonStyles(attrs) {
+  return {
+    ...sizeStyles(attrs),
+    display: attrs.visible === 'false' ? 'none' : undefined,
+  };
+}
+
+function sizeStyles(attrs) {
+  return {
+    width: cssNumber(attrs.width),
+    height: cssNumber(attrs.height),
+    'min-width': cssNumber(attrs['min-width']),
+    'min-height': cssNumber(attrs['min-height']),
+  };
+}
+
+function styleAttr(styles) {
+  return Object.entries(styles)
+    .filter(([, value]) => value !== undefined && value !== null && value !== '')
+    .map(([key, value]) => `${key}:${escapeHtml(String(value))}`)
+    .join(';');
+}
+
+function cssBox(value) {
+  return String(value || '')
+    .trim()
+    .split(/\s+/)
+    .map(cssNumber)
+    .join(' ');
+}
+
+function cssNumber(value) {
+  if (value === undefined || value === null || value === '') return undefined;
+  const raw = stripUnit(value);
+  return Number.isFinite(Number(raw)) ? `${raw}px` : undefined;
+}
+
+function stripUnit(value) {
+  return String(value || '').replace(/px$/i, '').trim();
+}
+
+function escapeHtml(value) {
+  return String(value ?? '')
+    .replaceAll('&', '&amp;')
+    .replaceAll('<', '&lt;')
+    .replaceAll('>', '&gt;')
+    .replaceAll('"', '&quot;')
+    .replaceAll("'", '&#39;');
 }
 
 function createServer(root) {
@@ -289,6 +564,13 @@ function createServer(root) {
         const body = await readRequestJson(req);
         const result = await diagnoseSource(root, body.source);
         sendJson(res, 200, { ok: true, result });
+        return;
+      }
+
+      if (req.method === 'POST' && url.pathname === '/api/preview') {
+        const body = await readRequestJson(req);
+        const html = await previewSource(root, body.source);
+        sendJson(res, 200, { ok: true, html });
         return;
       }
 
@@ -445,6 +727,7 @@ function renderStudioHtml() {
 
     .diagnostic.error { color: #fca5a5; }
     .diagnostic.warning { color: #facc15; }
+    .diagnostic.info { color: #93c5fd; }
     .diagnostic.ok { color: #86efac; }
 
     output {
@@ -509,6 +792,7 @@ function renderStudioHtml() {
 
     let currentPath = '';
     let diagnosticsTimer = 0;
+    let previewRequestId = 0;
 
     function setStatus(message) {
       status.value = message;
@@ -584,7 +868,17 @@ function renderStudioHtml() {
     }
 
     function renderPreview() {
-      preview.srcdoc = '<!doctype html><html><head><meta charset="utf-8"><meta http-equiv="Content-Security-Policy" content="default-src \\'none\\'; style-src \\'unsafe-inline\\'; img-src data: file:;"><style>' + previewCss() + '</style></head><body>' + source.value + '</body></html>';
+      const requestId = ++previewRequestId;
+      requestJson('/api/preview', {
+        method: 'POST',
+        body: JSON.stringify({ source: source.value }),
+      }).then((payload) => {
+        if (requestId === previewRequestId) preview.srcdoc = payload.html;
+      }).catch((error) => {
+        if (requestId === previewRequestId) {
+          preview.srcdoc = '<!doctype html><html><body style="margin:0;padding:16px;background:#0f172a;color:#fca5a5;font-family:system-ui,sans-serif;">' + error.message + '</body></html>';
+        }
+      });
     }
 
     function scheduleDiagnostics() {
@@ -606,6 +900,7 @@ function renderStudioHtml() {
       const entries = [];
       for (const error of result.errors || []) entries.push({ type: 'error', message: error.message });
       for (const warning of result.warnings || []) entries.push({ type: 'warning', message: warning.message || warning });
+      for (const item of result.comparison || []) entries.push({ type: 'info', message: item.message || item });
 
       if (!entries.length) {
         diagnostics.replaceChildren(createDiagnostic('ok', 'Sem diagnosticos.'));
@@ -620,23 +915,6 @@ function renderStudioHtml() {
       item.className = 'diagnostic ' + type;
       item.textContent = message;
       return item;
-    }
-
-    function previewCss() {
-      return [
-        'body{margin:0;font-family:Inter,system-ui,sans-serif;background:#0f172a;color:#f8fafc;}',
-        'gd-screen,gd-vbox,gd-hbox,gd-panel,gd-card,gd-grid,gd-label,gd-button,gd-scroll,gd-texture,gd-spacer{box-sizing:border-box;}',
-        'gd-screen{min-height:100vh;display:block;padding:32px;background:#0f172a;}',
-        'gd-vbox{display:flex;flex-direction:column;gap:18px;}',
-        'gd-hbox{display:flex;align-items:center;gap:16px;}',
-        'gd-panel,gd-card{display:block;background:#111827;border:1px solid #334155;border-radius:12px;padding:18px;}',
-        'gd-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;}',
-        'gd-label{display:block;color:#f8fafc;}',
-        'gd-button{display:inline-flex;justify-content:center;align-items:center;min-height:42px;padding:0 16px;border-radius:6px;background:#2f8f83;color:#06110f;font-weight:700;}',
-        'gd-scroll{display:block;overflow:auto;}',
-        'gd-spacer{display:block;flex:1 1 auto;}',
-        '@media (min-width:1025px){gd-grid{grid-template-columns:repeat(4,minmax(0,1fr));}}'
-      ].join('');
     }
 
     fileSelect.addEventListener('change', loadCurrentFile);

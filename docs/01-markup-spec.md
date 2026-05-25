@@ -58,6 +58,16 @@ Valores booleanos devem preferir string explícita:
 <gd-button disabled="true" />
 ```
 
+Contratos de runtime opcionais usam atributos explícitos:
+
+```html
+<gd-screen state="screen">
+  <gd-label bind:text="screen.title" />
+</gd-screen>
+```
+
+Bindings aceitos no contrato inicial: `bind:text`, `bind:visible` e `bind:disabled`.
+
 ## Comentários
 
 Comentários HTML são permitidos e ignorados:
