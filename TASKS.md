@@ -104,13 +104,13 @@ Status:
 
 ## v0.9 - Reestruturação de Pacotes
 
-| ID       | Status  | Task                                                            | Evidencia                                                    |
-| -------- | ------- | --------------------------------------------------------------- | ------------------------------------------------------------ |
-| GDUI-090 | Done    | Extrair `packages/compiler` (parser + normalizer).              | `packages/compiler/src/` com index.js, 31 testes passando.   |
-| GDUI-091 | Done    | Extrair `packages/godot-exporter`.                              | `packages/godot-exporter/src/tscn.js` + index.js.            |
-| GDUI-092 | Done    | Extrair `packages/theme-exporter`.                              | `packages/theme-exporter/src/theme.js` + index.js.           |
-| GDUI-093 | Done    | CLI `tools/gdui/bin/` usa pacotes como dependências explícitas. | npm workspaces; `@gdui/cli` depende de `@gdui/compiler` etc. |
-| GDUI-094 | Planned | Revisitar GDUI-051/055 com guard de loop seguro.                | Arquitetura de pacotes estavel - pronto para retomar.        |
+| ID       | Status | Task                                                            | Evidencia                                                                                                                                  |
+| -------- | ------ | --------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------ |
+| GDUI-090 | Done   | Extrair `packages/compiler` (parser + normalizer).              | `packages/compiler/src/` com index.js, 31 testes passando.                                                                                 |
+| GDUI-091 | Done   | Extrair `packages/godot-exporter`.                              | `packages/godot-exporter/src/tscn.js` + index.js.                                                                                          |
+| GDUI-092 | Done   | Extrair `packages/theme-exporter`.                              | `packages/theme-exporter/src/theme.js` + index.js.                                                                                         |
+| GDUI-093 | Done   | CLI `tools/gdui/bin/` usa pacotes como dependências explícitas. | npm workspaces; `@gdui/cli` depende de `@gdui/compiler` etc.                                                                               |
+| GDUI-094 | Done   | Revisitar GDUI-051/055 com guard de loop seguro.                | `set_watcher_enabled()` em `plugin.gd`: checkbox "Auto" na dock, duplo guard (cooldown 3 s + mtime comparado), desconecta em `_exit_tree`. |
 
 ## v0.10 - Setup Automático do Projeto
 
@@ -124,9 +124,9 @@ Status:
 
 ## v1.0 - Publicação
 
-| ID       | Status  | Task                                                                | Evidencia |
-| -------- | ------- | ------------------------------------------------------------------- | --------- |
-| GDUI-100 | Planned | Publicar addon no Asset Library do Godot.                           | —         |
-| GDUI-101 | Planned | Gerar GDScript auxiliar de conexão de signals a partir de `action`. | —         |
-| GDUI-102 | Planned | Documentação pública completa (README, guia, referência).           | —         |
-| GDUI-103 | Planned | Declarar compatibilidade com Godot 4.x LTS.                         | —         |
+| ID       | Status | Task                                                                | Evidencia                                                                                                                                           |
+| -------- | ------ | ------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------- |
+| GDUI-100 | Done   | Preparar addon para o Asset Library do Godot.                       | `LICENSE` MIT criada; `plugin.cfg` v1.0.0 com nota de compatibilidade Godot 4.1–4.4 LTS; seção "Distribuição" no README.                            |
+| GDUI-101 | Done   | Gerar GDScript auxiliar de conexão de signals a partir de `action`. | `packages/godot-exporter/src/script.js` + `generateActionScript`; flag `--gen-script` no CLI; 8 testes em `tools/gdui/tests/action-script.test.js`. |
+| GDUI-102 | Done   | Documentação pública completa (README, guia, referência).           | README refatorado: intro com compatibilidade, flag `--gen-script`, toggle Auto-compile, seção Distribuição para Asset Library.                      |
+| GDUI-103 | Done   | Declarar compatibilidade com Godot 4.x LTS.                         | `plugin.cfg` description e version bumped para 1.0.0; README declara "Compatível com Godot 4.x LTS (4.1 – 4.4)"; `package.json` version 1.0.0.      |

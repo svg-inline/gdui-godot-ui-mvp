@@ -12,6 +12,7 @@ var open_studio_button: Button
 var stop_studio_button: Button
 var input_dir_field: LineEdit
 var output_dir_field: LineEdit
+var watch_toggle: CheckBox
 
 func setup(owner: EditorPlugin) -> void:
 	plugin = owner
@@ -44,6 +45,13 @@ func _ready() -> void:
 	theme_button.tooltip_text = "Generate scenes/theme.tres from theme.gdui.json."
 	theme_button.pressed.connect(_on_compile_theme_pressed)
 	compile_row.add_child(theme_button)
+
+	# GDUI-094: auto-compile toggle
+	watch_toggle = CheckBox.new()
+	watch_toggle.text = "Auto"
+	watch_toggle.tooltip_text = "Auto-compile .gdui.html files when saved (watches for changes)."
+	watch_toggle.toggled.connect(_on_watch_toggled)
+	compile_row.add_child(watch_toggle)
 
 	var studio_row := HBoxContainer.new()
 	add_child(studio_row)
@@ -201,3 +209,12 @@ func _on_save_config_pressed() -> void:
 func _on_init_project_pressed() -> void:
 	if plugin and plugin.has_method("initialize_project_files"):
 		plugin.call("initialize_project_files")
+
+# GDUI-094: auto-compile toggle
+func _on_watch_toggled(pressed: bool) -> void:
+	if plugin and plugin.has_method("set_watcher_enabled"):
+		plugin.call("set_watcher_enabled", pressed)
+
+func set_watch_enabled(enabled: bool) -> void:
+	if watch_toggle:
+		watch_toggle.set_pressed_no_signal(enabled)

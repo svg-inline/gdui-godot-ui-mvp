@@ -31,6 +31,11 @@ var import_plugin: EditorImportPlugin
 var dock: GduiDock
 var studio_pid := -1
 
+# ── GDUI-094: File watcher with loop guard ────────────────────────────────────
+var _watch_enabled := false
+var _last_compiled: Dictionary = {} # path -> Unix timestamp of last compile
+const _WATCH_COOLDOWN_SEC := 3
+
 func _enter_tree() -> void:
 	if ENABLE_EXPERIMENTAL_IMPORTER:
 		import_plugin = IMPORT_PLUGIN.new()
@@ -53,6 +58,7 @@ func _enter_tree() -> void:
 		dock.refresh_config(load_config())
 
 func _exit_tree() -> void:
+	set_watcher_enabled(false)
 	stop_studio()
 	remove_tool_menu_item("Gdui: Stop Studio")
 	remove_tool_menu_item("Gdui: Open Studio")
@@ -66,6 +72,70 @@ func _exit_tree() -> void:
 	if import_plugin:
 		remove_import_plugin(import_plugin)
 		import_plugin = null
+
+# ── GDUI-094: File watcher with loop guard ──────────────────────────────────
+func set_watcher_enabled(enabled: bool) -> void:
+	var efs := EditorInterface.get_resource_filesystem()
+	if enabled and not _watch_enabled:
+		efs.filesystem_changed.connect(_on_filesystem_changed)
+		_log("[Gdui] Auto-compile watcher enabled.")
+	elif not enabled and _watch_enabled:
+		if efs.filesystem_changed.is_connected(_on_filesystem_changed):
+			efs.filesystem_changed.disconnect(_on_filesystem_changed)
+		_log("[Gdui] Auto-compile watcher disabled.")
+	_watch_enabled = enabled
+
+func _on_filesystem_changed() -> void:
+	if not _watch_enabled:
+		return
+	var root := ProjectSettings.globalize_path("res://")
+	var config := load_config()
+	var input_dir := root.path_join(config.get("inputDir", "ui"))
+	var output_dir := root.path_join(config.get("outputDir", "scenes"))
+	var cli := _cli_path(root)
+	if not FileAccess.file_exists(cli):
+		return
+	var now := Time.get_unix_time_from_system()
+	var compiled_any := false
+	for gdui_file in _collect_gdui_files(input_dir):
+		# Loop guard 1: cooldown — skip if we compiled this file very recently
+		var last: float = _last_compiled.get(gdui_file, 0.0)
+		if now - last < _WATCH_COOLDOWN_SEC:
+			continue
+		var gdui_mtime := FileAccess.get_modified_time(gdui_file)
+		# Loop guard 2: skip if the .tscn output is already up to date
+		var scene_name := gdui_file.get_file().replace(".gdui.html", ".tscn")
+		var tscn_file := output_dir.path_join(scene_name)
+		if FileAccess.file_exists(tscn_file):
+			var tscn_mtime := FileAccess.get_modified_time(tscn_file)
+			if gdui_mtime <= tscn_mtime:
+				continue
+		_last_compiled[gdui_file] = now
+		_log("[Gdui] Auto-compiling: " + gdui_file.get_file())
+		_run_node_command(
+			[cli, "--input", gdui_file, "--output", tscn_file],
+			"Watch compile"
+		)
+		compiled_any = true
+	if compiled_any:
+		EditorInterface.get_resource_filesystem().scan()
+		_set_status("Auto-compile done.")
+
+func _collect_gdui_files(input_dir: String) -> Array:
+	var out: Array = []
+	if not DirAccess.dir_exists_absolute(input_dir):
+		return out
+	var dir := DirAccess.open(input_dir)
+	if dir == null:
+		return out
+	dir.list_dir_begin()
+	var fname := dir.get_next()
+	while fname != "":
+		if not dir.current_is_dir() and fname.ends_with(".gdui.html"):
+			out.append(input_dir.path_join(fname))
+		fname = dir.get_next()
+	dir.list_dir_end()
+	return out
 
 func _compile_all_ui() -> void:
 	compile_all_ui()

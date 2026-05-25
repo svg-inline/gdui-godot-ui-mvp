@@ -1,12 +1,14 @@
-# Godot UI MVP
+# Gdui — Declarative UI for Godot 4
 
-Compilador experimental de UI declarativa para Godot 4.x.
+**Compatível com Godot 4.x LTS (4.1 – 4.4)**
+
+Compilador de UI declarativa que converte arquivos `.gdui.html` em cenas `.tscn` editáveis para Godot 4.
 
 ```text
-.gdui.html -> AST -> Godot Scene AST -> .tscn editável
+.gdui.html  →  AST  →  Godot Scene AST  →  .tscn editável
 ```
 
-Este projeto usa tags `gd-*` inspiradas em HTML, mas a saída é cena nativa Godot. Não é conversor universal de HTML/CSS e não usa WebView como saída principal.
+Usa tags `gd-*` inspiradas em HTML. A saída é cena nativa Godot — não é conversor universal de HTML/CSS e não usa WebView.
 
 ## Como usar o addon em um projeto Godot
 
@@ -40,6 +42,7 @@ Após ativar o plugin, o dock **Gdui** oferece:
 
 - **Compile UI** — compila os `.gdui.html` do `inputDir` para `.tscn`.
 - **Compile Theme** — gera `theme.tres` a partir de `theme.gdui.json`.
+- **Auto** (checkbox) — ativa auto-compilação ao salvar `.gdui.html` (watcher com guard de loop).
 - **Start / Open / Stop Studio** — servidor local de autoria no navegador.
 - **Project Config** — edita `inputDir` e `outputDir` sem abrir JSON.
 - **Init Project** — recria `gdui.config.json` e `theme.gdui.json` se necessário.
@@ -84,6 +87,31 @@ npm run studio
 | `npm run test:responsive` | Usa Godot headless para validar o runtime responsivo.                              |
 | `npm run test:actions`    | Usa Godot headless para validar `metadata/action` com `action_router.gd`.          |
 | `npm run test:bindings`   | Usa Godot headless para validar `metadata/gdui_bindings` com `binding_runtime.gd`. |
+
+### Gerando o script auxiliar de actions
+
+O compilador pode gerar um GDScript de partida com conexão de signals e stubs de handlers:
+
+```bash
+# Compila UI e gera <SceneName>Actions.gd junto de cada .tscn
+node tools/gdui/bin/gdui.js --input ui --output scenes --gen-script
+```
+
+O arquivo gerado (`<SceneName>Actions.gd`) é um ponto de partida — edite os branches `match` com a lógica real da sua cena.
+
+## Distribuição (Godot Asset Library)
+
+Para publicar o addon:
+
+1. Execute `npm run build:addon` para gerar o bundle self-contained em `addons/gdui/compiler/`.
+2. Comprima **apenas** a pasta `addons/` em um `.zip`.
+3. Submeta no [Godot Asset Library](https://godotengine.org/asset-library/asset) com:
+   - **Category**: Tools
+   - **Godot version**: 4.1+
+   - **License**: MIT
+4. Adicione um `icon.png` (128×128) na raiz do addon para exibição na loja.
+
+> O arquivo `plugin.cfg` já declara compatibilidade com Godot 4.1–4.4 LTS.
 
 ## CI
 

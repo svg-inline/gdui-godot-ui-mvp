@@ -2,7 +2,7 @@ import fs from "node:fs";
 import path from "node:path";
 import { parseMarkup } from "@gdui/compiler";
 import { normalizeToSceneAst } from "@gdui/compiler";
-import { exportTscn } from "@gdui/godot-exporter";
+import { exportTscn, generateActionScript } from "@gdui/godot-exporter";
 import {
   compileThemeFile,
   exportTheme,
@@ -12,7 +12,7 @@ import { cloneWithoutPrivateKeys } from "@gdui/compiler";
 
 export { parseMarkup } from "@gdui/compiler";
 export { normalizeToSceneAst } from "@gdui/compiler";
-export { exportTscn } from "@gdui/godot-exporter";
+export { exportTscn, generateActionScript } from "@gdui/godot-exporter";
 export {
   compileThemeFile,
   exportTheme,
@@ -39,6 +39,16 @@ export function compileFile(inputFile, outputFile, options = {}) {
   if (outputFile) {
     fs.mkdirSync(path.dirname(outputFile), { recursive: true });
     fs.writeFileSync(outputFile, result.tscn, "utf8");
+
+    if (options.genScript) {
+      const scriptResult = generateActionScript(result.sceneAst, {
+        sourceName: path.basename(inputFile),
+      });
+      const scriptFile = outputFile.replace(/\.tscn$/i, "Actions.gd");
+      fs.writeFileSync(scriptFile, scriptResult.content, "utf8");
+      result.scriptFile = scriptFile;
+      result.actions = scriptResult.actions;
+    }
   }
 
   return result;
@@ -55,6 +65,17 @@ export function compileDirectory(inputDir, outputDir, options = {}) {
     const outFile = path.join(outputDir, baseName);
     fs.mkdirSync(path.dirname(outFile), { recursive: true });
     fs.writeFileSync(outFile, result.tscn, "utf8");
+
+    if (options.genScript) {
+      const scriptResult = generateActionScript(result.sceneAst, {
+        sourceName: path.basename(file),
+      });
+      const scriptFile = outFile.replace(/\.tscn$/i, "Actions.gd");
+      fs.writeFileSync(scriptFile, scriptResult.content, "utf8");
+      result.scriptFile = scriptFile;
+      result.actions = scriptResult.actions;
+    }
+
     results.push({ input: file, output: outFile, ...result });
   }
 
@@ -85,6 +106,7 @@ export async function runCli(argv = process.argv.slice(2)) {
   const output =
     args.output || args.o ? path.resolve(cwd, args.output || args.o) : null;
   const check = Boolean(args.check);
+  const genScript = Boolean(args["gen-script"]);
 
   if (theme) {
     if (!fs.existsSync(theme)) {
@@ -123,12 +145,16 @@ export async function runCli(argv = process.argv.slice(2)) {
   try {
     if (fs.statSync(input).isDirectory()) {
       const outDir = output || path.resolve(cwd, "scenes");
-      const results = compileDirectory(input, outDir, args);
+      const results = compileDirectory(input, outDir, { ...args, genScript });
       for (const item of results) {
         printWarnings(item.warnings);
         console.log(
           `[gdui] ${path.relative(cwd, item.input)} -> ${path.relative(cwd, item.output)}`,
         );
+        if (item.scriptFile)
+          console.log(
+            `[gdui] script -> ${path.relative(cwd, item.scriptFile)} (${item.actions?.length ?? 0} actions)`,
+          );
       }
       if (!results.length)
         console.warn(`[gdui] No .gdui.html files found in ${input}`);
@@ -142,7 +168,10 @@ export async function runCli(argv = process.argv.slice(2)) {
         "scenes",
         path.basename(input).replace(/\.gdui\.html$/i, ".tscn"),
       );
-    const result = compileFile(input, check ? null : outFile, args);
+    const result = compileFile(input, check ? null : outFile, {
+      ...args,
+      genScript: check ? false : genScript,
+    });
     printWarnings(result.warnings);
 
     if (check) {
@@ -163,6 +192,10 @@ export async function runCli(argv = process.argv.slice(2)) {
     console.log(
       `[gdui] ${path.relative(cwd, input)} -> ${path.relative(cwd, outFile)}`,
     );
+    if (result.scriptFile)
+      console.log(
+        `[gdui] script -> ${path.relative(cwd, result.scriptFile)} (${result.actions?.length ?? 0} actions)`,
+      );
   } catch (error) {
     console.error(`[gdui] ${error.message}`);
     if (args.debug) console.error(error.stack);
