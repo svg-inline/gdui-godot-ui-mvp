@@ -56,3 +56,50 @@
 - Preview no navegador como ferramenta de autoria mais completa.
 - Comparação entre preview e saída Godot.
 - Diagnósticos visuais de componentes não suportados.
+
+---
+
+## Pós-MVP
+
+### v0.8 - Componentes de Input
+
+Objetivo: desbloquear casos reais de UI interativa com inputs nativos Godot.
+
+- `gd-input` → `LineEdit` (campo de texto).
+- `gd-option` → `OptionButton` (dropdown/select).
+- `gd-progress` → `ProgressBar`.
+- `gd-slider` → `HSlider` / `VSlider` via atributo `orientation`.
+- `gd-texture`: gerar `ExtResource` real no `.tscn` ao invés de só metadata de caminho.
+- Atualizar specs, testes e exemplos para cada componente novo.
+
+### v0.9 - Reestruturação de Pacotes
+
+Objetivo: aproximar o código da arquitetura obrigatória definida em AGENTS.md.
+
+- Extrair `packages/compiler` — parser + normalizer.
+- Extrair `packages/godot-exporter` — exporter TSCN.
+- Extrair `packages/theme-exporter` — exporter Theme.
+- `tools/gdui/bin/` passa a usar os pacotes como dependências explícitas.
+- Testes migrados para cada pacote com cobertura independente.
+- Revisitar GDUI-051 / GDUI-055: definir contrato seguro para re-import usando `FileSystemWatcher` com guard de loop antes de reativar.
+
+### v0.10 - Setup Automático do Projeto
+
+Objetivo: eliminar a necessidade de criar arquivos de configuração manualmente ao adotar o addon.
+
+Hoje o desenvolvedor precisa adicionar manualmente `gdui.config.json`, `theme.gdui.json` e `theme.gdui.schema.json` ao projeto. Isso é barreira de adoção.
+
+- Na primeira ativação do plugin, detectar se `gdui.config.json` existe; se não existir, criar com valores padrão (`inputDir: "ui"`, `outputDir: "scenes"`).
+- Na primeira ativação, detectar se `theme.gdui.json` existe; se não existir, gerar um arquivo inicial com todos os tokens obrigatórios preenchidos com os valores padrão do schema.
+- Criar tela de configuração na dock do Gdui: editar paths de `inputDir`/`outputDir`, visualizar e salvar tokens de tema sem editar JSON à mão.
+- Botão "Inicializar Projeto Gdui" na dock para rodar o setup a qualquer momento em projetos existentes.
+- Validar `gdui.config.json` e `theme.gdui.json` na ativação e mostrar erros no painel antes de tentar compilar.
+
+### v1.0 - Publicação
+
+Objetivo: tornar o addon distribuível e documentado para a comunidade Godot.
+
+- Publicar addon no Asset Library do Godot.
+- Gerar GDScript auxiliar de conexão de signals a partir dos metadados de `action`.
+- Documentação pública completa: README, guia de início rápido, referência de componentes.
+- Garantir compatibilidade declarada com Godot 4.x LTS.
