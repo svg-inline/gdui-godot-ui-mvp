@@ -75,10 +75,7 @@ O fluxo manual e o Studio local existem. O importer automatico ficou adiado por 
 
 | Task | Falta | Resultado esperado |
 | --- | --- | --- |
-| GDUI-052 | Melhor retorno visual do compile no editor. | Usuario ve sucesso/erro sem depender so do console. |
 | GDUI-053 | Robustez do lifecycle do Studio. | Start/Open/Stop previsiveis no editor. |
-| GDUI-054 | Painel de warnings. | Warnings do compilador aparecem no Godot. |
-| GDUI-056 | Dock Godot. | Comandos e status em UI propria do addon. |
 
 Tasks adiadas de proposito:
 
@@ -120,7 +117,7 @@ Notas:
 
 1. `GDUI-007`: levar smoke test Godot para CI/versoes alvo.
 2. `GDUI-033`: reduzir overrides locais usando Theme `.tres`.
-3. `GDUI-054`, `GDUI-056`: criar dock e warnings no Godot.
+3. `GDUI-052`, `GDUI-053`: melhorar feedback e lifecycle do Studio no dock.
 4. `GDUI-026`: ampliar cobertura de responsividade/foco.
 5. `GDUI-042`, `GDUI-043`: validar actions em cena real.
 

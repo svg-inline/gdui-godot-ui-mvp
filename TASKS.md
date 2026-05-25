@@ -60,9 +60,9 @@ Status:
 | GDUI-051 | Deferred | Implementar importer automatico de `.gdui.html`. | Desativado no MVP por causar loop de reimportacao. |
 | GDUI-052 | Partial | Compilar UI pelo editor Godot. | Menu `Gdui: Compile all UI`; falta painel de logs. |
 | GDUI-053 | Partial | Iniciar Studio local pelo addon. | `addons/gdui/server/studio-server.js` e menu `Start Studio`. |
-| GDUI-054 | Planned | Mostrar warnings no editor. | Hoje warnings aparecem no output/terminal. |
+| GDUI-054 | Done | Mostrar warnings no editor. | Dock mostra output/warnings do compilador. |
 | GDUI-055 | Deferred | Reimportar cena automaticamente quando arquivo mudar. | Adiado ate existir contrato seguro sem loop. |
-| GDUI-056 | Planned | Criar dock Godot para status, logs e comandos. | Nao implementado. |
+| GDUI-056 | Done | Criar dock Godot para status, logs e comandos. | `addons/gdui/dock.gd` |
 
 ## v0.6 - Reatividade
 

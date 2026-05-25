@@ -48,6 +48,8 @@ scenes/ResponsiveGridScreen.tscn
 
 O addon chama o compilador Node. Então o `node` precisa estar disponível no PATH.
 
+O addon tambem adiciona um dock `Gdui` com comandos para compilar UI, compilar Theme, iniciar/parar o Studio e ver logs/warnings do compilador.
+
 ## Gdui Studio local
 
 O addon pode iniciar um servidor Node local em:

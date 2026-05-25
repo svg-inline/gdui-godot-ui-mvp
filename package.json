@@ -1,7 +1,7 @@
 {
   "name": "gdui-godot-ui-mvp-workspace",
   "private": true,
-  "version": "0.1.2",
+  "version": "0.1.3",
   "type": "module",
   "scripts": {
     "compile": "node tools/gdui/bin/gdui.js --input ui --output scenes",
