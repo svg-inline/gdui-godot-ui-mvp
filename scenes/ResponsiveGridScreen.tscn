@@ -1,76 +1,13 @@
-[gd_scene load_steps=7 format=3]
+[gd_scene load_steps=2 format=3]
 
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_1"]
-bg_color = Color(0.117647, 0.160784, 0.231373, 1)
-corner_radius_top_left = 14
-corner_radius_top_right = 14
-corner_radius_bottom_right = 14
-corner_radius_bottom_left = 14
-content_margin_top = 16
-content_margin_right = 16
-content_margin_bottom = 16
-content_margin_left = 16
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_2"]
-bg_color = Color(0.117647, 0.160784, 0.231373, 1)
-corner_radius_top_left = 14
-corner_radius_top_right = 14
-corner_radius_bottom_right = 14
-corner_radius_bottom_left = 14
-content_margin_top = 16
-content_margin_right = 16
-content_margin_bottom = 16
-content_margin_left = 16
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_3"]
-bg_color = Color(0.117647, 0.160784, 0.231373, 1)
-corner_radius_top_left = 14
-corner_radius_top_right = 14
-corner_radius_bottom_right = 14
-corner_radius_bottom_left = 14
-content_margin_top = 16
-content_margin_right = 16
-content_margin_bottom = 16
-content_margin_left = 16
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_4"]
-bg_color = Color(0.117647, 0.160784, 0.231373, 1)
-corner_radius_top_left = 14
-corner_radius_top_right = 14
-corner_radius_bottom_right = 14
-corner_radius_bottom_left = 14
-content_margin_top = 16
-content_margin_right = 16
-content_margin_bottom = 16
-content_margin_left = 16
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_5"]
-bg_color = Color(0.117647, 0.160784, 0.231373, 1)
-corner_radius_top_left = 14
-corner_radius_top_right = 14
-corner_radius_bottom_right = 14
-corner_radius_bottom_left = 14
-content_margin_top = 16
-content_margin_right = 16
-content_margin_bottom = 16
-content_margin_left = 16
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_6"]
-bg_color = Color(0.117647, 0.160784, 0.231373, 1)
-corner_radius_top_left = 14
-corner_radius_top_right = 14
-corner_radius_bottom_right = 14
-corner_radius_bottom_left = 14
-content_margin_top = 16
-content_margin_right = 16
-content_margin_bottom = 16
-content_margin_left = 16
+[ext_resource type="Theme" path="res://scenes/theme.tres" id="GduiTheme"]
 
 [node name="ResponsiveGridScreen" type="Control"]
 anchor_left = 0.0
 anchor_top = 0.0
 anchor_right = 1.0
 anchor_bottom = 1.0
+theme = ExtResource("GduiTheme")
 
 [node name="Background" type="ColorRect" parent="."]
 anchor_right = 1.0
@@ -107,42 +44,42 @@ theme_override_constants/h_separation = 14
 theme_override_constants/v_separation = 14
 
 [node name="Card" type="PanelContainer" parent="Root/ResponsiveGrid"]
-theme_override_styles/panel = SubResource("StyleBoxFlat_1")
+theme_type_variation = &"Card"
 
 [node name="Label3" type="Label" parent="Root/ResponsiveGrid/Card"]
 text = "Slot 1"
 theme_override_colors/font_color = Color(0.972549, 0.980392, 0.988235, 1)
 
 [node name="Card2" type="PanelContainer" parent="Root/ResponsiveGrid"]
-theme_override_styles/panel = SubResource("StyleBoxFlat_2")
+theme_type_variation = &"Card"
 
 [node name="Label4" type="Label" parent="Root/ResponsiveGrid/Card2"]
 text = "Slot 2"
 theme_override_colors/font_color = Color(0.972549, 0.980392, 0.988235, 1)
 
 [node name="Card3" type="PanelContainer" parent="Root/ResponsiveGrid"]
-theme_override_styles/panel = SubResource("StyleBoxFlat_3")
+theme_type_variation = &"Card"
 
 [node name="Label5" type="Label" parent="Root/ResponsiveGrid/Card3"]
 text = "Slot 3"
 theme_override_colors/font_color = Color(0.972549, 0.980392, 0.988235, 1)
 
 [node name="Card4" type="PanelContainer" parent="Root/ResponsiveGrid"]
-theme_override_styles/panel = SubResource("StyleBoxFlat_4")
+theme_type_variation = &"Card"
 
 [node name="Label6" type="Label" parent="Root/ResponsiveGrid/Card4"]
 text = "Slot 4"
 theme_override_colors/font_color = Color(0.972549, 0.980392, 0.988235, 1)
 
 [node name="Card5" type="PanelContainer" parent="Root/ResponsiveGrid"]
-theme_override_styles/panel = SubResource("StyleBoxFlat_5")
+theme_type_variation = &"Card"
 
 [node name="Label7" type="Label" parent="Root/ResponsiveGrid/Card5"]
 text = "Slot 5"
 theme_override_colors/font_color = Color(0.972549, 0.980392, 0.988235, 1)
 
 [node name="Card6" type="PanelContainer" parent="Root/ResponsiveGrid"]
-theme_override_styles/panel = SubResource("StyleBoxFlat_6")
+theme_type_variation = &"Card"
 
 [node name="Label8" type="Label" parent="Root/ResponsiveGrid/Card6"]
 text = "Slot 6"

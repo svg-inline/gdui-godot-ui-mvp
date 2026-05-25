@@ -13,7 +13,8 @@
     "studio": "node addons/gdui/server/studio-server.js --root .",
     "test": "node --test tools/gdui/tests/*.test.js",
     "test:godot": "node tools/godot/run-smoke.js",
-    "test:responsive": "node tools/godot/run-smoke.js tools/godot/test_responsive_runtime.gd"
+    "test:responsive": "node tools/godot/run-smoke.js tools/godot/test_responsive_runtime.gd",
+    "test:actions": "node tools/godot/run-smoke.js tools/godot/test_action_router.gd"
   },
   "engines": {
     "node": ">=18.0.0"

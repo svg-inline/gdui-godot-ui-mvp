@@ -79,6 +79,22 @@ npm run studio
 | `npm test` | Roda testes básicos do parser/exporter. |
 | `npm run test:godot` | Usa Godot headless para carregar e instanciar as cenas geradas. |
 | `npm run test:responsive` | Usa Godot headless para validar o runtime responsivo. |
+| `npm run test:actions` | Usa Godot headless para validar `metadata/action` com `action_router.gd`. |
+
+## CI
+
+O workflow `.github/workflows/gdui-ci.yml` roda em `push` e `pull_request`:
+
+```text
+npm test
+npm run compile:all
+npm run compile:theme
+npm run test:godot
+npm run test:responsive
+npm run test:actions
+```
+
+Ele baixa versões alvo do Godot 4.x no runner Linux e publica o log headless como artefato quando houver execução.
 
 ## Componentes suportados no MVP
 
@@ -104,7 +120,7 @@ Suporte inicial:
 
 ```text
 name, id, anchor, visible, width, height, min-width, min-height,
-expand, class, variant, tooltip, action, padding, gap, background,
+expand, class, variant, theme, tooltip, action, padding, gap, background,
 radius, border, border-color, color, font-size, align, wrap, columns
 ```
 
@@ -115,6 +131,19 @@ Props responsivas são preservadas como metadata para runtime futuro:
 ```
 
 O runtime responsivo inicial existe em `addons/gdui/runtime/responsive_runtime.gd`, mas ainda precisa de validacao completa em cena real.
+
+`gd-screen` tambem pode referenciar um Theme Godot gerado:
+
+```html
+<gd-screen name="Menu" theme="res://scenes/theme.tres">
+  <gd-button text="Jogar" variant="primary" />
+  <gd-card><gd-label text="Perfil" /></gd-card>
+</gd-screen>
+```
+
+`gd-card` sem estilo inline usa a variação `Card` do Theme. Se `background`, `radius`, `border`, `border-color` ou `padding` forem declarados no markup, o compilador ainda gera um `StyleBoxFlat` local para preservar a intenção da cena.
+
+Actions declaradas em `gd-button action="..."` sao exportadas como `metadata/action`. O helper `addons/gdui/runtime/action_router.gd` conecta botões e emite `action_triggered`; veja `examples/main_menu_actions.gd`.
 
 ## Status e pendencias
 

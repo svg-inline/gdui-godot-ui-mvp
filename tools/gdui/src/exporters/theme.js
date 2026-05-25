@@ -105,6 +105,18 @@ export function exportTheme(themeTokens = {}, options = {}) {
     paddingFallback: 16,
   });
 
+  const cardStyle = styleBox('GduiCard', {
+    background: 'surfaceAlt',
+    backgroundFallback: '#1e293b',
+    borderColor: 'border',
+    borderFallback: '#334155',
+    radius: 'md',
+    radiusFallback: 12,
+    borderWidth: 1,
+    padding: 'md',
+    paddingFallback: 16,
+  });
+
   const primaryButtonStyle = styleBox('GduiPrimaryButton', {
     background: 'primary',
     backgroundFallback: '#38bdf8',
@@ -151,7 +163,7 @@ export function exportTheme(themeTokens = {}, options = {}) {
     'Button/styles/disabled': `SubResource(${godotString(buttonDisabledStyle)})`,
     'PanelContainer/styles/panel': `SubResource(${godotString(panelStyle)})`,
     'Card/base_type': '&"PanelContainer"',
-    'Card/styles/panel': `SubResource(${godotString(panelStyle)})`,
+    'Card/styles/panel': `SubResource(${godotString(cardStyle)})`,
     'PrimaryButton/base_type': '&"Button"',
     'PrimaryButton/colors/font_color': colorToken(themeTokens, 'primaryText', '#020617', warnings),
     'PrimaryButton/colors/font_hover_color': colorToken(themeTokens, 'primaryText', '#020617', warnings),

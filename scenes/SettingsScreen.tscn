@@ -1,4 +1,6 @@
-[gd_scene load_steps=3 format=3]
+[gd_scene load_steps=4 format=3]
+
+[ext_resource type="Theme" path="res://scenes/theme.tres" id="GduiTheme"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_1"]
 bg_color = Color(0.066667, 0.094118, 0.152941, 1)
@@ -37,6 +39,7 @@ anchor_left = 0.0
 anchor_top = 0.0
 anchor_right = 1.0
 anchor_bottom = 1.0
+theme = ExtResource("GduiTheme")
 
 [node name="Background" type="ColorRect" parent="."]
 anchor_right = 1.0
@@ -75,6 +78,7 @@ text = "Voltar"
 focus_mode = 2
 
 [node name="AudioCard" type="PanelContainer" parent="Root"]
+theme_type_variation = &"Card"
 theme_override_styles/panel = SubResource("StyleBoxFlat_1")
 
 [node name="VBox" type="VBoxContainer" parent="Root/AudioCard"]
@@ -96,6 +100,7 @@ text = "Alterar áudio"
 focus_mode = 2
 
 [node name="VideoCard" type="PanelContainer" parent="Root"]
+theme_type_variation = &"Card"
 theme_override_styles/panel = SubResource("StyleBoxFlat_2")
 
 [node name="VBox2" type="VBoxContainer" parent="Root/VideoCard"]

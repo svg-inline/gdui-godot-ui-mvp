@@ -14,17 +14,17 @@ O que ainda impede o projeto de ser uma ferramenta solida nao e o parser basico,
 
 ## Fechar confiabilidade do `.tscn`
 
-Prioridade maxima.
+Prioridade maxima. A primeira camada de CI ja existe.
 
-| Task | Falta | Resultado esperado |
+| Task | Estado | Resultado |
 | --- | --- | --- |
-| GDUI-007 | Rodar smoke test Godot em CI e versoes alvo. | Garantia continua de que `.tscn` abre editavel no Godot 4.x. |
+| GDUI-007 | Done | `.github/workflows/gdui-ci.yml` roda testes Node, recompila cenas/tema e valida as cenas com Godot headless. |
 
 Notas:
 
 - Os testes atuais cobrem parser, trechos de exporter e snapshots completos de `scenes/*.tscn`.
 - `npm run test:godot` carrega e instancia as cenas geradas via Godot headless, e tambem carrega `scenes/theme.tres`.
-- Falta transformar o smoke test em rotina de CI e validar em mais de uma versao Godot 4.x.
+- A matriz de Godot no CI cobre `4.4.1` e `4.6.2`; novas versoes alvo podem ser adicionadas conforme o projeto decidir o suporte oficial.
 
 ## Responsividade
 
@@ -42,40 +42,35 @@ Notas:
 
 ## Theme `.tres`
 
-Esta e a maior lacuna de produto.
+A base de Theme esta funcional.
 
-| Task | Falta | Resultado esperado |
+| Task | Estado | Resultado |
 | --- | --- | --- |
-| GDUI-033 | Ampliar variants usando Theme. | `variant="primary"` deixa de depender so de override local. |
+| GDUI-033 | Done | `theme="res://scenes/theme.tres"` referencia o Theme gerado; `PrimaryButton` e `Card` usam `theme_type_variation`; cards sem estilo inline nao geram `StyleBoxFlat` local. |
 
 Notas:
 
-- `theme.gdui.json`, `theme.gdui.schema.json`, exporter inicial e `scenes/theme.tres` ja existem.
+- `theme.gdui.json`, `theme.gdui.schema.json`, exporter e `scenes/theme.tres` ja existem.
 - O Theme atual cobre Label, Button, estados de Button, PrimaryButton, PanelContainer e Card.
-- Falta reducao gradual de overrides locais no `.tscn` quando houver token equivalente.
+- Overrides locais continuam permitidos quando o markup declara `background`, `radius`, `border`, `border-color` ou `padding`.
 
 ## Actions e eventos
 
-Boa base, mas falta demonstrar o fluxo completo dentro do Godot.
+O fluxo `metadata/action -> action_router.gd -> action_triggered` ja e validado em Godot headless.
 
 | Task | Falta | Resultado esperado |
 | --- | --- | --- |
 | GDUI-040 | Fechar contrato de eventos suportados. | `action` fica estavel e eventos futuros ficam delimitados. |
-| GDUI-042 | Validar `action_router.gd` em cena real. | Botao com metadata emite `action_triggered`. |
-| GDUI-043 | Exemplo conectado ao router. | Menu de exemplo mostra actions funcionando. |
 
 Notas:
 
 - `metadata/action` ja e gerado no `.tscn`.
-- O router existe, mas precisa exemplo de uso e validacao.
+- `npm run test:actions` carrega `MainMenuScreen.tscn`, conecta `action_router.gd` e valida o sinal `action_triggered`.
+- `examples/main_menu_actions.gd` mostra a conexao minima em cena.
 
 ## Addon Godot e Studio
 
-O fluxo manual e o Studio local existem. O importer automatico ficou adiado por seguranca.
-
-| Task | Falta | Resultado esperado |
-| --- | --- | --- |
-| GDUI-053 | Robustez do lifecycle do Studio. | Start/Open/Stop previsiveis no editor. |
+O fluxo manual, dock e Studio local existem. O importer automatico ficou adiado por seguranca.
 
 Tasks adiadas de proposito:
 
@@ -115,11 +110,10 @@ Notas:
 
 ## Ordem recomendada
 
-1. `GDUI-007`: levar smoke test Godot para CI/versoes alvo.
-2. `GDUI-033`: reduzir overrides locais usando Theme `.tres`.
-3. `GDUI-052`, `GDUI-053`: melhorar feedback e lifecycle do Studio no dock.
-4. `GDUI-026`: ampliar cobertura de responsividade/foco.
-5. `GDUI-042`, `GDUI-043`: validar actions em cena real.
+1. `GDUI-026`: ampliar cobertura de responsividade/foco.
+2. `GDUI-040`: fechar contrato de eventos suportados.
+3. `GDUI-070`, `GDUI-071`, `GDUI-072`: melhorar diagnosticos do preview auxiliar.
+4. `GDUI-060`, `GDUI-061`, `GDUI-062`: iniciar reatividade apenas depois das validacoes acima.
 
 ## Nao fazer agora
 

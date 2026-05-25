@@ -2,11 +2,17 @@ import { colorToGodot, godotString } from '../utils.js';
 
 export function exportTscn(sceneAst, options = {}) {
   const nodes = [];
+  const extResources = [];
   const subResources = [];
   const warnings = [...(sceneAst._warnings || [])];
   let styleBoxCount = 0;
+  const themePath = options.themePath || sceneAst.attrs?.theme || null;
 
   assignPaths(sceneAst);
+
+  if (themePath) {
+    extResources.push({ id: 'GduiTheme', type: 'Theme', path: themePath });
+  }
 
   function addStyleBox(stylebox) {
     const id = `StyleBoxFlat_${++styleBoxCount}`;
@@ -20,6 +26,10 @@ export function exportTscn(sceneAst, options = {}) {
     if (node.stylebox && Object.keys(node.stylebox).length) {
       const styleId = addStyleBox(node.stylebox);
       props['theme_override_styles/panel'] = `SubResource("${styleId}")`;
+    }
+
+    if (!parentPath && themePath) {
+      props.theme = 'ExtResource("GduiTheme")';
     }
 
     nodes.push({
@@ -53,8 +63,13 @@ export function exportTscn(sceneAst, options = {}) {
 
   walk(sceneAst, null);
 
-  const loadSteps = Math.max(1, subResources.length + 1);
+  const loadSteps = Math.max(1, extResources.length + subResources.length + 1);
   const lines = [`[gd_scene load_steps=${loadSteps} format=3]`, ''];
+
+  for (const resource of extResources) {
+    lines.push(`[ext_resource type=${godotString(resource.type)} path=${godotString(resource.path)} id=${godotString(resource.id)}]`);
+    lines.push('');
+  }
 
   for (const resource of subResources) {
     lines.push(`[sub_resource type="${resource.type}" id="${resource.id}"]`);

@@ -1,0 +1,64 @@
+name: Gdui CI
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  compiler-and-godot-smoke:
+    name: Compiler and Godot smoke
+    runs-on: ubuntu-latest
+
+    strategy:
+      fail-fast: false
+      matrix:
+        godot-version:
+          - "4.4.1"
+          - "4.6.2"
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Install Node dependencies
+        run: npm install --ignore-scripts
+
+      - name: Run compiler tests
+        run: npm test
+
+      - name: Regenerate scenes and theme
+        run: |
+          npm run compile:all
+          npm run compile:theme
+
+      - name: Install Godot
+        run: |
+          GODOT_RELEASE="${{ matrix.godot-version }}-stable"
+          GODOT_ZIP="Godot_v${GODOT_RELEASE}_linux.x86_64.zip"
+          curl -L -o godot.zip "https://github.com/godotengine/godot/releases/download/${GODOT_RELEASE}/${GODOT_ZIP}"
+          unzip -q godot.zip -d .godot-bin
+          mv ".godot-bin/Godot_v${GODOT_RELEASE}_linux.x86_64" .godot-bin/godot
+          chmod +x .godot-bin/godot
+          echo "$PWD/.godot-bin" >> "$GITHUB_PATH"
+
+      - name: Run Godot scene smoke test
+        run: npm run test:godot
+
+      - name: Run responsive runtime smoke test
+        run: npm run test:responsive
+
+      - name: Run action router smoke test
+        run: npm run test:actions
+
+      - name: Upload Godot smoke log
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: godot-smoke-log-${{ matrix.godot-version }}
+          path: .godot-smoke-user/godot.log
+          if-no-files-found: ignore

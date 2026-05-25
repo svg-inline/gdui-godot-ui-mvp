@@ -108,6 +108,8 @@ function applyCommonProps(node, warnings) {
   if (a.variant) {
     const suffix = node.type === 'Button' ? 'Button' : node.type === 'Label' ? 'Label' : '';
     p.theme_type_variation = `&${godotString(toThemeVariation(a.variant, suffix))}`;
+  } else if (node.tag === 'gd-card') {
+    p.theme_type_variation = '&"Card"';
   }
 
   if (Object.keys(node.responsive || {}).length) {
@@ -176,7 +178,8 @@ function applySpecificProps(node, warnings) {
 
     case 'gd-panel':
     case 'gd-card': {
-      node.stylebox = buildStyleBox(node);
+      const stylebox = buildStyleBox(node);
+      if (stylebox) node.stylebox = stylebox;
       break;
     }
 
@@ -206,6 +209,9 @@ function applySpecificProps(node, warnings) {
 
 function buildStyleBox(node) {
   const a = node.attrs;
+  const styleAttrs = ['background', 'radius', 'border', 'border-color', 'padding'];
+  if (!styleAttrs.some((attr) => a[attr] !== undefined)) return null;
+
   const style = {};
   const background = colorToGodot(a.background || '#111827');
   if (background) style.bg_color = background;

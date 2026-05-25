@@ -23,3 +23,12 @@ test('compiles panel stylebox subresource', () => {
   assert.match(result.tscn, /\[sub_resource type="StyleBoxFlat"/);
   assert.match(result.tscn, /theme_override_styles\/panel = SubResource/);
 });
+
+test('compiles theme resource and card variation without inline stylebox', () => {
+  const result = compileSource('<gd-screen name="Main" theme="res://scenes/theme.tres"><gd-card name="Card"><gd-label text="A" /></gd-card></gd-screen>');
+
+  assert.match(result.tscn, /\[ext_resource type="Theme" path="res:\/\/scenes\/theme\.tres" id="GduiTheme"\]/);
+  assert.match(result.tscn, /theme = ExtResource\("GduiTheme"\)/);
+  assert.match(result.tscn, /theme_type_variation = &"Card"/);
+  assert.doesNotMatch(result.tscn, /theme_override_styles\/panel/);
+});

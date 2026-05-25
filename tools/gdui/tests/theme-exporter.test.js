@@ -19,11 +19,12 @@ test('exports a Godot Theme resource with core variations', () => {
     fontSizes: { body: 16, title: 28, button: 16 },
   });
 
-  assert.match(result.content, /^\[gd_resource type="Theme" load_steps=9 format=3\]/);
+  assert.match(result.content, /^\[gd_resource type="Theme" load_steps=10 format=3\]/);
   assert.match(result.content, /PanelContainer\/styles\/panel = SubResource\("GduiPanel"\)/);
   assert.match(result.content, /Button\/styles\/normal = SubResource\("GduiButton"\)/);
   assert.match(result.content, /Button\/styles\/hover = SubResource\("GduiButtonHover"\)/);
   assert.match(result.content, /Button\/styles\/pressed = SubResource\("GduiButtonPressed"\)/);
+  assert.match(result.content, /Card\/styles\/panel = SubResource\("GduiCard"\)/);
   assert.match(result.content, /PrimaryButton\/styles\/hover = SubResource\("GduiPrimaryButtonHover"\)/);
   assert.match(result.content, /PrimaryButton\/base_type = &"Button"/);
   assert.deepEqual(result.warnings, []);
