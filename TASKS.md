@@ -31,7 +31,7 @@ Status:
 | GDUI-023 | Done | Implementar breakpoints documentados. | `responsive_runtime.gd` validado por `npm run test:responsive`. |
 | GDUI-024 | Done | Adicionar exemplo de grid responsivo. | `examples/responsive-grid.gdui.html` |
 | GDUI-025 | Done | Criar testes de AST responsiva. | `tools/gdui/tests/responsive.test.js` |
-| GDUI-026 | Done | Validar runtime minimo aplicando breakpoint correto. | `tools/godot/test_responsive_runtime.gd` aplica `lg` e `tv` em Godot headless. |
+| GDUI-026 | Done | Validar runtime minimo aplicando breakpoint correto. | `tools/godot/test_responsive_runtime.gd` cobre `lg`, `tv`, retorno para `sm`, `columns`, `gap`, `font-size`, `visible`, `padding`, `min-size` e foco inicial em TV. |
 
 ## v0.3 - Theme `.tres`
 
@@ -47,7 +47,7 @@ Status:
 
 | ID | Status | Task | Evidencia |
 | --- | --- | --- | --- |
-| GDUI-040 | Partial | Formalizar contrato de `action`. | Spec existe e exporter gera metadata; falta matriz de eventos futura. |
+| GDUI-040 | Done | Formalizar contrato de `action`. | `docs/08-events-actions-spec.md` define o contrato MVP, matriz futura e naming; o compilador avisa nomes fora do padrão pontuado. |
 | GDUI-041 | Done | Gerar metadata de eventos no `.tscn`. | `metadata/action` no normalizer/exporter. |
 | GDUI-042 | Done | Criar helper Godot para conectar actions. | `addons/gdui/runtime/action_router.gd` validado por `npm run test:actions`. |
 | GDUI-043 | Done | Criar exemplo de menu com actions. | `main-menu.gdui.html` usa actions e `examples/main_menu_actions.gd` demonstra o router conectado. |
@@ -76,9 +76,9 @@ Status:
 
 | ID | Status | Task | Evidencia |
 | --- | --- | --- | --- |
-| GDUI-070 | Partial | Preview web como ferramenta de autoria. | Studio tem preview auxiliar simples. |
+| GDUI-070 | Partial | Preview web como ferramenta de autoria. | Studio tem preview auxiliar com diagnósticos; ainda é aproximação web, não fonte de verdade. |
 | GDUI-071 | Planned | Comparar preview web com saida Godot. | Nao implementado. |
-| GDUI-072 | Planned | Diagnosticar componentes nao suportados visualmente. | Nao implementado. |
+| GDUI-072 | Done | Diagnosticar componentes nao suportados visualmente. | Studio mostra erros de parse/compile, warnings do compilador e atributos ignorados pelo exporter. |
 
 ## Higiene continua
 

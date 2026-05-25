@@ -20,6 +20,16 @@ No `.tscn`, ela vira metadata:
 metadata/action = "inventory.equip"
 ```
 
+## Contrato MVP
+
+No MVP, apenas `action` em `gd-button` tem comportamento runtime oficial.
+
+| Markup | Node Godot | Metadata | Sinal conectado pelo router |
+| --- | --- | --- | --- |
+| `gd-button action="menu.play"` | `Button` | `metadata/action = "menu.play"` | `pressed` |
+
+O compilador exporta metadata mesmo quando o nome foge do padrão, mas emite warning. Isso preserva cenas existentes e ainda orienta o contrato recomendado.
+
 ## Nomes de action
 
 Usar padrão pontuado:
@@ -27,6 +37,12 @@ Usar padrão pontuado:
 ```text
 domain.intent
 domain.intent.target
+```
+
+Formato recomendado:
+
+```text
+[a-z][a-z0-9_-]*(.[a-z][a-z0-9_-]*)+
 ```
 
 Exemplos:
@@ -56,6 +72,8 @@ No MVP, preferir `action`.
 | Select | `on-selected` | `item_selected` |
 | Formulário | `on-submit` | helper runtime |
 
+Esses eventos continuam fora do MVP até terem mapping, exemplo e teste.
+
 ## Metadata
 
 Metadados futuros podem incluir:
@@ -73,13 +91,21 @@ metadata/item_id = "sword"
 
 ## Sinais Godot
 
-O MVP não conecta sinais. O runtime ou addon futuro pode procurar nodes com `metadata/action` e conectar `pressed` para botões.
+O runtime inicial procura nodes com `metadata/action` e conecta `pressed` para botões.
 
-API conceitual:
+API atual:
 
 ```gdscript
 signal action_triggered(action: String, source: Node, metadata: Dictionary)
-signal input_changed(action: String, value: Variant, source: Node)
+```
+
+Uso mínimo:
+
+```gdscript
+var router := GduiActionRouter.new()
+add_child(router)
+router.action_triggered.connect(_on_action)
+router.connect_actions(self)
 ```
 
 ## Restrições
@@ -88,3 +114,4 @@ signal input_changed(action: String, value: Variant, source: Node)
 - Não gerar scripts complexos sem pedido explícito.
 - Não esconder lógica de jogo dentro do markup.
 - Não exigir runtime para cenas sem interação dinâmica.
+- Não adicionar nova família de evento sem mapping para node nativo, exemplo e teste.

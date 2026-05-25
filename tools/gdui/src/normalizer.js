@@ -102,7 +102,12 @@ function applyCommonProps(node, warnings) {
   }
 
   if (a.class) p['metadata/css_class'] = godotString(a.class);
-  if (a.action) p['metadata/action'] = godotString(a.action);
+  if (a.action) {
+    p['metadata/action'] = godotString(a.action);
+    if (!isValidActionName(a.action)) {
+      warnings.push(`${node.name}: action "${a.action}" should use dotted lowercase names like domain.intent.`);
+    }
+  }
   if (a.tooltip) p.tooltip_text = godotString(a.tooltip);
 
   if (a.variant) {
@@ -256,4 +261,8 @@ function alignmentToGodot(value) {
     case 'start':
     default: return '0';
   }
+}
+
+function isValidActionName(value) {
+  return /^[a-z][a-z0-9_-]*(\.[a-z][a-z0-9_-]*)+$/.test(String(value || ''));
 }

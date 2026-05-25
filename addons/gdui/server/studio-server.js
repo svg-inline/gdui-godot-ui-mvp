@@ -6,6 +6,38 @@ import { pathToFileURL } from 'node:url';
 
 const DEFAULT_HOST = '127.0.0.1';
 const DEFAULT_PORT = 39147;
+const RESPONSIVE_PREFIXES = new Set(['sm', 'md', 'lg', 'xl', 'tv']);
+const SUPPORTED_ATTRS = new Set([
+  'name',
+  'id',
+  'anchor',
+  'visible',
+  'width',
+  'height',
+  'min-width',
+  'min-height',
+  'expand',
+  'class',
+  'variant',
+  'theme',
+  'tooltip',
+  'action',
+  'padding',
+  'gap',
+  'background',
+  'radius',
+  'border',
+  'border-color',
+  'color',
+  'font-size',
+  'align',
+  'wrap',
+  'columns',
+  'src',
+  'image',
+  'disabled',
+  'text',
+]);
 
 export function resolveProjectPath(root, requestedPath) {
   const value = String(requestedPath || '').replaceAll('\\', '/');
@@ -32,6 +64,31 @@ export function assertGduiMarkupPath(filePath) {
 
 export function toProjectPath(root, filePath) {
   return path.relative(root, filePath).replaceAll(path.sep, '/');
+}
+
+export function collectMarkupDiagnostics(source, compiler) {
+  const diagnostics = {
+    ok: true,
+    errors: [],
+    warnings: [],
+  };
+
+  try {
+    const markupAst = compiler.parseMarkup(source);
+    collectUnsupportedAttrs(markupAst, diagnostics.warnings);
+    const result = compiler.compileSource(source);
+    for (const warning of result.warnings || []) {
+      diagnostics.warnings.push({ kind: 'compiler-warning', message: warning });
+    }
+  } catch (error) {
+    diagnostics.ok = false;
+    diagnostics.errors.push({
+      kind: 'compile-error',
+      message: error instanceof Error ? error.message : String(error),
+    });
+  }
+
+  return diagnostics;
 }
 
 function parseArgs(argv) {
@@ -153,6 +210,32 @@ async function compileAll(root) {
   }));
 }
 
+async function diagnoseSource(root, source) {
+  const compiler = await loadCompiler(root);
+  return collectMarkupDiagnostics(String(source || ''), compiler);
+}
+
+function collectUnsupportedAttrs(node, warnings) {
+  for (const attr of Object.keys(node.attrs || {})) {
+    const [prefix, prop] = attr.split(':');
+    const isResponsive = Boolean(prop) && RESPONSIVE_PREFIXES.has(prefix);
+    const attrName = isResponsive ? prop : attr;
+
+    if (!SUPPORTED_ATTRS.has(attrName)) {
+      warnings.push({
+        kind: 'unsupported-attr',
+        node: node.tag,
+        attr,
+        message: `${node.tag}: unsupported attribute "${attr}" is ignored by the Godot exporter.`,
+      });
+    }
+  }
+
+  for (const child of node.children || []) {
+    if (child.type === 'element') collectUnsupportedAttrs(child, warnings);
+  }
+}
+
 function createServer(root) {
   return http.createServer(async (req, res) => {
     try {
@@ -198,6 +281,13 @@ function createServer(root) {
       if (req.method === 'POST' && url.pathname === '/api/compile') {
         const body = await readRequestJson(req);
         const result = body.all ? await compileAll(root) : await compileSingle(root, body.path);
+        sendJson(res, 200, { ok: true, result });
+        return;
+      }
+
+      if (req.method === 'POST' && url.pathname === '/api/diagnostics') {
+        const body = await readRequestJson(req);
+        const result = await diagnoseSource(root, body.source);
         sendJson(res, 200, { ok: true, result });
         return;
       }
@@ -298,6 +388,10 @@ function renderStudioHtml() {
       grid-template-rows: auto minmax(0, 1fr);
     }
 
+    .preview {
+      grid-template-rows: auto minmax(0, 1fr) minmax(120px, auto);
+    }
+
     .panel-title {
       display: flex;
       align-items: center;
@@ -331,6 +425,27 @@ function renderStudioHtml() {
       border: 0;
       background: #0f172a;
     }
+
+    .diagnostics {
+      min-height: 120px;
+      max-height: 220px;
+      overflow: auto;
+      border-top: 1px solid #2f3442;
+      background: #0b0e14;
+      padding: 10px 14px;
+      font-size: 13px;
+      line-height: 1.45;
+    }
+
+    .diagnostic {
+      display: block;
+      margin: 0 0 6px;
+      color: #cbd5e1;
+    }
+
+    .diagnostic.error { color: #fca5a5; }
+    .diagnostic.warning { color: #facc15; }
+    .diagnostic.ok { color: #86efac; }
 
     output {
       display: block;
@@ -376,6 +491,7 @@ function renderStudioHtml() {
           <span>.tscn continua sendo a saida canonica</span>
         </div>
         <iframe id="preview" title="Gdui preview" sandbox=""></iframe>
+        <div id="diagnostics" class="diagnostics" aria-live="polite"></div>
       </section>
     </main>
   </div>
@@ -384,6 +500,7 @@ function renderStudioHtml() {
     const fileSelect = document.querySelector('#fileSelect');
     const source = document.querySelector('#source');
     const preview = document.querySelector('#preview');
+    const diagnostics = document.querySelector('#diagnostics');
     const status = document.querySelector('#status');
     const reloadButton = document.querySelector('#reloadButton');
     const saveButton = document.querySelector('#saveButton');
@@ -391,6 +508,7 @@ function renderStudioHtml() {
     const compileAllButton = document.querySelector('#compileAllButton');
 
     let currentPath = '';
+    let diagnosticsTimer = 0;
 
     function setStatus(message) {
       status.value = message;
@@ -430,6 +548,7 @@ function renderStudioHtml() {
       const payload = await requestJson('/api/file?path=' + encodeURIComponent(currentPath));
       source.value = payload.source;
       renderPreview();
+      scheduleDiagnostics();
       setStatus('Loaded ' + currentPath);
     }
 
@@ -440,6 +559,7 @@ function renderStudioHtml() {
         body: JSON.stringify({ path: currentPath, source: source.value }),
       });
       setStatus('Saved ' + currentPath);
+      await runDiagnostics();
     }
 
     async function compileCurrentFile() {
@@ -450,6 +570,7 @@ function renderStudioHtml() {
         body: JSON.stringify({ path: currentPath }),
       });
       setStatus('Compiled to ' + payload.result.output);
+      await runDiagnostics();
     }
 
     async function compileAllFiles() {
@@ -459,10 +580,46 @@ function renderStudioHtml() {
         body: JSON.stringify({ all: true }),
       });
       setStatus('Compiled ' + payload.result.length + ' file(s)');
+      await runDiagnostics();
     }
 
     function renderPreview() {
       preview.srcdoc = '<!doctype html><html><head><meta charset="utf-8"><meta http-equiv="Content-Security-Policy" content="default-src \\'none\\'; style-src \\'unsafe-inline\\'; img-src data: file:;"><style>' + previewCss() + '</style></head><body>' + source.value + '</body></html>';
+    }
+
+    function scheduleDiagnostics() {
+      window.clearTimeout(diagnosticsTimer);
+      diagnosticsTimer = window.setTimeout(() => {
+        runDiagnostics().catch((error) => renderDiagnostics({ errors: [{ message: error.message }], warnings: [] }));
+      }, 180);
+    }
+
+    async function runDiagnostics() {
+      const payload = await requestJson('/api/diagnostics', {
+        method: 'POST',
+        body: JSON.stringify({ source: source.value }),
+      });
+      renderDiagnostics(payload.result);
+    }
+
+    function renderDiagnostics(result) {
+      const entries = [];
+      for (const error of result.errors || []) entries.push({ type: 'error', message: error.message });
+      for (const warning of result.warnings || []) entries.push({ type: 'warning', message: warning.message || warning });
+
+      if (!entries.length) {
+        diagnostics.replaceChildren(createDiagnostic('ok', 'Sem diagnosticos.'));
+        return;
+      }
+
+      diagnostics.replaceChildren(...entries.map((entry) => createDiagnostic(entry.type, entry.message)));
+    }
+
+    function createDiagnostic(type, message) {
+      const item = document.createElement('p');
+      item.className = 'diagnostic ' + type;
+      item.textContent = message;
+      return item;
     }
 
     function previewCss() {
@@ -487,7 +644,10 @@ function renderStudioHtml() {
     saveButton.addEventListener('click', saveCurrentFile);
     compileButton.addEventListener('click', compileCurrentFile);
     compileAllButton.addEventListener('click', compileAllFiles);
-    source.addEventListener('input', renderPreview);
+    source.addEventListener('input', () => {
+      renderPreview();
+      scheduleDiagnostics();
+    });
 
     loadFiles().catch((error) => setStatus(error.message));
   </script>

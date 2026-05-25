@@ -18,6 +18,13 @@ test('compiles button action to metadata', () => {
   assert.match(result.tscn, /\[node name="PlayButton" type="Button" parent="\."\]/);
 });
 
+test('warns for action names outside the dotted contract', () => {
+  const result = compileSource('<gd-screen name="Main"><gd-button text="Play" action="Play Now" /></gd-screen>');
+
+  assert.match(result.tscn, /metadata\/action = "Play Now"/);
+  assert.match(result.warnings.join('\n'), /action "Play Now" should use dotted lowercase names/);
+});
+
 test('compiles panel stylebox subresource', () => {
   const result = compileSource('<gd-screen name="Main"><gd-panel name="Card" background="#111827" radius="12" padding="16" /></gd-screen>');
   assert.match(result.tscn, /\[sub_resource type="StyleBoxFlat"/);

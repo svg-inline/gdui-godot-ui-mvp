@@ -28,17 +28,17 @@ Notas:
 
 ## Responsividade
 
-Existe base tecnica, mas ainda nao esta fechada como feature confiavel.
+A base tecnica esta validada para o conjunto MVP de runtime.
 
-| Task | Falta | Resultado esperado |
+| Task | Estado | Resultado |
 | --- | --- | --- |
-| GDUI-026 | Expandir cobertura do runtime responsivo. | Validar mais propriedades e casos reais de viewport/foco. |
+| GDUI-026 | Done | `npm run test:responsive` valida breakpoints, retorno para `sm`, tamanho minimo, padding e foco inicial em TV. |
 
 Notas:
 
 - A sintaxe responsiva e a metadata no Scene AST ja estao testadas.
-- `npm run test:responsive` valida `columns`, `gap`, `font-size` e `visible` em Godot headless.
-- Navegacao por foco para TV ainda deve ser tratada depois.
+- `npm run test:responsive` valida `columns`, `gap`, `font-size`, `visible`, `padding`, `min-width`, `min-height` e restauracao de valores base em Godot headless.
+- Em `tv`, o runtime captura o primeiro controle visivel e focavel quando ainda nao existe foco ativo.
 
 ## Theme `.tres`
 
@@ -58,9 +58,9 @@ Notas:
 
 O fluxo `metadata/action -> action_router.gd -> action_triggered` ja e validado em Godot headless.
 
-| Task | Falta | Resultado esperado |
+| Task | Estado | Resultado |
 | --- | --- | --- |
-| GDUI-040 | Fechar contrato de eventos suportados. | `action` fica estavel e eventos futuros ficam delimitados. |
+| GDUI-040 | Done | `docs/08-events-actions-spec.md` define `gd-button action`, matriz futura e naming; actions fora do padrão geram warning. |
 
 Notas:
 
@@ -99,21 +99,22 @@ O preview atual e util, mas ainda e aproximado.
 
 | Task | Falta | Resultado esperado |
 | --- | --- | --- |
-| GDUI-070 | Melhorar preview web auxiliar. | Autoria mais confortavel. |
+| GDUI-070 | Melhorar preview web auxiliar. | Autoria mais confortavel; diagnosticos ja aparecem no Studio. |
 | GDUI-071 | Comparar preview com cena Godot. | Usuario entende diferencas entre preview e saida real. |
-| GDUI-072 | Diagnosticos visuais. | Props/tags sem suporte ficam claras. |
+| GDUI-072 | Done. | Studio mostra erros de parse/compile, warnings e atributos ignorados pelo exporter. |
 
 Notas:
 
 - O preview web nao deve virar fonte de verdade.
 - A fonte de verdade continua sendo `.gdui.html -> .tscn`.
+- Diagnosticos atuais vem do parser/compilador Node; comparacao visual contra a cena Godot ainda nao existe.
 
 ## Ordem recomendada
 
-1. `GDUI-026`: ampliar cobertura de responsividade/foco.
-2. `GDUI-040`: fechar contrato de eventos suportados.
-3. `GDUI-070`, `GDUI-071`, `GDUI-072`: melhorar diagnosticos do preview auxiliar.
-4. `GDUI-060`, `GDUI-061`, `GDUI-062`: iniciar reatividade apenas depois das validacoes acima.
+1. `GDUI-071`: comparar preview web com saida Godot.
+2. `GDUI-070`: continuar refinando autoria no Studio.
+3. `GDUI-060`, `GDUI-061`, `GDUI-062`: iniciar reatividade apenas depois das validacoes acima.
+4. `GDUI-051`, `GDUI-055`: reavaliar importer/live reimport apenas com contrato seguro sem loop.
 
 ## Nao fazer agora
 

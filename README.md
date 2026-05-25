@@ -60,6 +60,8 @@ http://127.0.0.1:39147
 
 Esse Studio serve para criar, editar e previsualizar arquivos `.gdui.html`. Ele e um apoio de autoria: a saida canonica do projeto continua sendo `.tscn` editavel gerado pelo compilador.
 
+O painel de diagnosticos do Studio usa o parser/compilador para mostrar erros, warnings e atributos ignorados pelo exporter antes da compilacao.
+
 Tambem e possivel iniciar fora do Godot:
 
 ```bash
@@ -130,7 +132,7 @@ Props responsivas são preservadas como metadata para runtime futuro:
 <gd-grid columns="2" md:columns="3" lg:columns="4" tv:columns="6" />
 ```
 
-O runtime responsivo inicial existe em `addons/gdui/runtime/responsive_runtime.gd`, mas ainda precisa de validacao completa em cena real.
+O runtime responsivo inicial existe em `addons/gdui/runtime/responsive_runtime.gd` e e validado por Godot headless para breakpoints, retorno ao tamanho base, tamanho minimo, padding e foco inicial em TV.
 
 `gd-screen` tambem pode referenciar um Theme Godot gerado:
 
