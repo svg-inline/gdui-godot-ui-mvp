@@ -2,7 +2,7 @@
 
 ## Objetivo
 
-Criar um addon Godot para importar `.gdui.html` direto no editor e gerar `.tscn` editável.
+Criar um addon Godot para compilar `.gdui.html` dentro do editor e gerar `.tscn` editável.
 
 O addon tambem pode iniciar o Gdui Studio: um servidor Node local para autoria e previsualizacao no navegador. Esse Studio nao muda o contrato principal do produto; ele e uma ferramenta auxiliar para escrever `.gdui.html` e acionar a geracao de `.tscn`.
 
@@ -19,18 +19,28 @@ addons/gdui/
     action_router.gd
 ```
 
-## Fluxo de importação
+## Fluxo confiavel atual
 
 O importer automatico fica desativado por padrao no MVP para evitar loops de reimportacao quando o Godot detecta `.tscn` gerado como modificacao externa. O fluxo confiavel atual e manual via menu ou Studio.
 
-1. Usuário adiciona arquivo `.gdui.html`.
-2. Addon detecta o arquivo.
-3. Addon chama o compilador.
-4. Addon grava `.tscn`.
-5. Editor Godot importa a cena gerada.
-6. Warnings aparecem no painel do addon ou no output.
+1. Usuario adiciona ou edita arquivo `.gdui.html`.
+2. Usuario usa `Project > Tools > Gdui: Compile all UI` ou compila pelo Studio.
+3. Addon/Studio chama o compilador.
+4. Compilador grava `.tscn`.
+5. Editor Godot abre a cena gerada como cena nativa editavel.
+6. Warnings aparecem no output por enquanto; painel dedicado e futuro.
 
 Live reload é desejável, inspirado no fluxo de ferramentas como GTML, mas não pode substituir o arquivo `.tscn` gerado.
+
+## Importer automatico experimental
+
+O arquivo `import_plugin.gd` permanece no addon como referencia experimental, mas nao deve reconhecer extensoes nem ser registrado por padrao no MVP.
+
+Tasks relacionadas:
+
+- `GDUI-051`: importer automatico adiado.
+- `GDUI-055`: reimport automatico adiado.
+- `GDUI-056`: dock Godot planejado para substituir o fluxo fragil de importer automatico.
 
 ## Fluxo Studio local
 

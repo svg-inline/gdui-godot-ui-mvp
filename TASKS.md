@@ -1,50 +1,89 @@
 # TASKS
 
-## v0.1
+Este arquivo rastreia o estado real do MVP. Use os IDs `GDUI-*` para referenciar pendencias em docs, commits e issues.
 
-- [x] Criar parser restrito para tags `gd-*`.
-- [x] Gerar AST intermediária.
-- [x] Exportar `.tscn` textual.
-- [x] Criar exemplo de inventário.
-- [ ] Cobrir parser com testes automatizados.
-- [ ] Cobrir exporter com snapshot de `.tscn`.
-- [ ] Validar cena gerada abrindo no Godot 4.x.
+Status:
 
-## v0.2 Design Tokens + Responsive Props básicas
+- `Done`: implementado e coberto minimamente.
+- `Partial`: existe implementacao, mas falta teste, validacao Godot ou acabamento.
+- `Planned`: especificado, ainda nao implementado.
+- `Deferred`: adiado de proposito por risco ou mudanca de direcao.
 
-- [ ] Definir tokens mínimos de cor, espaçamento, raio, tipografia e escala.
-- [ ] Definir sintaxe responsiva.
-- [ ] Fazer parser aceitar `md:columns`, `lg:padding` e `tv:font-size`.
-- [ ] Implementar breakpoints documentados.
-- [ ] Adicionar exemplo de grid responsivo.
-- [ ] Criar testes de AST responsiva.
-- [ ] Validar runtime mínimo aplicando o breakpoint correto.
+## v0.1 - TSCN confiavel
 
-## v0.3 Theme .tres completo
+| ID | Status | Task | Evidencia |
+| --- | --- | --- | --- |
+| GDUI-001 | Done | Criar parser restrito para tags `gd-*`. | `tools/gdui/src/parser.js` |
+| GDUI-002 | Done | Gerar AST intermediaria. | `parseMarkup` + `normalizeToSceneAst` |
+| GDUI-003 | Done | Exportar `.tscn` textual. | `tools/gdui/src/exporters/tscn.js` |
+| GDUI-004 | Done | Criar exemplos basicos. | `examples/` e `ui/` |
+| GDUI-005 | Partial | Cobrir parser/exporter com testes automatizados. | Testes basicos existem; falta snapshot abrangente de `.tscn`. |
+| GDUI-006 | Partial | Validar cena gerada no Godot 4.x. | Scripts do addon foram checados com Godot CLI; falta smoke test abrindo cenas geradas. |
 
-- [ ] Criar `theme.gdui.json`.
-- [ ] Definir schema de tokens.
-- [ ] Implementar exportador `Theme .tres`.
-- [ ] Migrar variants para Theme.
-- [ ] Adicionar exemplo com tema compartilhado.
+## v0.2 - Design Tokens + Responsive Props basicas
 
-## v0.4
+| ID | Status | Task | Evidencia |
+| --- | --- | --- | --- |
+| GDUI-020 | Planned | Definir tokens minimos de cor, espacamento, raio, tipografia e escala. | Aguardando `theme.gdui.json`. |
+| GDUI-021 | Done | Definir sintaxe responsiva para props com prefixos. | `md:*`, `lg:*`, `tv:*` aceitos pelo parser de atributos. |
+| GDUI-022 | Partial | Normalizar props responsivas para metadata. | `metadata/gdui_responsive` gerado no Scene AST. |
+| GDUI-023 | Partial | Implementar breakpoints documentados. | `responsive_runtime.gd` existe; falta teste Godot automatizado. |
+| GDUI-024 | Done | Adicionar exemplo de grid responsivo. | `examples/responsive-grid.gdui.html` |
+| GDUI-025 | Planned | Criar testes de AST responsiva. | Ainda sem teste dedicado. |
+| GDUI-026 | Planned | Validar runtime minimo aplicando breakpoint correto. | Ainda sem cena/teste de runtime. |
 
-- [ ] Formalizar `action`.
-- [ ] Documentar metadata de eventos.
-- [ ] Criar helper Godot para conectar actions.
-- [ ] Criar exemplo de menu com actions.
+## v0.3 - Theme `.tres`
 
-## v0.5
+| ID | Status | Task | Evidencia |
+| --- | --- | --- | --- |
+| GDUI-030 | Planned | Criar `theme.gdui.json`. | Nao implementado. |
+| GDUI-031 | Planned | Definir schema de tokens. | Especificado em `docs/05-theme-exporter-spec.md`. |
+| GDUI-032 | Planned | Implementar exportador `Theme .tres`. | Nao implementado. |
+| GDUI-033 | Planned | Migrar variants para Theme. | Hoje `variant` vira `theme_type_variation`, sem Theme gerado. |
+| GDUI-034 | Planned | Adicionar exemplo com tema compartilhado. | Nao implementado. |
 
-- [ ] Criar estrutura `addons/gdui`.
-- [ ] Implementar importer de `.gdui.html`.
-- [ ] Mostrar warnings no editor.
-- [ ] Reimportar cena quando arquivo mudar.
+## v0.4 - Eventos e actions
 
-## Higiene contínua
+| ID | Status | Task | Evidencia |
+| --- | --- | --- | --- |
+| GDUI-040 | Partial | Formalizar contrato de `action`. | Spec existe e exporter gera metadata; falta matriz de eventos futura. |
+| GDUI-041 | Done | Gerar metadata de eventos no `.tscn`. | `metadata/action` no normalizer/exporter. |
+| GDUI-042 | Partial | Criar helper Godot para conectar actions. | `addons/gdui/runtime/action_router.gd`; falta validacao em cena real. |
+| GDUI-043 | Partial | Criar exemplo de menu com actions. | `main-menu.gdui.html` usa actions; falta demonstracao com router conectado. |
 
-- [ ] Manter `README.md` alinhado com o estado real.
-- [ ] Atualizar exemplos a cada componente novo.
-- [ ] Não adicionar tags sem atualizar specs.
-- [ ] Não adicionar comportamento sem teste.
+## v0.5 - Addon Godot + Studio
+
+| ID | Status | Task | Evidencia |
+| --- | --- | --- | --- |
+| GDUI-050 | Done | Criar estrutura `addons/gdui`. | `addons/gdui/` |
+| GDUI-051 | Deferred | Implementar importer automatico de `.gdui.html`. | Desativado no MVP por causar loop de reimportacao. |
+| GDUI-052 | Partial | Compilar UI pelo editor Godot. | Menu `Gdui: Compile all UI`; falta painel de logs. |
+| GDUI-053 | Partial | Iniciar Studio local pelo addon. | `addons/gdui/server/studio-server.js` e menu `Start Studio`. |
+| GDUI-054 | Planned | Mostrar warnings no editor. | Hoje warnings aparecem no output/terminal. |
+| GDUI-055 | Deferred | Reimportar cena automaticamente quando arquivo mudar. | Adiado ate existir contrato seguro sem loop. |
+| GDUI-056 | Planned | Criar dock Godot para status, logs e comandos. | Nao implementado. |
+
+## v0.6 - Reatividade
+
+| ID | Status | Task | Evidencia |
+| --- | --- | --- | --- |
+| GDUI-060 | Planned | Definir estado declarativo minimo. | Nao implementado. |
+| GDUI-061 | Planned | Definir bindings limitados. | Nao implementado. |
+| GDUI-062 | Planned | Atualizar UI por runtime Godot, nao WebView. | Nao implementado. |
+
+## v0.7 - Preview Studio avancado
+
+| ID | Status | Task | Evidencia |
+| --- | --- | --- | --- |
+| GDUI-070 | Partial | Preview web como ferramenta de autoria. | Studio tem preview auxiliar simples. |
+| GDUI-071 | Planned | Comparar preview web com saida Godot. | Nao implementado. |
+| GDUI-072 | Planned | Diagnosticar componentes nao suportados visualmente. | Nao implementado. |
+
+## Higiene continua
+
+| ID | Status | Task | Evidencia |
+| --- | --- | --- | --- |
+| GDUI-900 | Partial | Manter README alinhado com o estado real. | Atualizado, mas deve acompanhar cada release. |
+| GDUI-901 | Partial | Atualizar exemplos a cada componente novo. | Exemplos atuais cobrem MVP principal. |
+| GDUI-902 | Partial | Nao adicionar tags sem atualizar specs. | Specs existem; precisa disciplina em PRs. |
+| GDUI-903 | Partial | Nao adicionar comportamento sem teste. | Algumas features ainda estao sem teste dedicado. |

@@ -108,6 +108,15 @@ Props responsivas são preservadas como metadata para runtime futuro:
 <gd-grid columns="2" md:columns="3" lg:columns="4" tv:columns="6" />
 ```
 
+O runtime responsivo inicial existe em `addons/gdui/runtime/responsive_runtime.gd`, mas ainda precisa de validacao completa em cena real.
+
+## Status e pendencias
+
+Use estes documentos para acompanhar o que esta implementado e o que ainda falta:
+
+- `TASKS.md`: task list com IDs e status real.
+- `docs/11-implementation-gap.md`: lacunas atuais referenciando as tasks.
+
 ## Limites
 
 - Sem HTML genérico.
