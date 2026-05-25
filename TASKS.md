@@ -93,14 +93,14 @@ Status:
 
 ## v0.8 - Componentes de Input
 
-| ID       | Status  | Task                                                   | Evidencia                         |
-| -------- | ------- | ------------------------------------------------------ | --------------------------------- |
-| GDUI-080 | Planned | `gd-input` → `LineEdit`.                               | —                                 |
-| GDUI-081 | Planned | `gd-option` → `OptionButton`.                          | —                                 |
-| GDUI-082 | Planned | `gd-progress` → `ProgressBar`.                         | —                                 |
-| GDUI-083 | Planned | `gd-slider` → `HSlider` / `VSlider` via `orientation`. | —                                 |
-| GDUI-084 | Planned | `gd-texture`: gerar `ExtResource` real no `.tscn`.     | Atual usa só metadata de caminho. |
-| GDUI-085 | Planned | Specs, testes e exemplos para componentes de v0.8.     | —                                 |
+| ID       | Status | Task                                                   | Evidencia                                                                                                         |
+| -------- | ------ | ------------------------------------------------------ | ----------------------------------------------------------------------------------------------------------------- |
+| GDUI-080 | Done   | `gd-input` → `LineEdit`.                               | `tools/gdui/src/components.js` + `normalizer.js`; testes em `parser.test.js`.                                     |
+| GDUI-081 | Done   | `gd-option` → `OptionButton`.                          | Items via `metadata/options`; testes em `parser.test.js`.                                                         |
+| GDUI-082 | Done   | `gd-progress` → `ProgressBar`.                         | Props `min_value`, `max_value`, `value`, `step`; testes em `parser.test.js`.                                      |
+| GDUI-083 | Done   | `gd-slider` → `HSlider` / `VSlider` via `orientation`. | `orientation="vertical"` muda tipo para `VSlider`; testes em `parser.test.js`.                                    |
+| GDUI-084 | Done   | `gd-texture`: gerar `ExtResource` real no `.tscn`.     | Caminhos `res://` geram `ExtResource`; outros ficam em `metadata/source_image`; testes em `parser.test.js`.       |
+| GDUI-085 | Done   | Specs, testes e exemplos para componentes de v0.8.     | `docs/02-components-spec.md` atualizado; `ui/form-components.gdui.html` + snapshot em `scenes/`; 10 testes novos. |
 
 ## v0.9 - Reestruturação de Pacotes
 

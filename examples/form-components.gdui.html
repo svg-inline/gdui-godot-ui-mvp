@@ -1,0 +1,140 @@
+<gd-screen
+  name="FormComponentsScreen"
+  anchor="full"
+  background="#020617"
+  theme="res://scenes/theme.tres"
+>
+  <gd-vbox name="Root" anchor="full" padding="32" gap="20">
+    <gd-label
+      name="Title"
+      text="Formulário de Exemplo"
+      color="#f8fafc"
+      font-size="32"
+    />
+
+    <gd-card
+      name="InputCard"
+      background="#111827"
+      radius="16"
+      border="1"
+      border-color="#334155"
+      padding="18"
+    >
+      <gd-vbox gap="12">
+        <gd-label text="Nome do jogador" color="#cbd5e1" font-size="16" />
+        <gd-input
+          name="NameInput"
+          placeholder="Digite seu nome..."
+          max-length="32"
+          action="form.name_changed"
+        />
+      </gd-vbox>
+    </gd-card>
+
+    <gd-card
+      name="PasswordCard"
+      background="#111827"
+      radius="16"
+      border="1"
+      border-color="#334155"
+      padding="18"
+    >
+      <gd-vbox gap="12">
+        <gd-label text="Senha" color="#cbd5e1" font-size="16" />
+        <gd-input
+          name="PasswordInput"
+          placeholder="Digite sua senha..."
+          password="true"
+          action="form.password_changed"
+        />
+      </gd-vbox>
+    </gd-card>
+
+    <gd-card
+      name="DifficultyCard"
+      background="#111827"
+      radius="16"
+      border="1"
+      border-color="#334155"
+      padding="18"
+    >
+      <gd-vbox gap="12">
+        <gd-label text="Dificuldade" color="#cbd5e1" font-size="16" />
+        <gd-option
+          name="DifficultyOption"
+          options="Fácil,Normal,Difícil,Insano"
+          action="form.difficulty_changed"
+        />
+      </gd-vbox>
+    </gd-card>
+
+    <gd-card
+      name="VolumeCard"
+      background="#111827"
+      radius="16"
+      border="1"
+      border-color="#334155"
+      padding="18"
+    >
+      <gd-vbox gap="12">
+        <gd-label text="Volume" color="#cbd5e1" font-size="16" />
+        <gd-slider
+          name="VolumeSlider"
+          min-value="0"
+          max-value="100"
+          value="80"
+          step="1"
+          action="form.volume_changed"
+        />
+      </gd-vbox>
+    </gd-card>
+
+    <gd-card
+      name="ProgressCard"
+      background="#111827"
+      radius="16"
+      border="1"
+      border-color="#334155"
+      padding="18"
+    >
+      <gd-vbox gap="12">
+        <gd-label
+          text="Carregando recursos..."
+          color="#cbd5e1"
+          font-size="16"
+        />
+        <gd-progress name="LoadBar" min-value="0" max-value="100" value="65" />
+      </gd-vbox>
+    </gd-card>
+
+    <gd-card
+      name="AvatarCard"
+      background="#111827"
+      radius="16"
+      border="1"
+      border-color="#334155"
+      padding="18"
+    >
+      <gd-vbox gap="12">
+        <gd-label text="Avatar" color="#cbd5e1" font-size="16" />
+        <gd-texture
+          name="AvatarTexture"
+          src="res://assets/avatar_placeholder.png"
+          width="128"
+          height="128"
+        />
+      </gd-vbox>
+    </gd-card>
+
+    <gd-hbox gap="12">
+      <gd-spacer expand="true" />
+      <gd-button name="CancelButton" text="Cancelar" action="form.cancel" />
+      <gd-button
+        name="SaveButton"
+        text="Salvar"
+        variant="primary"
+        action="form.save"
+      />
+    </gd-hbox>
+  </gd-vbox>
+</gd-screen>

@@ -1,0 +1,257 @@
+[gd_scene load_steps=9 format=3]
+
+[ext_resource type="Theme" path="res://scenes/theme.tres" id="GduiTheme"]
+
+[ext_resource type="Texture2D" path="res://assets/avatar_placeholder.png" id="Texture2D_1"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_1"]
+bg_color = Color(0.066667, 0.094118, 0.152941, 1)
+corner_radius_top_left = 16
+corner_radius_top_right = 16
+corner_radius_bottom_right = 16
+corner_radius_bottom_left = 16
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.2, 0.254902, 0.333333, 1)
+content_margin_top = 18
+content_margin_right = 18
+content_margin_bottom = 18
+content_margin_left = 18
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_2"]
+bg_color = Color(0.066667, 0.094118, 0.152941, 1)
+corner_radius_top_left = 16
+corner_radius_top_right = 16
+corner_radius_bottom_right = 16
+corner_radius_bottom_left = 16
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.2, 0.254902, 0.333333, 1)
+content_margin_top = 18
+content_margin_right = 18
+content_margin_bottom = 18
+content_margin_left = 18
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_3"]
+bg_color = Color(0.066667, 0.094118, 0.152941, 1)
+corner_radius_top_left = 16
+corner_radius_top_right = 16
+corner_radius_bottom_right = 16
+corner_radius_bottom_left = 16
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.2, 0.254902, 0.333333, 1)
+content_margin_top = 18
+content_margin_right = 18
+content_margin_bottom = 18
+content_margin_left = 18
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_4"]
+bg_color = Color(0.066667, 0.094118, 0.152941, 1)
+corner_radius_top_left = 16
+corner_radius_top_right = 16
+corner_radius_bottom_right = 16
+corner_radius_bottom_left = 16
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.2, 0.254902, 0.333333, 1)
+content_margin_top = 18
+content_margin_right = 18
+content_margin_bottom = 18
+content_margin_left = 18
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_5"]
+bg_color = Color(0.066667, 0.094118, 0.152941, 1)
+corner_radius_top_left = 16
+corner_radius_top_right = 16
+corner_radius_bottom_right = 16
+corner_radius_bottom_left = 16
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.2, 0.254902, 0.333333, 1)
+content_margin_top = 18
+content_margin_right = 18
+content_margin_bottom = 18
+content_margin_left = 18
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_6"]
+bg_color = Color(0.066667, 0.094118, 0.152941, 1)
+corner_radius_top_left = 16
+corner_radius_top_right = 16
+corner_radius_bottom_right = 16
+corner_radius_bottom_left = 16
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.2, 0.254902, 0.333333, 1)
+content_margin_top = 18
+content_margin_right = 18
+content_margin_bottom = 18
+content_margin_left = 18
+
+[node name="FormComponentsScreen" type="Control"]
+anchor_left = 0.0
+anchor_top = 0.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+theme = ExtResource("GduiTheme")
+
+[node name="Background" type="ColorRect" parent="."]
+anchor_right = 1.0
+anchor_bottom = 1.0
+color = Color(0.007843, 0.023529, 0.090196, 1)
+mouse_filter = 2
+
+[node name="Root" type="VBoxContainer" parent="."]
+anchor_left = 0.0
+anchor_top = 0.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 32
+offset_top = 32
+offset_right = -32
+offset_bottom = -32
+theme_override_constants/separation = 20
+
+[node name="Title" type="Label" parent="Root"]
+text = "Formulário de Exemplo"
+theme_override_font_sizes/font_size = 32
+theme_override_colors/font_color = Color(0.972549, 0.980392, 0.988235, 1)
+
+[node name="InputCard" type="PanelContainer" parent="Root"]
+theme_type_variation = &"Card"
+theme_override_styles/panel = SubResource("StyleBoxFlat_1")
+
+[node name="VBox" type="VBoxContainer" parent="Root/InputCard"]
+theme_override_constants/separation = 12
+
+[node name="Label" type="Label" parent="Root/InputCard/VBox"]
+text = "Nome do jogador"
+theme_override_font_sizes/font_size = 16
+theme_override_colors/font_color = Color(0.796078, 0.835294, 0.882353, 1)
+
+[node name="NameInput" type="LineEdit" parent="Root/InputCard/VBox"]
+metadata/action = "form.name_changed"
+placeholder_text = "Digite seu nome..."
+max_length = 32
+focus_mode = 2
+
+[node name="PasswordCard" type="PanelContainer" parent="Root"]
+theme_type_variation = &"Card"
+theme_override_styles/panel = SubResource("StyleBoxFlat_2")
+
+[node name="VBox2" type="VBoxContainer" parent="Root/PasswordCard"]
+theme_override_constants/separation = 12
+
+[node name="Label2" type="Label" parent="Root/PasswordCard/VBox2"]
+text = "Senha"
+theme_override_font_sizes/font_size = 16
+theme_override_colors/font_color = Color(0.796078, 0.835294, 0.882353, 1)
+
+[node name="PasswordInput" type="LineEdit" parent="Root/PasswordCard/VBox2"]
+metadata/action = "form.password_changed"
+placeholder_text = "Digite sua senha..."
+secret = true
+focus_mode = 2
+
+[node name="DifficultyCard" type="PanelContainer" parent="Root"]
+theme_type_variation = &"Card"
+theme_override_styles/panel = SubResource("StyleBoxFlat_3")
+
+[node name="VBox3" type="VBoxContainer" parent="Root/DifficultyCard"]
+theme_override_constants/separation = 12
+
+[node name="Label3" type="Label" parent="Root/DifficultyCard/VBox3"]
+text = "Dificuldade"
+theme_override_font_sizes/font_size = 16
+theme_override_colors/font_color = Color(0.796078, 0.835294, 0.882353, 1)
+
+[node name="DifficultyOption" type="OptionButton" parent="Root/DifficultyCard/VBox3"]
+metadata/action = "form.difficulty_changed"
+metadata/options = "[\"Fácil\",\"Normal\",\"Difícil\",\"Insano\"]"
+focus_mode = 2
+
+[node name="VolumeCard" type="PanelContainer" parent="Root"]
+theme_type_variation = &"Card"
+theme_override_styles/panel = SubResource("StyleBoxFlat_4")
+
+[node name="VBox4" type="VBoxContainer" parent="Root/VolumeCard"]
+theme_override_constants/separation = 12
+
+[node name="Label4" type="Label" parent="Root/VolumeCard/VBox4"]
+text = "Volume"
+theme_override_font_sizes/font_size = 16
+theme_override_colors/font_color = Color(0.796078, 0.835294, 0.882353, 1)
+
+[node name="VolumeSlider" type="HSlider" parent="Root/VolumeCard/VBox4"]
+metadata/action = "form.volume_changed"
+min_value = 0
+max_value = 100
+value = 80
+step = 1
+focus_mode = 2
+
+[node name="ProgressCard" type="PanelContainer" parent="Root"]
+theme_type_variation = &"Card"
+theme_override_styles/panel = SubResource("StyleBoxFlat_5")
+
+[node name="VBox5" type="VBoxContainer" parent="Root/ProgressCard"]
+theme_override_constants/separation = 12
+
+[node name="Label5" type="Label" parent="Root/ProgressCard/VBox5"]
+text = "Carregando recursos..."
+theme_override_font_sizes/font_size = 16
+theme_override_colors/font_color = Color(0.796078, 0.835294, 0.882353, 1)
+
+[node name="LoadBar" type="ProgressBar" parent="Root/ProgressCard/VBox5"]
+min_value = 0
+max_value = 100
+value = 65
+
+[node name="AvatarCard" type="PanelContainer" parent="Root"]
+theme_type_variation = &"Card"
+theme_override_styles/panel = SubResource("StyleBoxFlat_6")
+
+[node name="VBox6" type="VBoxContainer" parent="Root/AvatarCard"]
+theme_override_constants/separation = 12
+
+[node name="Label6" type="Label" parent="Root/AvatarCard/VBox6"]
+text = "Avatar"
+theme_override_font_sizes/font_size = 16
+theme_override_colors/font_color = Color(0.796078, 0.835294, 0.882353, 1)
+
+[node name="AvatarTexture" type="TextureRect" parent="Root/AvatarCard/VBox6"]
+custom_minimum_size = Vector2(128, 128)
+expand_mode = 1
+stretch_mode = 5
+texture = ExtResource("Texture2D_1")
+
+[node name="HBox" type="HBoxContainer" parent="Root"]
+theme_override_constants/separation = 12
+
+[node name="Spacer" type="Control" parent="Root/HBox"]
+size_flags_horizontal = 3
+size_flags_vertical = 3
+custom_minimum_size = Vector2(0, 0)
+
+[node name="CancelButton" type="Button" parent="Root/HBox"]
+metadata/action = "form.cancel"
+text = "Cancelar"
+focus_mode = 2
+
+[node name="SaveButton" type="Button" parent="Root/HBox"]
+metadata/action = "form.save"
+theme_type_variation = &"PrimaryButton"
+text = "Salvar"
+focus_mode = 2
