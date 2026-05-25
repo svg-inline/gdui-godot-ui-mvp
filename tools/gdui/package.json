@@ -1,5 +1,5 @@
 {
-  "name": "@gdui/compiler",
+  "name": "@gdui/cli",
   "private": true,
   "version": "0.1.1",
   "type": "module",
@@ -11,8 +11,12 @@
     "check": "node bin/gdui.js --input ../../ui/inventory.gdui.html --check",
     "test": "node --test tests/*.test.js"
   },
+  "dependencies": {
+    "@gdui/compiler": "*",
+    "@gdui/godot-exporter": "*",
+    "@gdui/theme-exporter": "*"
+  },
   "engines": {
     "node": ">=18.0.0"
-  },
-  "dependencies": {}
+  }
 }

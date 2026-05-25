@@ -2,3 +2,26 @@
 # yarn lockfile v1
 
 
+"@gdui/cli@file:D:\\GODOT\\gdui-godot-ui-mvp\\gdui-godot-ui-mvp\\tools\\gdui":
+  version "0.1.1"
+  resolved "file:tools/gdui"
+  dependencies:
+    "@gdui/compiler" "*"
+    "@gdui/godot-exporter" "*"
+    "@gdui/theme-exporter" "*"
+
+"@gdui/compiler@*", "@gdui/compiler@file:D:\\GODOT\\gdui-godot-ui-mvp\\gdui-godot-ui-mvp\\packages\\compiler":
+  version "0.1.0"
+  resolved "file:packages/compiler"
+
+"@gdui/godot-exporter@*", "@gdui/godot-exporter@file:D:\\GODOT\\gdui-godot-ui-mvp\\gdui-godot-ui-mvp\\packages\\godot-exporter":
+  version "0.1.0"
+  resolved "file:packages/godot-exporter"
+  dependencies:
+    "@gdui/compiler" "*"
+
+"@gdui/theme-exporter@*", "@gdui/theme-exporter@file:D:\\GODOT\\gdui-godot-ui-mvp\\gdui-godot-ui-mvp\\packages\\theme-exporter":
+  version "0.1.0"
+  resolved "file:packages/theme-exporter"
+  dependencies:
+    "@gdui/compiler" "*"

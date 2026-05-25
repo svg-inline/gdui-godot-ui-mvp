@@ -1,4 +1,4 @@
-import { colorToGodot, godotString } from "../utils.js";
+import { colorToGodot, godotString } from "@gdui/compiler";
 
 export function exportTscn(sceneAst, options = {}) {
   const nodes = [];

@@ -1,0 +1,15 @@
+{
+  "name": "@gdui/godot-exporter",
+  "version": "0.1.0",
+  "type": "module",
+  "main": "src/index.js",
+  "exports": {
+    ".": "./src/index.js"
+  },
+  "dependencies": {
+    "@gdui/compiler": "*"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}

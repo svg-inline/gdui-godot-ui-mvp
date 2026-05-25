@@ -3,6 +3,10 @@
   "private": true,
   "version": "0.1.3",
   "type": "module",
+  "workspaces": [
+    "packages/*",
+    "tools/gdui"
+  ],
   "scripts": {
     "compile": "node tools/gdui/bin/gdui.js --input ui --output scenes",
     "compile:sample": "node tools/gdui/bin/gdui.js --input ui/inventory.gdui.html --output scenes/InventoryScreen.tscn",

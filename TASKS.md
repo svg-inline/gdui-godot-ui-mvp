@@ -104,13 +104,13 @@ Status:
 
 ## v0.9 - Reestruturação de Pacotes
 
-| ID       | Status  | Task                                                            | Evidencia                                    |
-| -------- | ------- | --------------------------------------------------------------- | -------------------------------------------- |
-| GDUI-090 | Planned | Extrair `packages/compiler` (parser + normalizer).              | Hoje em `tools/gdui/src/`.                   |
-| GDUI-091 | Planned | Extrair `packages/godot-exporter`.                              | Hoje em `tools/gdui/src/exporters/tscn.js`.  |
-| GDUI-092 | Planned | Extrair `packages/theme-exporter`.                              | Hoje em `tools/gdui/src/exporters/theme.js`. |
-| GDUI-093 | Planned | CLI `tools/gdui/bin/` usa pacotes como dependências explícitas. | —                                            |
-| GDUI-094 | Planned | Revisitar GDUI-051/055 com guard de loop seguro.                | Adiado ate arquitetura de pacotes estavel.   |
+| ID       | Status  | Task                                                            | Evidencia                                                    |
+| -------- | ------- | --------------------------------------------------------------- | ------------------------------------------------------------ |
+| GDUI-090 | Done    | Extrair `packages/compiler` (parser + normalizer).              | `packages/compiler/src/` com index.js, 31 testes passando.   |
+| GDUI-091 | Done    | Extrair `packages/godot-exporter`.                              | `packages/godot-exporter/src/tscn.js` + index.js.            |
+| GDUI-092 | Done    | Extrair `packages/theme-exporter`.                              | `packages/theme-exporter/src/theme.js` + index.js.           |
+| GDUI-093 | Done    | CLI `tools/gdui/bin/` usa pacotes como dependências explícitas. | npm workspaces; `@gdui/cli` depende de `@gdui/compiler` etc. |
+| GDUI-094 | Planned | Revisitar GDUI-051/055 com guard de loop seguro.                | Arquitetura de pacotes estavel - pronto para retomar.        |
 
 ## v0.10 - Setup Automático do Projeto
 
