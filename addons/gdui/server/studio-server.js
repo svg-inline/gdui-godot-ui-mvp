@@ -1,73 +1,73 @@
 #!/usr/bin/env node
-import fs from 'node:fs';
-import http from 'node:http';
-import path from 'node:path';
-import { pathToFileURL } from 'node:url';
+import fs from "node:fs";
+import http from "node:http";
+import path from "node:path";
+import { pathToFileURL, fileURLToPath } from "node:url";
 
-const DEFAULT_HOST = '127.0.0.1';
+const DEFAULT_HOST = "127.0.0.1";
 const DEFAULT_PORT = 39147;
-const RESPONSIVE_PREFIXES = new Set(['sm', 'md', 'lg', 'xl', 'tv']);
-const BINDING_PREFIX = 'bind';
-const SUPPORTED_BINDINGS = new Set(['text', 'visible', 'disabled']);
+const RESPONSIVE_PREFIXES = new Set(["sm", "md", "lg", "xl", "tv"]);
+const BINDING_PREFIX = "bind";
+const SUPPORTED_BINDINGS = new Set(["text", "visible", "disabled"]);
 const SUPPORTED_ATTRS = new Set([
-  'name',
-  'id',
-  'anchor',
-  'visible',
-  'width',
-  'height',
-  'min-width',
-  'min-height',
-  'expand',
-  'class',
-  'variant',
-  'theme',
-  'tooltip',
-  'action',
-  'padding',
-  'gap',
-  'background',
-  'radius',
-  'border',
-  'border-color',
-  'color',
-  'font-size',
-  'align',
-  'wrap',
-  'columns',
-  'src',
-  'image',
-  'disabled',
-  'text',
-  'state',
+  "name",
+  "id",
+  "anchor",
+  "visible",
+  "width",
+  "height",
+  "min-width",
+  "min-height",
+  "expand",
+  "class",
+  "variant",
+  "theme",
+  "tooltip",
+  "action",
+  "padding",
+  "gap",
+  "background",
+  "radius",
+  "border",
+  "border-color",
+  "color",
+  "font-size",
+  "align",
+  "wrap",
+  "columns",
+  "src",
+  "image",
+  "disabled",
+  "text",
+  "state",
 ]);
-const GODOT_ONLY_ATTRS = new Set(['action', 'theme', 'class', 'tooltip']);
+const GODOT_ONLY_ATTRS = new Set(["action", "theme", "class", "tooltip"]);
 const PREVIEW_APPROX_ATTRS = new Set([
-  'anchor',
-  'expand',
-  'padding',
-  'gap',
-  'background',
-  'radius',
-  'border',
-  'border-color',
-  'font-size',
-  'columns',
-  'wrap',
+  "anchor",
+  "expand",
+  "padding",
+  "gap",
+  "background",
+  "radius",
+  "border",
+  "border-color",
+  "font-size",
+  "columns",
+  "wrap",
 ]);
 
 export function resolveProjectPath(root, requestedPath) {
-  const value = String(requestedPath || '').replaceAll('\\', '/');
+  const value = String(requestedPath || "").replaceAll("\\", "/");
 
-  if (!value || value.includes('\0') || path.isAbsolute(value)) {
-    throw new Error('Invalid project path');
+  if (!value || value.includes("\0") || path.isAbsolute(value)) {
+    throw new Error("Invalid project path");
   }
 
   const resolved = path.resolve(root, value);
   const relative = path.relative(root, resolved);
 
-  if (relative.startsWith('..') || path.isAbsolute(relative)) {
-    throw new Error('Project path escapes project root');
+  if (relative.startsWith("..") || path.isAbsolute(relative)) {
+    throw new Error("Project path escapes project root");
   }
 
   return resolved;
@@ -75,12 +75,12 @@ export function resolveProjectPath(root, requestedPath) {
 
 export function assertGduiMarkupPath(filePath) {
   if (!/\.gdui\.html$/i.test(filePath)) {
-    throw new Error('Only .gdui.html files can be edited by Gdui Studio');
+    throw new Error("Only .gdui.html files can be edited by Gdui Studio");
   }
 }
 
 export function toProjectPath(root, filePath) {
-  return path.relative(root, filePath).replaceAll(path.sep, '/');
+  return path.relative(root, filePath).replaceAll(path.sep, "/");
 }
 
 export function collectMarkupDiagnostics(source, compiler) {
@@ -95,14 +95,16 @@ export function collectMarkupDiagnostics(source, compiler) {
     const markupAst = compiler.parseMarkup(source);
     collectUnsupportedAttrs(markupAst, diagnostics.warnings);
     const result = compiler.compileSource(source);
-    diagnostics.comparison.push(...collectPreviewComparison(markupAst, result.sceneAst));
+    diagnostics.comparison.push(
+      ...collectPreviewComparison(markupAst, result.sceneAst),
+    );
     for (const warning of result.warnings || []) {
-      diagnostics.warnings.push({ kind: 'compiler-warning', message: warning });
+      diagnostics.warnings.push({ kind: "compiler-warning", message: warning });
     }
   } catch (error) {
     diagnostics.ok = false;
     diagnostics.errors.push({
-      kind: 'compile-error',
+      kind: "compile-error",
       message: error instanceof Error ? error.message : String(error),
     });
   }
@@ -117,7 +119,7 @@ export function collectPreviewComparison(markupAst, sceneAst) {
   const nodeCount = sceneNodes.length;
 
   items.push({
-    kind: 'godot-output',
+    kind: "godot-output",
     message: `Godot output: ${nodeCount} native node(s), root ${sceneAst.type} "${sceneAst.name}".`,
   });
 
@@ -148,11 +150,11 @@ function parseArgs(argv) {
 
   for (let i = 0; i < argv.length; i++) {
     const token = argv[i];
-    if (!token.startsWith('--')) continue;
+    if (!token.startsWith("--")) continue;
 
     const key = token.slice(2);
     const next = argv[i + 1];
-    if (!next || next.startsWith('--')) {
+    if (!next || next.startsWith("--")) {
       args[key] = true;
     } else {
       args[key] = next;
@@ -167,7 +169,7 @@ function parseArgs(argv) {
 
 function listGduiFiles(root) {
   const files = [];
-  const sourceDirs = ['ui', 'examples'];
+  const sourceDirs = ["ui", "examples"];
 
   for (const sourceDir of sourceDirs) {
     const absoluteDir = path.join(root, sourceDir);
@@ -190,34 +192,45 @@ function listGduiFiles(root) {
 }
 
 async function loadCompiler(root) {
-  const compilerPath = path.join(root, 'tools/gdui/src/index.js');
-  if (!fs.existsSync(compilerPath)) {
-    throw new Error(`Compiler not found: ${compilerPath}`);
+  // Prefer bundled lib (self-contained addon — just addons/gdui/ distributed)
+  const bundledPath = path.join(
+    path.dirname(fileURLToPath(import.meta.url)),
+    "../compiler/lib.mjs",
+  );
+  if (fs.existsSync(bundledPath)) {
+    return import(pathToFileURL(bundledPath).href);
   }
 
-  return import(pathToFileURL(compilerPath).href);
+  // Development fallback: workspace source tree
+  const srcPath = path.join(root, "tools/gdui/src/index.js");
+  if (!fs.existsSync(srcPath)) {
+    throw new Error(
+      'Compiler not found. Run "npm run build:addon" to generate addons/gdui/compiler/lib.mjs',
+    );
+  }
+  return import(pathToFileURL(srcPath).href);
 }
 
 async function readRequestJson(req) {
   const chunks = [];
   for await (const chunk of req) chunks.push(chunk);
-  const raw = Buffer.concat(chunks).toString('utf8');
+  const raw = Buffer.concat(chunks).toString("utf8");
   return raw ? JSON.parse(raw) : {};
 }
 
 function sendJson(res, status, payload) {
   const body = JSON.stringify(payload, null, 2);
   res.writeHead(status, {
-    'content-type': 'application/json; charset=utf-8',
-    'cache-control': 'no-store',
+    "content-type": "application/json; charset=utf-8",
+    "cache-control": "no-store",
   });
   res.end(body);
 }
 
 function sendHtml(res, html) {
   res.writeHead(200, {
-    'content-type': 'text/html; charset=utf-8',
-    'cache-control': 'no-store',
+    "content-type": "text/html; charset=utf-8",
+    "cache-control": "no-store",
   });
   res.end(html);
 }
@@ -235,7 +248,7 @@ async function compileSingle(root, projectPath) {
 
   const { compileFile } = await loadCompiler(root);
   const dryRun = compileFile(inputFile, null);
-  const outputFile = path.join(root, 'scenes', `${dryRun.sceneAst.name}.tscn`);
+  const outputFile = path.join(root, "scenes", `${dryRun.sceneAst.name}.tscn`);
   const result = compileFile(inputFile, outputFile);
 
   return {
@@ -246,8 +259,8 @@ async function compileSingle(root, projectPath) {
 }
 
 async function compileAll(root) {
-  const inputDir = path.join(root, 'ui');
-  const outputDir = path.join(root, 'scenes');
+  const inputDir = path.join(root, "ui");
+  const outputDir = path.join(root, "scenes");
   const { compileDirectory } = await loadCompiler(root);
   const results = compileDirectory(inputDir, outputDir);
 
@@ -260,17 +273,17 @@ async function compileAll(root) {
 
 async function diagnoseSource(root, source) {
   const compiler = await loadCompiler(root);
-  return collectMarkupDiagnostics(String(source || ''), compiler);
+  return collectMarkupDiagnostics(String(source || ""), compiler);
 }
 
 async function previewSource(root, source) {
   const compiler = await loadCompiler(root);
-  return renderPreviewDocument(String(source || ''), compiler);
+  return renderPreviewDocument(String(source || ""), compiler);
 }
 
 function collectUnsupportedAttrs(node, warnings) {
   for (const attr of Object.keys(node.attrs || {})) {
-    const [prefix, prop] = attr.split(':');
+    const [prefix, prop] = attr.split(":");
     const isResponsive = Boolean(prop) && RESPONSIVE_PREFIXES.has(prefix);
     const isBinding = Boolean(prop) && prefix === BINDING_PREFIX;
     const attrName = isResponsive ? prop : attr;
@@ -281,7 +294,7 @@ function collectUnsupportedAttrs(node, warnings) {
 
     if (!SUPPORTED_ATTRS.has(attrName)) {
       warnings.push({
-        kind: 'unsupported-attr',
+        kind: "unsupported-attr",
         node: node.tag,
         attr,
         message: `${node.tag}: unsupported attribute "${attr}" is ignored by the Godot exporter.`,
@@ -290,56 +303,57 @@ function collectUnsupportedAttrs(node, warnings) {
   }
 
   for (const child of node.children || []) {
-    if (child.type === 'element') collectUnsupportedAttrs(child, warnings);
+    if (child.type === "element") collectUnsupportedAttrs(child, warnings);
   }
 }
 
 function collectMarkupComparison(node, items) {
-  if (node.tag === 'gd-texture') {
+  if (node.tag === "gd-texture") {
     items.push({
-      kind: 'preview-gap',
-      message: 'gd-texture is metadata-only in the Godot MVP; the web preview cannot confirm the final TextureRect resource.',
+      kind: "preview-gap",
+      message:
+        "gd-texture is metadata-only in the Godot MVP; the web preview cannot confirm the final TextureRect resource.",
     });
   }
 
-  if (node.tag === 'gd-button' && node.attrs?.action) {
+  if (node.tag === "gd-button" && node.attrs?.action) {
     items.push({
-      kind: 'godot-only',
+      kind: "godot-only",
       message: `action="${node.attrs.action}" is exported as metadata/action and handled by action_router.gd, not by the web preview.`,
     });
   }
 
   for (const attr of Object.keys(node.attrs || {})) {
-    const [prefix, prop] = attr.split(':');
+    const [prefix, prop] = attr.split(":");
     const isResponsive = Boolean(prop) && RESPONSIVE_PREFIXES.has(prefix);
     const isBinding = Boolean(prop) && prefix === BINDING_PREFIX;
     const attrName = isResponsive ? prop : attr;
 
     if (isResponsive) {
       items.push({
-        kind: 'runtime-only',
+        kind: "runtime-only",
         message: `${attr} is applied by responsive_runtime.gd in Godot; the web preview only approximates breakpoints.`,
       });
     } else if (isBinding) {
       items.push({
-        kind: 'runtime-only',
+        kind: "runtime-only",
         message: `${attr} is exported as gdui_bindings metadata for the future Godot reactive runtime; the web preview does not execute bindings.`,
       });
     } else if (GODOT_ONLY_ATTRS.has(attrName)) {
       items.push({
-        kind: 'godot-only',
+        kind: "godot-only",
         message: `${attrName} affects Godot metadata/resource behavior and may not be visible in the web preview.`,
       });
     } else if (PREVIEW_APPROX_ATTRS.has(attrName)) {
       items.push({
-        kind: 'preview-approx',
+        kind: "preview-approx",
         message: `${attrName} is approximated in the web preview; verify final layout in the generated .tscn.`,
       });
     }
   }
 
   for (const child of node.children || []) {
-    if (child.type === 'element') collectMarkupComparison(child, items);
+    if (child.type === "element") collectMarkupComparison(child, items);
   }
 }
 
@@ -351,35 +365,35 @@ function collectSceneNodes(node, out) {
 function renderPreviewNode(node) {
   const attrs = node.attrs || {};
   const children = (node.children || [])
-    .filter((child) => child.type === 'element')
+    .filter((child) => child.type === "element")
     .map(renderPreviewNode)
-    .join('');
+    .join("");
 
   switch (node.tag) {
-    case 'gd-screen':
+    case "gd-screen":
       return `<main class="gd-screen" style="${styleAttr(screenStyles(attrs))}">${children}</main>`;
-    case 'gd-vbox':
-      return `<div class="gd-vbox" style="${styleAttr(layoutStyles(attrs, 'column'))}">${children}</div>`;
-    case 'gd-hbox':
-      return `<div class="gd-hbox" style="${styleAttr(layoutStyles(attrs, 'row'))}">${children}</div>`;
-    case 'gd-grid':
+    case "gd-vbox":
+      return `<div class="gd-vbox" style="${styleAttr(layoutStyles(attrs, "column"))}">${children}</div>`;
+    case "gd-hbox":
+      return `<div class="gd-hbox" style="${styleAttr(layoutStyles(attrs, "row"))}">${children}</div>`;
+    case "gd-grid":
       return `<div class="gd-grid" style="${styleAttr(gridStyles(attrs))}">${children}</div>`;
-    case 'gd-panel':
+    case "gd-panel":
       return `<section class="gd-panel" style="${styleAttr(panelStyles(attrs))}">${children}</section>`;
-    case 'gd-card':
+    case "gd-card":
       return `<article class="gd-card" style="${styleAttr(panelStyles(attrs))}">${children}</article>`;
-    case 'gd-label':
-      return `<div class="gd-label" style="${styleAttr(labelStyles(attrs))}">${escapeHtml(attrs.text || '')}</div>`;
-    case 'gd-button':
-      return `<button class="gd-button" style="${styleAttr(buttonStyles(attrs))}"${attrs.disabled === 'true' ? ' disabled' : ''}>${escapeHtml(attrs.text || '')}</button>`;
-    case 'gd-scroll':
+    case "gd-label":
+      return `<div class="gd-label" style="${styleAttr(labelStyles(attrs))}">${escapeHtml(attrs.text || "")}</div>`;
+    case "gd-button":
+      return `<button class="gd-button" style="${styleAttr(buttonStyles(attrs))}"${attrs.disabled === "true" ? " disabled" : ""}>${escapeHtml(attrs.text || "")}</button>`;
+    case "gd-scroll":
       return `<div class="gd-scroll" style="${styleAttr(sizeStyles(attrs))}">${children}</div>`;
-    case 'gd-texture':
-      return `<div class="gd-texture" style="${styleAttr(sizeStyles(attrs))}">${escapeHtml(attrs.src || attrs.image || 'Texture')}</div>`;
-    case 'gd-spacer':
+    case "gd-texture":
+      return `<div class="gd-texture" style="${styleAttr(sizeStyles(attrs))}">${escapeHtml(attrs.src || attrs.image || "Texture")}</div>`;
+    case "gd-spacer":
       return `<div class="gd-spacer" style="${styleAttr(sizeStyles(attrs))}"></div>`;
-    case 'gd-container':
-    case 'gd-control':
+    case "gd-container":
+    case "gd-control":
     default:
       return `<div class="gd-control" style="${styleAttr(containerStyles(attrs))}">${children}</div>`;
   }
@@ -387,21 +401,21 @@ function renderPreviewNode(node) {
 
 function previewCss() {
   return [
-    'html,body{margin:0;min-height:100%;background:#0f172a;color:#f8fafc;font-family:Inter,system-ui,sans-serif;}',
-    '*{box-sizing:border-box;}',
-    '.gd-screen{min-height:100vh;padding:32px;background:#0f172a;}',
-    '.gd-vbox{display:flex;flex-direction:column;gap:18px;}',
-    '.gd-hbox{display:flex;flex-direction:row;align-items:center;gap:16px;}',
-    '.gd-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;}',
-    '.gd-panel,.gd-card{display:block;background:#111827;border:1px solid #334155;border-radius:12px;padding:18px;}',
-    '.gd-label{display:block;color:#f8fafc;}',
-    '.gd-button{display:inline-flex;justify-content:center;align-items:center;min-height:42px;padding:0 16px;border:0;border-radius:6px;background:#2f8f83;color:#06110f;font:inherit;font-weight:700;}',
-    '.gd-button:disabled{opacity:.55;}',
-    '.gd-scroll{display:block;overflow:auto;}',
-    '.gd-texture{display:grid;place-items:center;min-height:96px;border:1px dashed #475569;color:#cbd5e1;background:#111827;}',
-    '.gd-spacer{display:block;flex:1 1 auto;}',
-    '@media (min-width:1025px){.gd-grid{grid-template-columns:repeat(4,minmax(0,1fr));}}',
-  ].join('');
+    "html,body{margin:0;min-height:100%;background:#0f172a;color:#f8fafc;font-family:Inter,system-ui,sans-serif;}",
+    "*{box-sizing:border-box;}",
+    ".gd-screen{min-height:100vh;padding:32px;background:#0f172a;}",
+    ".gd-vbox{display:flex;flex-direction:column;gap:18px;}",
+    ".gd-hbox{display:flex;flex-direction:row;align-items:center;gap:16px;}",
+    ".gd-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;}",
+    ".gd-panel,.gd-card{display:block;background:#111827;border:1px solid #334155;border-radius:12px;padding:18px;}",
+    ".gd-label{display:block;color:#f8fafc;}",
+    ".gd-button{display:inline-flex;justify-content:center;align-items:center;min-height:42px;padding:0 16px;border:0;border-radius:6px;background:#2f8f83;color:#06110f;font:inherit;font-weight:700;}",
+    ".gd-button:disabled{opacity:.55;}",
+    ".gd-scroll{display:block;overflow:auto;}",
+    ".gd-texture{display:grid;place-items:center;min-height:96px;border:1px dashed #475569;color:#cbd5e1;background:#111827;}",
+    ".gd-spacer{display:block;flex:1 1 auto;}",
+    "@media (min-width:1025px){.gd-grid{grid-template-columns:repeat(4,minmax(0,1fr));}}",
+  ].join("");
 }
 
 function screenStyles(attrs) {
@@ -409,25 +423,25 @@ function screenStyles(attrs) {
     ...sizeStyles(attrs),
     background: attrs.background,
     padding: attrs.padding ? cssBox(attrs.padding) : undefined,
-    display: attrs.visible === 'false' ? 'none' : undefined,
+    display: attrs.visible === "false" ? "none" : undefined,
   };
 }
 
 function layoutStyles(attrs, direction) {
   return {
     ...containerStyles(attrs),
-    display: attrs.visible === 'false' ? 'none' : 'flex',
-    'flex-direction': direction,
+    display: attrs.visible === "false" ? "none" : "flex",
+    "flex-direction": direction,
     gap: cssNumber(attrs.gap),
   };
 }
 
 function gridStyles(attrs) {
-  const columns = Math.max(1, Number.parseInt(attrs.columns || '2', 10) || 2);
+  const columns = Math.max(1, Number.parseInt(attrs.columns || "2", 10) || 2);
   return {
     ...containerStyles(attrs),
-    display: attrs.visible === 'false' ? 'none' : 'grid',
-    'grid-template-columns': `repeat(${columns}, minmax(0, 1fr))`,
+    display: attrs.visible === "false" ? "none" : "grid",
+    "grid-template-columns": `repeat(${columns}, minmax(0, 1fr))`,
     gap: cssNumber(attrs.gap),
   };
 }
@@ -437,8 +451,10 @@ function panelStyles(attrs) {
     ...containerStyles(attrs),
     background: attrs.background,
     padding: attrs.padding ? cssBox(attrs.padding) : undefined,
-    'border-radius': cssNumber(attrs.radius),
-    border: attrs.border ? `${stripUnit(attrs.border)}px solid ${attrs['border-color'] || '#334155'}` : undefined,
+    "border-radius": cssNumber(attrs.radius),
+    border: attrs.border
+      ? `${stripUnit(attrs.border)}px solid ${attrs["border-color"] || "#334155"}`
+      : undefined,
   };
 }
 
@@ -446,7 +462,7 @@ function containerStyles(attrs) {
   return {
     ...sizeStyles(attrs),
     padding: attrs.padding ? cssBox(attrs.padding) : undefined,
-    display: attrs.visible === 'false' ? 'none' : undefined,
+    display: attrs.visible === "false" ? "none" : undefined,
   };
 }
 
@@ -454,17 +470,20 @@ function labelStyles(attrs) {
   return {
     ...sizeStyles(attrs),
     color: attrs.color,
-    'font-size': cssNumber(attrs['font-size']),
-    'text-align': attrs.align === 'center' || attrs.align === 'right' ? attrs.align : undefined,
-    'white-space': attrs.wrap === 'true' ? 'normal' : undefined,
-    display: attrs.visible === 'false' ? 'none' : undefined,
+    "font-size": cssNumber(attrs["font-size"]),
+    "text-align":
+      attrs.align === "center" || attrs.align === "right"
+        ? attrs.align
+        : undefined,
+    "white-space": attrs.wrap === "true" ? "normal" : undefined,
+    display: attrs.visible === "false" ? "none" : undefined,
   };
 }
 
 function buttonStyles(attrs) {
   return {
     ...sizeStyles(attrs),
-    display: attrs.visible === 'false' ? 'none' : undefined,
+    display: attrs.visible === "false" ? "none" : undefined,
   };
 }
 
@@ -472,109 +491,115 @@ function sizeStyles(attrs) {
   return {
     width: cssNumber(attrs.width),
     height: cssNumber(attrs.height),
-    'min-width': cssNumber(attrs['min-width']),
-    'min-height': cssNumber(attrs['min-height']),
+    "min-width": cssNumber(attrs["min-width"]),
+    "min-height": cssNumber(attrs["min-height"]),
   };
 }
 
 function styleAttr(styles) {
   return Object.entries(styles)
-    .filter(([, value]) => value !== undefined && value !== null && value !== '')
+    .filter(
+      ([, value]) => value !== undefined && value !== null && value !== "",
+    )
     .map(([key, value]) => `${key}:${escapeHtml(String(value))}`)
-    .join(';');
+    .join(";");
 }
 
 function cssBox(value) {
-  return String(value || '')
+  return String(value || "")
     .trim()
     .split(/\s+/)
     .map(cssNumber)
-    .join(' ');
+    .join(" ");
 }
 
 function cssNumber(value) {
-  if (value === undefined || value === null || value === '') return undefined;
+  if (value === undefined || value === null || value === "") return undefined;
   const raw = stripUnit(value);
   return Number.isFinite(Number(raw)) ? `${raw}px` : undefined;
 }
 
 function stripUnit(value) {
-  return String(value || '').replace(/px$/i, '').trim();
+  return String(value || "")
+    .replace(/px$/i, "")
+    .trim();
 }
 
 function escapeHtml(value) {
-  return String(value ?? '')
-    .replaceAll('&', '&amp;')
-    .replaceAll('<', '&lt;')
-    .replaceAll('>', '&gt;')
-    .replaceAll('"', '&quot;')
-    .replaceAll("'", '&#39;');
+  return String(value ?? "")
+    .replaceAll("&", "&amp;")
+    .replaceAll("<", "&lt;")
+    .replaceAll(">", "&gt;")
+    .replaceAll('"', "&quot;")
+    .replaceAll("'", "&#39;");
 }
 
 function createServer(root) {
   return http.createServer(async (req, res) => {
     try {
-      const url = new URL(req.url || '/', 'http://localhost');
+      const url = new URL(req.url || "/", "http://localhost");
 
-      if (req.method === 'GET' && url.pathname === '/') {
+      if (req.method === "GET" && url.pathname === "/") {
         sendHtml(res, renderStudioHtml());
         return;
       }
 
-      if (req.method === 'GET' && url.pathname === '/api/status') {
+      if (req.method === "GET" && url.pathname === "/api/status") {
         sendJson(res, 200, { ok: true, root, files: listGduiFiles(root) });
         return;
       }
 
-      if (req.method === 'GET' && url.pathname === '/api/files') {
+      if (req.method === "GET" && url.pathname === "/api/files") {
         sendJson(res, 200, { ok: true, files: listGduiFiles(root) });
         return;
       }
 
-      if (req.method === 'GET' && url.pathname === '/api/file') {
-        const projectPath = url.searchParams.get('path');
+      if (req.method === "GET" && url.pathname === "/api/file") {
+        const projectPath = url.searchParams.get("path");
         const filePath = resolveProjectPath(root, projectPath);
         assertGduiMarkupPath(filePath);
         sendJson(res, 200, {
           ok: true,
           path: toProjectPath(root, filePath),
-          source: fs.readFileSync(filePath, 'utf8'),
+          source: fs.readFileSync(filePath, "utf8"),
         });
         return;
       }
 
-      if (req.method === 'POST' && url.pathname === '/api/file') {
+      if (req.method === "POST" && url.pathname === "/api/file") {
         const body = await readRequestJson(req);
         const filePath = resolveProjectPath(root, body.path);
         assertGduiMarkupPath(filePath);
         fs.mkdirSync(path.dirname(filePath), { recursive: true });
-        fs.writeFileSync(filePath, String(body.source || ''), 'utf8');
+        fs.writeFileSync(filePath, String(body.source || ""), "utf8");
         sendJson(res, 200, { ok: true, path: toProjectPath(root, filePath) });
         return;
       }
 
-      if (req.method === 'POST' && url.pathname === '/api/compile') {
+      if (req.method === "POST" && url.pathname === "/api/compile") {
         const body = await readRequestJson(req);
-        const result = body.all ? await compileAll(root) : await compileSingle(root, body.path);
+        const result = body.all
+          ? await compileAll(root)
+          : await compileSingle(root, body.path);
         sendJson(res, 200, { ok: true, result });
         return;
       }
 
-      if (req.method === 'POST' && url.pathname === '/api/diagnostics') {
+      if (req.method === "POST" && url.pathname === "/api/diagnostics") {
         const body = await readRequestJson(req);
         const result = await diagnoseSource(root, body.source);
         sendJson(res, 200, { ok: true, result });
         return;
       }
 
-      if (req.method === 'POST' && url.pathname === '/api/preview') {
+      if (req.method === "POST" && url.pathname === "/api/preview") {
         const body = await readRequestJson(req);
         const html = await previewSource(root, body.source);
         sendJson(res, 200, { ok: true, html });
         return;
       }
 
-      sendJson(res, 404, { ok: false, error: 'Route not found' });
+      sendJson(res, 404, { ok: false, error: "Route not found" });
     } catch (error) {
       sendError(res, error);
     }
@@ -947,7 +972,10 @@ export function startStudioServer(options = {}) {
   return server;
 }
 
-if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) {
+if (
+  process.argv[1] &&
+  import.meta.url === pathToFileURL(process.argv[1]).href
+) {
   const args = parseArgs(process.argv.slice(2));
   startStudioServer(args);
 }

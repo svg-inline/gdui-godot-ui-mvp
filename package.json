@@ -19,10 +19,13 @@
     "test:godot": "node tools/godot/run-smoke.js",
     "test:responsive": "node tools/godot/run-smoke.js tools/godot/test_responsive_runtime.gd",
     "test:actions": "node tools/godot/run-smoke.js tools/godot/test_action_router.gd",
-    "test:bindings": "node tools/godot/run-smoke.js tools/godot/test_binding_runtime.gd"
+    "test:bindings": "node tools/godot/run-smoke.js tools/godot/test_binding_runtime.gd",
+    "build:addon": "node tools/build-addon.js"
   },
   "engines": {
     "node": ">=18.0.0"
   },
-  "devDependencies": {}
+  "devDependencies": {
+    "esbuild": "^0.25.0"
+  }
 }

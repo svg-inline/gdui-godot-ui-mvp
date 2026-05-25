@@ -84,7 +84,7 @@ func _stop_studio() -> void:
 
 func compile_all_ui() -> void:
 	var root := ProjectSettings.globalize_path("res://")
-	var cli := root.path_join("tools/gdui/bin/gdui.js")
+	var cli := _cli_path(root)
 
 	if not FileAccess.file_exists(cli):
 		_report_error("[Gdui] Compiler not found: " + cli)
@@ -102,7 +102,7 @@ func compile_all_ui() -> void:
 
 func compile_theme() -> void:
 	var root := ProjectSettings.globalize_path("res://")
-	var cli := root.path_join("tools/gdui/bin/gdui.js")
+	var cli := _cli_path(root)
 	var theme := root.path_join("theme.gdui.json")
 	var config := load_config()
 	var output := root.path_join(config.get("outputDir", "scenes")).path_join("theme.tres")
@@ -254,3 +254,12 @@ func _write_json_file(path: String, data: Dictionary) -> void:
 		return
 	file.store_string(JSON.stringify(data, "\t"))
 	file.close()
+
+# Resolve the CLI entry point:
+#   1. Bundled compiler inside addons/gdui/compiler/gdui.js  (distributed addon)
+#   2. Dev workspace source at tools/gdui/bin/gdui.js        (during development)
+func _cli_path(root: String) -> String:
+	var bundled := root.path_join("addons/gdui/compiler/gdui.js")
+	if FileAccess.file_exists(bundled):
+		return bundled
+	return root.path_join("tools/gdui/bin/gdui.js")
