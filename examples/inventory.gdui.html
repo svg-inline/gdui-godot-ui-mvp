@@ -1,0 +1,49 @@
+<gd-screen name="InventoryScreen" anchor="full" background="#0f172a">
+  <gd-vbox name="Root" anchor="full" padding="32" gap="18">
+    <gd-hbox name="Header" gap="16">
+      <gd-label name="Title" text="Inventário" color="#f8fafc" font-size="34" />
+      <gd-spacer name="HeaderSpacer" expand="true" />
+      <gd-button name="CloseButton" text="Fechar" action="inventory.close" min-width="120" />
+    </gd-hbox>
+
+    <gd-panel name="SummaryPanel" background="#111827" radius="18" border="1" border-color="#334155" padding="18">
+      <gd-vbox name="SummaryContent" gap="8">
+        <gd-label text="Mochila" color="#cbd5e1" font-size="18" />
+        <gd-label text="24 itens encontrados" color="#94a3b8" font-size="14" />
+      </gd-vbox>
+    </gd-panel>
+
+    <gd-scroll name="InventoryScroll" expand="true">
+      <gd-grid name="ItemsGrid" columns="2" md:columns="3" lg:columns="4" tv:columns="6" gap="14">
+        <gd-card name="SwordCard" background="#1e293b" radius="14" border="1" border-color="#475569" padding="16">
+          <gd-vbox gap="10">
+            <gd-label text="Espada Rara" color="#f8fafc" font-size="18" />
+            <gd-label text="+20 Ataque" color="#38bdf8" font-size="14" />
+            <gd-button text="Equipar" action="inventory.equip.sword" />
+          </gd-vbox>
+        </gd-card>
+        <gd-card name="PotionCard" background="#1e293b" radius="14" border="1" border-color="#475569" padding="16">
+          <gd-vbox gap="10">
+            <gd-label text="Poção" color="#f8fafc" font-size="18" />
+            <gd-label text="Cura 50 HP" color="#22c55e" font-size="14" />
+            <gd-button text="Usar" action="inventory.use.potion" />
+          </gd-vbox>
+        </gd-card>
+        <gd-card name="ShieldCard" background="#1e293b" radius="14" border="1" border-color="#475569" padding="16">
+          <gd-vbox gap="10">
+            <gd-label text="Escudo" color="#f8fafc" font-size="18" />
+            <gd-label text="+12 Defesa" color="#a78bfa" font-size="14" />
+            <gd-button text="Equipar" action="inventory.equip.shield" />
+          </gd-vbox>
+        </gd-card>
+        <gd-card name="MapCard" background="#1e293b" radius="14" border="1" border-color="#475569" padding="16">
+          <gd-vbox gap="10">
+            <gd-label text="Mapa Antigo" color="#f8fafc" font-size="18" />
+            <gd-label text="Item de missão" color="#f59e0b" font-size="14" />
+            <gd-button text="Inspecionar" action="inventory.inspect.map" />
+          </gd-vbox>
+        </gd-card>
+      </gd-grid>
+    </gd-scroll>
+  </gd-vbox>
+</gd-screen>

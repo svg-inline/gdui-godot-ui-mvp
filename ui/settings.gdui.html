@@ -1,0 +1,23 @@
+<gd-screen name="SettingsScreen" anchor="full" background="#020617">
+  <gd-vbox name="Root" anchor="full" padding="32" gap="18">
+    <gd-hbox name="Header" gap="12">
+      <gd-label name="Title" text="Configurações" color="#f8fafc" font-size="32" />
+      <gd-spacer expand="true" />
+      <gd-button name="BackButton" text="Voltar" action="settings.back" min-width="120" />
+    </gd-hbox>
+    <gd-card name="AudioCard" background="#111827" radius="16" border="1" border-color="#334155" padding="18">
+      <gd-vbox gap="10">
+        <gd-label text="Áudio" color="#f8fafc" font-size="22" />
+        <gd-label text="Volume mestre: 80%" color="#cbd5e1" font-size="16" />
+        <gd-button text="Alterar áudio" action="settings.audio" />
+      </gd-vbox>
+    </gd-card>
+    <gd-card name="VideoCard" background="#111827" radius="16" border="1" border-color="#334155" padding="18">
+      <gd-vbox gap="10">
+        <gd-label text="Vídeo" color="#f8fafc" font-size="22" />
+        <gd-label text="Modo: Tela cheia" color="#cbd5e1" font-size="16" />
+        <gd-button text="Alterar vídeo" action="settings.video" />
+      </gd-vbox>
+    </gd-card>
+  </gd-vbox>
+</gd-screen>

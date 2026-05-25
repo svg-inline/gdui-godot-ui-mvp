@@ -1,0 +1,117 @@
+[gd_scene load_steps=3 format=3]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_1"]
+bg_color = Color(0.066667, 0.094118, 0.152941, 1)
+corner_radius_top_left = 16
+corner_radius_top_right = 16
+corner_radius_bottom_right = 16
+corner_radius_bottom_left = 16
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.2, 0.254902, 0.333333, 1)
+content_margin_top = 18
+content_margin_right = 18
+content_margin_bottom = 18
+content_margin_left = 18
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_2"]
+bg_color = Color(0.066667, 0.094118, 0.152941, 1)
+corner_radius_top_left = 16
+corner_radius_top_right = 16
+corner_radius_bottom_right = 16
+corner_radius_bottom_left = 16
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.2, 0.254902, 0.333333, 1)
+content_margin_top = 18
+content_margin_right = 18
+content_margin_bottom = 18
+content_margin_left = 18
+
+[node name="SettingsScreen" type="Control"]
+anchor_left = 0.0
+anchor_top = 0.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+
+[node name="Background" type="ColorRect" parent="."]
+anchor_right = 1.0
+anchor_bottom = 1.0
+color = Color(0.007843, 0.023529, 0.090196, 1)
+mouse_filter = 2
+
+[node name="Root" type="VBoxContainer" parent="."]
+anchor_left = 0.0
+anchor_top = 0.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 32
+offset_top = 32
+offset_right = -32
+offset_bottom = -32
+theme_override_constants/separation = 18
+
+[node name="Header" type="HBoxContainer" parent="Root"]
+theme_override_constants/separation = 12
+
+[node name="Title" type="Label" parent="Root/Header"]
+text = "Configurações"
+theme_override_font_sizes/font_size = 32
+theme_override_colors/font_color = Color(0.972549, 0.980392, 0.988235, 1)
+
+[node name="Spacer" type="Control" parent="Root/Header"]
+size_flags_horizontal = 3
+size_flags_vertical = 3
+custom_minimum_size = Vector2(0, 0)
+
+[node name="BackButton" type="Button" parent="Root/Header"]
+custom_minimum_size = Vector2(120, 0)
+metadata/action = "settings.back"
+text = "Voltar"
+focus_mode = 2
+
+[node name="AudioCard" type="PanelContainer" parent="Root"]
+theme_override_styles/panel = SubResource("StyleBoxFlat_1")
+
+[node name="VBox" type="VBoxContainer" parent="Root/AudioCard"]
+theme_override_constants/separation = 10
+
+[node name="Label" type="Label" parent="Root/AudioCard/VBox"]
+text = "Áudio"
+theme_override_font_sizes/font_size = 22
+theme_override_colors/font_color = Color(0.972549, 0.980392, 0.988235, 1)
+
+[node name="Label2" type="Label" parent="Root/AudioCard/VBox"]
+text = "Volume mestre: 80%"
+theme_override_font_sizes/font_size = 16
+theme_override_colors/font_color = Color(0.796078, 0.835294, 0.882353, 1)
+
+[node name="Button" type="Button" parent="Root/AudioCard/VBox"]
+metadata/action = "settings.audio"
+text = "Alterar áudio"
+focus_mode = 2
+
+[node name="VideoCard" type="PanelContainer" parent="Root"]
+theme_override_styles/panel = SubResource("StyleBoxFlat_2")
+
+[node name="VBox2" type="VBoxContainer" parent="Root/VideoCard"]
+theme_override_constants/separation = 10
+
+[node name="Label3" type="Label" parent="Root/VideoCard/VBox2"]
+text = "Vídeo"
+theme_override_font_sizes/font_size = 22
+theme_override_colors/font_color = Color(0.972549, 0.980392, 0.988235, 1)
+
+[node name="Label4" type="Label" parent="Root/VideoCard/VBox2"]
+text = "Modo: Tela cheia"
+theme_override_font_sizes/font_size = 16
+theme_override_colors/font_color = Color(0.796078, 0.835294, 0.882353, 1)
+
+[node name="Button2" type="Button" parent="Root/VideoCard/VBox2"]
+metadata/action = "settings.video"
+text = "Alterar vídeo"
+focus_mode = 2

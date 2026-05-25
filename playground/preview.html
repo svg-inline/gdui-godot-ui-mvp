@@ -1,0 +1,34 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <style>
+    body { margin: 0; font-family: Inter, system-ui, sans-serif; background: #0f172a; color: #f8fafc; }
+    gd-screen, gd-vbox, gd-hbox, gd-panel, gd-card, gd-grid, gd-label, gd-button, gd-scroll { box-sizing: border-box; }
+    gd-screen { min-height: 100vh; display: block; padding: 32px; background: #0f172a; }
+    gd-vbox { display: flex; flex-direction: column; gap: 18px; }
+    gd-hbox { display: flex; align-items: center; gap: 16px; }
+    gd-panel, gd-card { display: block; background: #111827; border: 1px solid #334155; border-radius: 16px; padding: 18px; }
+    gd-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; }
+    gd-label { display: block; color: #f8fafc; }
+    gd-button { display: inline-flex; justify-content: center; align-items: center; min-height: 42px; padding: 0 16px; border-radius: 10px; background: #2563eb; color: white; }
+    @media (min-width: 1025px) { gd-grid { grid-template-columns: repeat(4, minmax(0, 1fr)); } }
+  </style>
+</head>
+<body>
+  <gd-screen>
+    <gd-vbox>
+      <gd-hbox>
+        <gd-label style="font-size: 34px">Inventário</gd-label>
+      </gd-hbox>
+      <gd-grid>
+        <gd-card><gd-vbox><gd-label>Espada Rara</gd-label><gd-button>Equipar</gd-button></gd-vbox></gd-card>
+        <gd-card><gd-vbox><gd-label>Poção</gd-label><gd-button>Usar</gd-button></gd-vbox></gd-card>
+        <gd-card><gd-vbox><gd-label>Escudo</gd-label><gd-button>Equipar</gd-button></gd-vbox></gd-card>
+        <gd-card><gd-vbox><gd-label>Mapa</gd-label><gd-button>Inspecionar</gd-button></gd-vbox></gd-card>
+      </gd-grid>
+    </gd-vbox>
+  </gd-screen>
+</body>
+</html>

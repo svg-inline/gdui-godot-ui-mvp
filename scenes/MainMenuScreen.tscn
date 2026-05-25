@@ -1,0 +1,80 @@
+[gd_scene load_steps=2 format=3]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_1"]
+bg_color = Color(0.066667, 0.094118, 0.152941, 1)
+corner_radius_top_left = 20
+corner_radius_top_right = 20
+corner_radius_bottom_right = 20
+corner_radius_bottom_left = 20
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.2, 0.254902, 0.333333, 1)
+content_margin_top = 24
+content_margin_right = 24
+content_margin_bottom = 24
+content_margin_left = 24
+
+[node name="MainMenuScreen" type="Control"]
+anchor_left = 0.0
+anchor_top = 0.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+
+[node name="Background" type="ColorRect" parent="."]
+anchor_right = 1.0
+anchor_bottom = 1.0
+color = Color(0.062745, 0.094118, 0.12549, 1)
+mouse_filter = 2
+
+[node name="Root" type="VBoxContainer" parent="."]
+anchor_left = 0.0
+anchor_top = 0.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 48
+offset_top = 48
+offset_right = -48
+offset_bottom = -48
+theme_override_constants/separation = 22
+
+[node name="Spacer" type="Control" parent="Root"]
+custom_minimum_size = Vector2(0, 80)
+
+[node name="GameTitle" type="Label" parent="Root"]
+text = "Skyforge Tactics"
+theme_override_font_sizes/font_size = 42
+theme_override_colors/font_color = Color(0.972549, 0.980392, 0.988235, 1)
+horizontal_alignment = 1
+
+[node name="Subtitle" type="Label" parent="Root"]
+text = "UI nativa gerada por .gdui.html"
+theme_override_font_sizes/font_size = 18
+theme_override_colors/font_color = Color(0.580392, 0.639216, 0.721569, 1)
+horizontal_alignment = 1
+
+[node name="MenuPanel" type="PanelContainer" parent="Root"]
+theme_override_styles/panel = SubResource("StyleBoxFlat_1")
+
+[node name="MenuButtons" type="VBoxContainer" parent="Root/MenuPanel"]
+theme_override_constants/separation = 12
+
+[node name="PlayButton" type="Button" parent="Root/MenuPanel/MenuButtons"]
+custom_minimum_size = Vector2(0, 48)
+metadata/action = "menu.play"
+theme_type_variation = &"PrimaryButton"
+text = "Jogar"
+focus_mode = 2
+
+[node name="SettingsButton" type="Button" parent="Root/MenuPanel/MenuButtons"]
+custom_minimum_size = Vector2(0, 48)
+metadata/action = "menu.settings"
+text = "Configurações"
+focus_mode = 2
+
+[node name="ExitButton" type="Button" parent="Root/MenuPanel/MenuButtons"]
+custom_minimum_size = Vector2(0, 48)
+metadata/action = "menu.exit"
+text = "Sair"
+focus_mode = 2
