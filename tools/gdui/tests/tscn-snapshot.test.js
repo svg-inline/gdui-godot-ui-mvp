@@ -10,6 +10,7 @@ const CASES = [
   "responsive-grid.gdui.html",
   "settings.gdui.html",
   "form-components.gdui.html",
+  "theme-variants.gdui.html",
 ];
 
 test("generated scenes match committed .tscn snapshots", () => {

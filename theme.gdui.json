@@ -10,9 +10,14 @@
     "primaryHover": "#7dd3fc",
     "primaryPressed": "#0284c7",
     "primaryText": "#020617",
+    "danger": "#ef4444",
+    "dangerHover": "#f87171",
+    "dangerPressed": "#b91c1c",
+    "dangerText": "#ffffff",
     "disabled": "#475569",
     "disabledText": "#94a3b8",
-    "border": "#334155"
+    "border": "#334155",
+    "transparent": "#00000000"
   },
   "spacing": {
     "sm": 8,

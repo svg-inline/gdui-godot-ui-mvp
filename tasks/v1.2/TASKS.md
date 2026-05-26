@@ -17,11 +17,11 @@ gd-* previsivel + AST estavel + .tscn editavel + Theme .tres
 
 | ID | Status | Task | Evidencia esperada |
 | --- | --- | --- | --- |
-| GDUI-200 | Planned | Especificar contrato de Theme v1.2 por componente. | `docs/COMPONENTS.md` ou doc dedicado com tokens, variants e limites. |
-| GDUI-201 | Planned | Migrar estilos visuais recorrentes para Theme `.tres`. | Exporter reduz inline stylebox quando houver `theme`/`variant` equivalente. |
-| GDUI-202 | Planned | Definir variants oficiais para `gd-button`, `gd-card`, `gd-label` e inputs. | Exemplos com `variant` e snapshots `.tscn` editaveis. |
-| GDUI-203 | Planned | Cobrir Theme v1.2 com testes de exporter. | Testes Node para tokens, variants e fallback seguro. |
-| GDUI-204 | Planned | Criar exemplo tematico v1.2. | Novo exemplo em `examples/` e cena gerada em `scenes/` quando aplicavel. |
+| GDUI-200 | Done | Especificar contrato de Theme v1.2 por componente. | `docs/COMPONENTS.md` documenta tokens, variants e limites. |
+| GDUI-201 | Done | Migrar estilos visuais recorrentes para Theme `.tres`. | Exporter reduz inline stylebox quando houver `theme`/`variant` equivalente. |
+| GDUI-202 | Done | Definir variants oficiais para `gd-button`, `gd-card`, `gd-label` e inputs. | Exemplos com `variant` e snapshots `.tscn` editaveis. |
+| GDUI-203 | Done | Cobrir Theme v1.2 com testes de exporter. | Testes Node cobrem tokens, variants e fallback seguro. |
+| GDUI-204 | Done | Criar exemplo tematico v1.2. | `examples/theme-variants.gdui.html` e `scenes/ThemeVariantsScreen.tscn`. |
 
 ## v1.2 - Release automation
 

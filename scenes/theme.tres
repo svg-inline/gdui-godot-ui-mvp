@@ -1,4 +1,4 @@
-[gd_resource type="Theme" load_steps=10 format=3]
+[gd_resource type="Theme" load_steps=23 format=3]
 
 [sub_resource type="StyleBoxFlat" id="GduiPanel"]
 bg_color = Color(0.066667, 0.094118, 0.152941, 1)
@@ -80,8 +80,88 @@ content_margin_right = 16
 content_margin_bottom = 16
 content_margin_left = 16
 
+[sub_resource type="StyleBoxFlat" id="GduiGhostButton"]
+bg_color = Color(0, 0, 0, 0)
+border_color = Color(0, 0, 0, 0)
+corner_radius_top_left = 12
+corner_radius_top_right = 12
+corner_radius_bottom_right = 12
+corner_radius_bottom_left = 12
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+content_margin_top = 16
+content_margin_right = 16
+content_margin_bottom = 16
+content_margin_left = 16
+
+[sub_resource type="StyleBoxFlat" id="GduiGhostButtonHover"]
+bg_color = Color(0.14902, 0.203922, 0.286275, 1)
+border_color = Color(0, 0, 0, 0)
+corner_radius_top_left = 12
+corner_radius_top_right = 12
+corner_radius_bottom_right = 12
+corner_radius_bottom_left = 12
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+content_margin_top = 16
+content_margin_right = 16
+content_margin_bottom = 16
+content_margin_left = 16
+
+[sub_resource type="StyleBoxFlat" id="GduiGhostButtonPressed"]
+bg_color = Color(0.058824, 0.090196, 0.164706, 1)
+border_color = Color(0, 0, 0, 0)
+corner_radius_top_left = 12
+corner_radius_top_right = 12
+corner_radius_bottom_right = 12
+corner_radius_bottom_left = 12
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+content_margin_top = 16
+content_margin_right = 16
+content_margin_bottom = 16
+content_margin_left = 16
+
 [sub_resource type="StyleBoxFlat" id="GduiCard"]
 bg_color = Color(0.117647, 0.160784, 0.231373, 1)
+border_color = Color(0.2, 0.254902, 0.333333, 1)
+corner_radius_top_left = 12
+corner_radius_top_right = 12
+corner_radius_bottom_right = 12
+corner_radius_bottom_left = 12
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+content_margin_top = 16
+content_margin_right = 16
+content_margin_bottom = 16
+content_margin_left = 16
+
+[sub_resource type="StyleBoxFlat" id="GduiElevatedCard"]
+bg_color = Color(0.117647, 0.160784, 0.231373, 1)
+border_color = Color(0.219608, 0.741176, 0.972549, 1)
+corner_radius_top_left = 18
+corner_radius_top_right = 18
+corner_radius_bottom_right = 18
+corner_radius_bottom_left = 18
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+content_margin_top = 24
+content_margin_right = 24
+content_margin_bottom = 24
+content_margin_left = 24
+
+[sub_resource type="StyleBoxFlat" id="GduiOutlinedCard"]
+bg_color = Color(0.066667, 0.094118, 0.152941, 1)
 border_color = Color(0.2, 0.254902, 0.333333, 1)
 corner_radius_top_left = 12
 corner_radius_top_right = 12
@@ -111,6 +191,134 @@ content_margin_top = 16
 content_margin_right = 16
 content_margin_bottom = 16
 content_margin_left = 16
+
+[sub_resource type="StyleBoxFlat" id="GduiDangerButton"]
+bg_color = Color(0.937255, 0.266667, 0.266667, 1)
+border_color = Color(0.937255, 0.266667, 0.266667, 1)
+corner_radius_top_left = 12
+corner_radius_top_right = 12
+corner_radius_bottom_right = 12
+corner_radius_bottom_left = 12
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+content_margin_top = 16
+content_margin_right = 16
+content_margin_bottom = 16
+content_margin_left = 16
+
+[sub_resource type="StyleBoxFlat" id="GduiDangerButtonHover"]
+bg_color = Color(0.972549, 0.443137, 0.443137, 1)
+border_color = Color(0.972549, 0.443137, 0.443137, 1)
+corner_radius_top_left = 12
+corner_radius_top_right = 12
+corner_radius_bottom_right = 12
+corner_radius_bottom_left = 12
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+content_margin_top = 16
+content_margin_right = 16
+content_margin_bottom = 16
+content_margin_left = 16
+
+[sub_resource type="StyleBoxFlat" id="GduiDangerButtonPressed"]
+bg_color = Color(0.72549, 0.109804, 0.109804, 1)
+border_color = Color(0.72549, 0.109804, 0.109804, 1)
+corner_radius_top_left = 12
+corner_radius_top_right = 12
+corner_radius_bottom_right = 12
+corner_radius_bottom_left = 12
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+content_margin_top = 16
+content_margin_right = 16
+content_margin_bottom = 16
+content_margin_left = 16
+
+[sub_resource type="StyleBoxFlat" id="GduiInput"]
+bg_color = Color(0.066667, 0.094118, 0.152941, 1)
+border_color = Color(0.2, 0.254902, 0.333333, 1)
+corner_radius_top_left = 12
+corner_radius_top_right = 12
+corner_radius_bottom_right = 12
+corner_radius_bottom_left = 12
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+content_margin_top = 8
+content_margin_right = 8
+content_margin_bottom = 8
+content_margin_left = 8
+
+[sub_resource type="StyleBoxFlat" id="GduiInputFocus"]
+bg_color = Color(0.066667, 0.094118, 0.152941, 1)
+border_color = Color(0.219608, 0.741176, 0.972549, 1)
+corner_radius_top_left = 12
+corner_radius_top_right = 12
+corner_radius_bottom_right = 12
+corner_radius_bottom_left = 12
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+content_margin_top = 8
+content_margin_right = 8
+content_margin_bottom = 8
+content_margin_left = 8
+
+[sub_resource type="StyleBoxFlat" id="GduiInputReadOnly"]
+bg_color = Color(0.058824, 0.090196, 0.164706, 1)
+border_color = Color(0.278431, 0.333333, 0.411765, 1)
+corner_radius_top_left = 12
+corner_radius_top_right = 12
+corner_radius_bottom_right = 12
+corner_radius_bottom_left = 12
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+content_margin_top = 8
+content_margin_right = 8
+content_margin_bottom = 8
+content_margin_left = 8
+
+[sub_resource type="StyleBoxFlat" id="GduiInvalidInput"]
+bg_color = Color(0.066667, 0.094118, 0.152941, 1)
+border_color = Color(0.937255, 0.266667, 0.266667, 1)
+corner_radius_top_left = 12
+corner_radius_top_right = 12
+corner_radius_bottom_right = 12
+corner_radius_bottom_left = 12
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+content_margin_top = 8
+content_margin_right = 8
+content_margin_bottom = 8
+content_margin_left = 8
+
+[sub_resource type="StyleBoxFlat" id="GduiInvalidInputFocus"]
+bg_color = Color(0.066667, 0.094118, 0.152941, 1)
+border_color = Color(0.972549, 0.443137, 0.443137, 1)
+corner_radius_top_left = 12
+corner_radius_top_right = 12
+corner_radius_bottom_right = 12
+corner_radius_bottom_left = 12
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+content_margin_top = 8
+content_margin_right = 8
+content_margin_bottom = 8
+content_margin_left = 8
 
 [sub_resource type="StyleBoxFlat" id="GduiPrimaryButtonHover"]
 bg_color = Color(0.490196, 0.827451, 0.988235, 1)
@@ -147,6 +355,12 @@ content_margin_left = 16
 [resource]
 Label/colors/font_color = Color(0.972549, 0.980392, 0.988235, 1)
 Label/font_sizes/font_size = 16
+TitleLabel/base_type = &"Label"
+TitleLabel/colors/font_color = Color(0.972549, 0.980392, 0.988235, 1)
+TitleLabel/font_sizes/font_size = 28
+MutedLabel/base_type = &"Label"
+MutedLabel/colors/font_color = Color(0.796078, 0.835294, 0.882353, 1)
+MutedLabel/font_sizes/font_size = 16
 Button/colors/font_color = Color(0.972549, 0.980392, 0.988235, 1)
 Button/colors/font_disabled_color = Color(0.580392, 0.639216, 0.721569, 1)
 Button/font_sizes/font_size = 16
@@ -154,9 +368,20 @@ Button/styles/normal = SubResource("GduiButton")
 Button/styles/hover = SubResource("GduiButtonHover")
 Button/styles/pressed = SubResource("GduiButtonPressed")
 Button/styles/disabled = SubResource("GduiButtonDisabled")
+LineEdit/colors/font_color = Color(0.972549, 0.980392, 0.988235, 1)
+LineEdit/colors/font_placeholder_color = Color(0.796078, 0.835294, 0.882353, 1)
+LineEdit/colors/caret_color = Color(0.219608, 0.741176, 0.972549, 1)
+LineEdit/font_sizes/font_size = 16
+LineEdit/styles/normal = SubResource("GduiInput")
+LineEdit/styles/focus = SubResource("GduiInputFocus")
+LineEdit/styles/read_only = SubResource("GduiInputReadOnly")
 PanelContainer/styles/panel = SubResource("GduiPanel")
 Card/base_type = &"PanelContainer"
 Card/styles/panel = SubResource("GduiCard")
+ElevatedCard/base_type = &"PanelContainer"
+ElevatedCard/styles/panel = SubResource("GduiElevatedCard")
+OutlinedCard/base_type = &"PanelContainer"
+OutlinedCard/styles/panel = SubResource("GduiOutlinedCard")
 PrimaryButton/base_type = &"Button"
 PrimaryButton/colors/font_color = Color(0.007843, 0.023529, 0.090196, 1)
 PrimaryButton/colors/font_hover_color = Color(0.007843, 0.023529, 0.090196, 1)
@@ -166,3 +391,29 @@ PrimaryButton/styles/normal = SubResource("GduiPrimaryButton")
 PrimaryButton/styles/hover = SubResource("GduiPrimaryButtonHover")
 PrimaryButton/styles/pressed = SubResource("GduiPrimaryButtonPressed")
 PrimaryButton/styles/disabled = SubResource("GduiButtonDisabled")
+DangerButton/base_type = &"Button"
+DangerButton/colors/font_color = Color(1, 1, 1, 1)
+DangerButton/colors/font_hover_color = Color(1, 1, 1, 1)
+DangerButton/colors/font_pressed_color = Color(1, 1, 1, 1)
+DangerButton/font_sizes/font_size = 16
+DangerButton/styles/normal = SubResource("GduiDangerButton")
+DangerButton/styles/hover = SubResource("GduiDangerButtonHover")
+DangerButton/styles/pressed = SubResource("GduiDangerButtonPressed")
+DangerButton/styles/disabled = SubResource("GduiButtonDisabled")
+GhostButton/base_type = &"Button"
+GhostButton/colors/font_color = Color(0.972549, 0.980392, 0.988235, 1)
+GhostButton/colors/font_hover_color = Color(0.972549, 0.980392, 0.988235, 1)
+GhostButton/colors/font_pressed_color = Color(0.972549, 0.980392, 0.988235, 1)
+GhostButton/font_sizes/font_size = 16
+GhostButton/styles/normal = SubResource("GduiGhostButton")
+GhostButton/styles/hover = SubResource("GduiGhostButtonHover")
+GhostButton/styles/pressed = SubResource("GduiGhostButtonPressed")
+GhostButton/styles/disabled = SubResource("GduiButtonDisabled")
+InvalidInput/base_type = &"LineEdit"
+InvalidInput/colors/font_color = Color(0.972549, 0.980392, 0.988235, 1)
+InvalidInput/colors/font_placeholder_color = Color(0.796078, 0.835294, 0.882353, 1)
+InvalidInput/colors/caret_color = Color(0.937255, 0.266667, 0.266667, 1)
+InvalidInput/font_sizes/font_size = 16
+InvalidInput/styles/normal = SubResource("GduiInvalidInput")
+InvalidInput/styles/focus = SubResource("GduiInvalidInputFocus")
+InvalidInput/styles/read_only = SubResource("GduiInputReadOnly")

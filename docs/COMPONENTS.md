@@ -104,6 +104,59 @@ Exemplo:
 </gd-list>
 ```
 
+## Theme `.tres` v1.2
+
+O Theme v1.2 e o caminho preferencial para estilos visuais recorrentes. O markup continua declarativo e pequeno: `variant` seleciona uma variacao de tipo do Godot Theme, enquanto atributos visuais diretos continuam existindo como escape hatch local.
+
+Contrato:
+
+| Markup | Node Godot | Variacao padrao | Variants oficiais |
+| --- | --- | --- | --- |
+| `gd-button` | `Button` | `Button` | `primary`, `danger`, `ghost` |
+| `gd-card` | `PanelContainer` | `Card` | `elevated`, `outlined` |
+| `gd-label` | `Label` | `Label` | `title`, `muted` |
+| `gd-input` | `LineEdit` | `LineEdit` | `invalid` |
+
+Mapping de variants:
+
+| Markup | `theme_type_variation` |
+| --- | --- |
+| `<gd-button variant="primary" />` | `PrimaryButton` |
+| `<gd-button variant="danger" />` | `DangerButton` |
+| `<gd-button variant="ghost" />` | `GhostButton` |
+| `<gd-card />` | `Card` |
+| `<gd-card variant="elevated" />` | `ElevatedCard` |
+| `<gd-card variant="outlined" />` | `OutlinedCard` |
+| `<gd-label variant="title" />` | `TitleLabel` |
+| `<gd-label variant="muted" />` | `MutedLabel` |
+| `<gd-input variant="invalid" />` | `InvalidInput` |
+
+Tokens usados pelo exporter de Theme:
+
+| Secao | Tokens principais |
+| --- | --- |
+| `colors` | `surface`, `surfaceAlt`, `surfaceHover`, `surfacePressed`, `text`, `muted`, `primary`, `primaryHover`, `primaryPressed`, `primaryText`, `danger`, `dangerHover`, `dangerPressed`, `dangerText`, `disabled`, `disabledText`, `border`, `transparent` |
+| `spacing` | `sm`, `md`, `lg` |
+| `radius` | `md`, `lg` |
+| `fontSizes` | `body`, `title`, `button` |
+
+Somente `surface`, `surfaceAlt`, `text`, `primary`, `primaryText`, `border`, `sm`, `md`, `lg`, `body`, `title` e `button` sao obrigatorios. Os demais tokens tem fallback seguro para preservar `.tscn` editavel.
+
+Exemplo:
+
+```html
+<gd-screen name="ThemeVariantsScreen" theme="res://scenes/theme.tres">
+  <gd-card variant="elevated">
+    <gd-label text="Theme v1.2" variant="title" />
+    <gd-button text="Salvar" variant="primary" action="form.save" />
+    <gd-button text="Excluir" variant="danger" action="form.delete" />
+    <gd-input placeholder="email" variant="invalid" />
+  </gd-card>
+</gd-screen>
+```
+
+Quando uma cena usa `theme="res://scenes/theme.tres"`, estilos inline equivalentes aos variants oficiais de `gd-panel`/`gd-card` sao omitidos do `.tscn`. Se algum valor visual divergir, o exporter preserva `theme_override_styles/panel` para que o override continue editavel no Godot.
+
 ## Limites
 
 - Sem HTML generico.

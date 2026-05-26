@@ -1,0 +1,25 @@
+<gd-screen name="ThemeVariantsScreen" anchor="full" background="#020617" theme="res://scenes/theme.tres">
+  <gd-vbox name="Root" anchor="full" padding="32" gap="18">
+    <gd-label name="Title" text="Theme v1.2" variant="title" />
+    <gd-label name="Subtitle" text="Variants oficiais usando Theme .tres, sem WebView e sem CSS generico." variant="muted" wrap="true" />
+
+    <gd-card name="FeaturedCard" variant="elevated">
+      <gd-vbox gap="12">
+        <gd-label text="Card elevado" variant="title" />
+        <gd-label text="gd-card elevated usa StyleBoxFlat do Theme." variant="muted" wrap="true" />
+        <gd-hbox gap="10">
+          <gd-button text="Primario" variant="primary" action="theme.primary" />
+          <gd-button text="Ghost" variant="ghost" action="theme.ghost" />
+          <gd-button text="Perigo" variant="danger" action="theme.danger" />
+        </gd-hbox>
+      </gd-vbox>
+    </gd-card>
+
+    <gd-card name="FormCard" variant="outlined">
+      <gd-vbox gap="10">
+        <gd-label text="Input com estado invalido" variant="muted" />
+        <gd-input name="EmailInput" placeholder="email@exemplo.com" variant="invalid" />
+      </gd-vbox>
+    </gd-card>
+  </gd-vbox>
+</gd-screen>

@@ -87,6 +87,47 @@ test("compiles theme resource and card variation without inline stylebox", () =>
   assert.doesNotMatch(result.tscn, /theme_override_styles\/panel/);
 });
 
+test("compiles official theme variants for controls", () => {
+  const result = compileSource(`
+    <gd-screen name="Main" theme="res://scenes/theme.tres">
+      <gd-label name="Title" text="Title" variant="title" />
+      <gd-label name="Hint" text="Hint" variant="muted" />
+      <gd-button name="Delete" text="Delete" variant="danger" />
+      <gd-button name="More" text="More" variant="ghost" />
+      <gd-input name="Email" placeholder="email" variant="invalid" />
+      <gd-card name="Featured" variant="elevated" />
+    </gd-screen>
+  `);
+
+  assert.match(result.tscn, /theme_type_variation = &"TitleLabel"/);
+  assert.match(result.tscn, /theme_type_variation = &"MutedLabel"/);
+  assert.match(result.tscn, /theme_type_variation = &"DangerButton"/);
+  assert.match(result.tscn, /theme_type_variation = &"GhostButton"/);
+  assert.match(result.tscn, /theme_type_variation = &"InvalidInput"/);
+  assert.match(result.tscn, /theme_type_variation = &"ElevatedCard"/);
+  assert.deepEqual(result.warnings, []);
+});
+
+test("reduces inline card stylebox when explicit values match a themed variant", () => {
+  const result = compileSource(
+    '<gd-screen name="Main" theme="res://scenes/theme.tres"><gd-card name="Featured" variant="elevated" background="#1e293b" radius="18" border="1" border-color="#38bdf8" padding="24" /></gd-screen>',
+  );
+
+  assert.match(result.tscn, /theme_type_variation = &"ElevatedCard"/);
+  assert.doesNotMatch(result.tscn, /\[sub_resource type="StyleBoxFlat"/);
+  assert.doesNotMatch(result.tscn, /theme_override_styles\/panel/);
+});
+
+test("keeps inline card stylebox when values differ from themed variant", () => {
+  const result = compileSource(
+    '<gd-screen name="Main" theme="res://scenes/theme.tres"><gd-card name="Featured" variant="elevated" background="#111827" radius="18" border="1" border-color="#38bdf8" padding="24" /></gd-screen>',
+  );
+
+  assert.match(result.tscn, /theme_type_variation = &"ElevatedCard"/);
+  assert.match(result.tscn, /\[sub_resource type="StyleBoxFlat"/);
+  assert.match(result.tscn, /theme_override_styles\/panel/);
+});
+
 // v0.8 - Componentes de Input
 
 test("gd-input compiles to LineEdit with placeholder and max_length", () => {

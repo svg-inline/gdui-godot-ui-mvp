@@ -14,7 +14,7 @@ Regra:
 | --- | --- | --- |
 | v1.0 | `tasks/v1.0/TASKS.md` | Fechada |
 | v1.1 | `tasks/v1.1/TASKS.md` | Fechada |
-| v1.2 | `tasks/v1.2/TASKS.md` | Planejada |
+| v1.2 | `tasks/v1.2/TASKS.md` | Em andamento |
 
 ## Status
 

@@ -23,7 +23,11 @@ export function exportTscn(sceneAst, options = {}) {
   function walk(node, parentPath = null) {
     const props = { ...node.props };
 
-    if (node.stylebox && Object.keys(node.stylebox).length) {
+    if (
+      node.stylebox &&
+      Object.keys(node.stylebox).length &&
+      !usesThemeEquivalentStylebox(node, themePath)
+    ) {
       const styleId = addStyleBox(node.stylebox);
       props["theme_override_styles/panel"] = `SubResource("${styleId}")`;
     }
@@ -129,4 +133,86 @@ function assignPaths(root) {
     }
   }
   visit(root, "");
+}
+
+function usesThemeEquivalentStylebox(node, themePath) {
+  if (!themePath) return false;
+  const variant = String(node.attrs?.variant || "").trim().toLowerCase();
+  const expected = themeEquivalentStylebox(node.tag, variant);
+  if (!expected) return false;
+  return styleboxesEqual(node.stylebox, expected);
+}
+
+function themeEquivalentStylebox(tag, variant) {
+  if (tag === "gd-panel" && !variant) {
+    return stylebox({
+      background: "#111827",
+      borderColor: "#334155",
+      radius: 18,
+      borderWidth: 1,
+      padding: 16,
+    });
+  }
+
+  if (tag !== "gd-card") return null;
+
+  if (!variant) {
+    return stylebox({
+      background: "#1e293b",
+      borderColor: "#334155",
+      radius: 12,
+      borderWidth: 1,
+      padding: 16,
+    });
+  }
+
+  if (variant === "elevated") {
+    return stylebox({
+      background: "#1e293b",
+      borderColor: "#38bdf8",
+      radius: 18,
+      borderWidth: 1,
+      padding: 24,
+    });
+  }
+
+  if (variant === "outlined") {
+    return stylebox({
+      background: "#111827",
+      borderColor: "#334155",
+      radius: 12,
+      borderWidth: 1,
+      padding: 16,
+    });
+  }
+
+  return null;
+}
+
+function stylebox({ background, borderColor, radius, borderWidth, padding }) {
+  return {
+    bg_color: colorToGodot(background),
+    corner_radius_top_left: String(radius),
+    corner_radius_top_right: String(radius),
+    corner_radius_bottom_right: String(radius),
+    corner_radius_bottom_left: String(radius),
+    border_width_left: String(borderWidth),
+    border_width_top: String(borderWidth),
+    border_width_right: String(borderWidth),
+    border_width_bottom: String(borderWidth),
+    border_color: colorToGodot(borderColor),
+    content_margin_top: String(padding),
+    content_margin_right: String(padding),
+    content_margin_bottom: String(padding),
+    content_margin_left: String(padding),
+  };
+}
+
+function styleboxesEqual(actual = {}, expected = {}) {
+  const actualEntries = Object.entries(actual).filter(
+    ([, value]) => value !== undefined && value !== null,
+  );
+  if (actualEntries.length !== Object.keys(expected).length) return false;
+
+  return actualEntries.every(([key, value]) => expected[key] === value);
 }

@@ -1,0 +1,87 @@
+[gd_scene load_steps=2 format=3]
+
+[ext_resource type="Theme" path="res://scenes/theme.tres" id="GduiTheme"]
+
+[node name="ThemeVariantsScreen" type="Control"]
+anchor_left = 0.0
+anchor_top = 0.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+theme = ExtResource("GduiTheme")
+
+[node name="Background" type="ColorRect" parent="."]
+anchor_right = 1.0
+anchor_bottom = 1.0
+color = Color(0.007843, 0.023529, 0.090196, 1)
+mouse_filter = 2
+
+[node name="Root" type="VBoxContainer" parent="."]
+anchor_left = 0.0
+anchor_top = 0.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 32
+offset_top = 32
+offset_right = -32
+offset_bottom = -32
+theme_override_constants/separation = 18
+
+[node name="Title" type="Label" parent="Root"]
+theme_type_variation = &"TitleLabel"
+text = "Theme v1.2"
+
+[node name="Subtitle" type="Label" parent="Root"]
+theme_type_variation = &"MutedLabel"
+text = "Variants oficiais usando Theme .tres, sem WebView e sem CSS generico."
+autowrap_mode = 2
+
+[node name="FeaturedCard" type="PanelContainer" parent="Root"]
+theme_type_variation = &"ElevatedCard"
+
+[node name="VBox" type="VBoxContainer" parent="Root/FeaturedCard"]
+theme_override_constants/separation = 12
+
+[node name="Label" type="Label" parent="Root/FeaturedCard/VBox"]
+theme_type_variation = &"TitleLabel"
+text = "Card elevado"
+
+[node name="Label2" type="Label" parent="Root/FeaturedCard/VBox"]
+theme_type_variation = &"MutedLabel"
+text = "gd-card elevated usa StyleBoxFlat do Theme."
+autowrap_mode = 2
+
+[node name="HBox" type="HBoxContainer" parent="Root/FeaturedCard/VBox"]
+theme_override_constants/separation = 10
+
+[node name="Button" type="Button" parent="Root/FeaturedCard/VBox/HBox"]
+metadata/action = "theme.primary"
+theme_type_variation = &"PrimaryButton"
+text = "Primario"
+focus_mode = 2
+
+[node name="Button2" type="Button" parent="Root/FeaturedCard/VBox/HBox"]
+metadata/action = "theme.ghost"
+theme_type_variation = &"GhostButton"
+text = "Ghost"
+focus_mode = 2
+
+[node name="Button3" type="Button" parent="Root/FeaturedCard/VBox/HBox"]
+metadata/action = "theme.danger"
+theme_type_variation = &"DangerButton"
+text = "Perigo"
+focus_mode = 2
+
+[node name="FormCard" type="PanelContainer" parent="Root"]
+theme_type_variation = &"OutlinedCard"
+
+[node name="VBox2" type="VBoxContainer" parent="Root/FormCard"]
+theme_override_constants/separation = 10
+
+[node name="Label3" type="Label" parent="Root/FormCard/VBox2"]
+theme_type_variation = &"MutedLabel"
+text = "Input com estado invalido"
+
+[node name="EmailInput" type="LineEdit" parent="Root/FormCard/VBox2"]
+theme_type_variation = &"InvalidInput"
+placeholder_text = "email@exemplo.com"
+focus_mode = 2

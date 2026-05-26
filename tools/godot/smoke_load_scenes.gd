@@ -1,10 +1,12 @@
 extends SceneTree
 
 const SCENE_PATHS := [
+	"res://scenes/FormComponentsScreen.tscn",
 	"res://scenes/InventoryScreen.tscn",
 	"res://scenes/MainMenuScreen.tscn",
 	"res://scenes/ResponsiveGridScreen.tscn",
 	"res://scenes/SettingsScreen.tscn",
+	"res://scenes/ThemeVariantsScreen.tscn",
 ]
 
 const RESOURCE_PATHS := [

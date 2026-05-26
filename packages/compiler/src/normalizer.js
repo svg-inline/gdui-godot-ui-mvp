@@ -10,6 +10,18 @@ import {
 } from "./utils.js";
 
 const SUPPORTED_BINDINGS = new Set(["text", "visible", "disabled"]);
+const THEME_VARIANT_SUFFIX_BY_TAG = new Map([
+  ["gd-button", "Button"],
+  ["gd-card", "Card"],
+  ["gd-label", "Label"],
+  ["gd-input", "Input"],
+]);
+const OFFICIAL_THEME_VARIANTS = new Map([
+  ["gd-button", new Set(["primary", "danger", "ghost"])],
+  ["gd-card", new Set(["elevated", "outlined"])],
+  ["gd-label", new Set(["title", "muted"])],
+  ["gd-input", new Set(["invalid"])],
+]);
 
 export function normalizeToSceneAst(markupAst, options = {}) {
   const counters = new Map();
@@ -131,8 +143,14 @@ function applyCommonProps(node, warnings) {
   if (a.tooltip) p.tooltip_text = godotString(a.tooltip);
 
   if (a.variant) {
-    const suffix =
-      node.type === "Button" ? "Button" : node.type === "Label" ? "Label" : "";
+    const normalizedVariant = String(a.variant).trim().toLowerCase();
+    const official = OFFICIAL_THEME_VARIANTS.get(node.tag);
+    if (official && !official.has(normalizedVariant)) {
+      warnings.push(
+        `${node.name}: variant "${a.variant}" is not official for ${node.tag}. Exporting it as a Godot theme variation anyway.`,
+      );
+    }
+    const suffix = THEME_VARIANT_SUFFIX_BY_TAG.get(node.tag) || "";
     p.theme_type_variation = `&${godotString(toThemeVariation(a.variant, suffix))}`;
   } else if (node.tag === "gd-card") {
     p.theme_type_variation = '&"Card"';
