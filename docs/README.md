@@ -25,8 +25,8 @@ O projeto nao e um conversor de HTML/CSS generico. O contrato publico e um subco
 | `docs/COMPONENTS.md` | Componentes suportados, props e limites. |
 | `docs/DEVELOPMENT.md` | Como desenvolver, testar e validar mudancas. |
 | `docs/ROADMAP.md` | Estado atual e direcao de v1.1+. |
+| `docs/RELEASE.md` | Checklist de empacotamento e submissao do addon. |
 
 ## Historico
 
 A documentacao tecnica usada ate a v1.0 foi arquivada em `docs/v1/`. Ela continua sendo referencia historica, mas a documentacao atual deve ser mantida nos arquivos acima.
-

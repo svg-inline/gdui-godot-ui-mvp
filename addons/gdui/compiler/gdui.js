@@ -42,6 +42,7 @@ var SUPPORTED_TAGS = /* @__PURE__ */ new Map([
   ["gd-progress", { type: "ProgressBar", defaultName: "Progress" }],
   ["gd-slider", { type: "HSlider", defaultName: "Slider" }],
   ["gd-scroll", { type: "ScrollContainer", defaultName: "Scroll" }],
+  ["gd-list", { type: "VBoxContainer", defaultName: "List" }],
   ["gd-grid", { type: "GridContainer", defaultName: "Grid" }],
   ["gd-texture", { type: "TextureRect", defaultName: "Texture" }],
   ["gd-spacer", { type: "Control", defaultName: "Spacer" }]
@@ -413,6 +414,37 @@ function applySpecificProps(node, warnings) {
       if (gap !== null) {
         p["theme_override_constants/h_separation"] = String(gap);
         p["theme_override_constants/v_separation"] = String(gap);
+      }
+      break;
+    }
+    case "gd-list": {
+      const listMetadata = {};
+      const items = a.items || a.source;
+      if (items) listMetadata.items = items;
+      if (a["item-name"]) listMetadata.itemName = a["item-name"];
+      if (a.key) listMetadata.key = a.key;
+      if (a["empty-text"]) listMetadata.emptyText = a["empty-text"];
+      if (!items) {
+        warnings.push(
+          `${node.name}: gd-list should declare items="state.collection" for the optional list runtime.`
+        );
+      }
+      const columns = parseNumber(a.columns, null);
+      if (a.layout === "grid" || columns !== null && columns > 1) {
+        node.type = "GridContainer";
+        p.columns = String(Math.max(1, columns || 1));
+      }
+      const gap = parseNumber(a.gap, null);
+      if (gap !== null) {
+        if (node.type === "GridContainer") {
+          p["theme_override_constants/h_separation"] = String(gap);
+          p["theme_override_constants/v_separation"] = String(gap);
+        } else {
+          p["theme_override_constants/separation"] = String(gap);
+        }
+      }
+      if (Object.keys(listMetadata).length) {
+        p["metadata/gdui_list"] = godotString(JSON.stringify(listMetadata));
       }
       break;
     }

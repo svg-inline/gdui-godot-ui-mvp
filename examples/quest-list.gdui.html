@@ -1,0 +1,13 @@
+<gd-screen name="QuestListScreen" anchor="full" padding="32" background="#101820" theme="res://scenes/theme.tres" state="quests">
+  <gd-vbox name="Content" gap="16" anchor="full">
+    <gd-label name="Title" text="Active quests" font-size="28" color="#f8fafc" />
+    <gd-list name="QuestList" items="quests.active" item-name="quest" key="id" gap="10" empty-text="No active quests">
+      <gd-card name="QuestItem" padding="14" background="#111827" radius="10" border="1" border-color="#334155">
+        <gd-vbox name="QuestBody" gap="6">
+          <gd-label name="QuestTitle" bind:text="quest.title" text="Find the old gate" font-size="18" color="#f8fafc" />
+          <gd-label name="QuestSummary" bind:text="quest.summary" text="Recover the lost key before nightfall." wrap="true" color="#cbd5e1" />
+        </gd-vbox>
+      </gd-card>
+    </gd-list>
+  </gd-vbox>
+</gd-screen>

@@ -48,6 +48,12 @@ const SUPPORTED_ATTRS = new Set([
   "max-value",
   "step",
   "max-length",
+  "items",
+  "source",
+  "item-name",
+  "key",
+  "empty-text",
+  "layout",
 ]);
 const GODOT_ONLY_ATTRS = new Set(["action", "theme", "class", "tooltip"]);
 const PREVIEW_APPROX_ATTRS = new Set([
@@ -62,6 +68,26 @@ const PREVIEW_APPROX_ATTRS = new Set([
   "font-size",
   "columns",
   "wrap",
+]);
+const UNSUPPORTED_ATTR_SUGGESTIONS = new Map([
+  [
+    "onclick",
+    'Use action="domain.intent" on gd-button; action_router.gd handles it in Godot.',
+  ],
+  [
+    "on-click",
+    'Use action="domain.intent" on gd-button; free event handlers are outside the MVP.',
+  ],
+  ["href", "Use a gd-button action and route navigation in Godot."],
+  [
+    "style",
+    "Use supported props such as background, padding, gap, radius, border, color or font-size.",
+  ],
+  [
+    "className",
+    'Use class="name" for metadata only, or variant="name" for Theme variation.',
+  ],
+  ["css", "Use explicit gd-* props; CSS blocks are outside the MVP."],
 ]);
 
 export function resolveProjectPath(root, requestedPath) {
@@ -301,11 +327,16 @@ function collectUnsupportedAttrs(node, warnings) {
     }
 
     if (!SUPPORTED_ATTRS.has(attrName)) {
+      const suggestion =
+        UNSUPPORTED_ATTR_SUGGESTIONS.get(attr) ||
+        UNSUPPORTED_ATTR_SUGGESTIONS.get(attrName) ||
+        "Use documented gd-* props that map to native Godot nodes.";
       warnings.push({
         kind: "unsupported-attr",
         node: node.tag,
         attr,
-        message: `${node.tag}: unsupported attribute "${attr}" is ignored by the Godot exporter.`,
+        suggestion,
+        message: `${node.tag}: unsupported attribute "${attr}" is ignored by the Godot exporter. ${suggestion}`,
       });
     }
   }
@@ -328,6 +359,14 @@ function collectMarkupComparison(node, items) {
     items.push({
       kind: "godot-only",
       message: `action="${node.attrs.action}" is exported as metadata/action and handled by action_router.gd, not by the web preview.`,
+    });
+  }
+
+  if (node.tag === "gd-list") {
+    items.push({
+      kind: "runtime-only",
+      message:
+        "gd-list exports native container nodes plus metadata/gdui_list; repeated data needs an optional Godot runtime, not the web preview.",
     });
   }
 
@@ -386,6 +425,8 @@ function renderPreviewNode(node) {
       return `<div class="gd-hbox" style="${styleAttr(layoutStyles(attrs, "row"))}">${children}</div>`;
     case "gd-grid":
       return `<div class="gd-grid" style="${styleAttr(gridStyles(attrs))}">${children}</div>`;
+    case "gd-list":
+      return `<div class="gd-list" style="${styleAttr(listStyles(attrs))}">${children}</div>`;
     case "gd-panel":
       return `<section class="gd-panel" style="${styleAttr(panelStyles(attrs))}">${children}</section>`;
     case "gd-card":
@@ -444,6 +485,7 @@ function previewCss() {
     ".gd-vbox{display:flex;flex-direction:column;gap:18px;}",
     ".gd-hbox{display:flex;flex-direction:row;align-items:center;gap:16px;}",
     ".gd-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;}",
+    ".gd-list{display:flex;flex-direction:column;gap:12px;}",
     ".gd-panel,.gd-card{display:block;background:#111827;border:1px solid #334155;border-radius:12px;padding:18px;}",
     ".gd-label{display:block;color:#f8fafc;}",
     ".gd-button{display:inline-flex;justify-content:center;align-items:center;min-height:42px;padding:0 16px;border:0;border-radius:6px;background:#2f8f83;color:#06110f;font:inherit;font-weight:700;}",
@@ -485,6 +527,16 @@ function gridStyles(attrs) {
     "grid-template-columns": `repeat(${columns}, minmax(0, 1fr))`,
     gap: cssNumber(attrs.gap),
   };
+}
+
+function listStyles(attrs) {
+  if (
+    attrs.layout === "grid" ||
+    Number.parseInt(attrs.columns || "1", 10) > 1
+  ) {
+    return gridStyles(attrs);
+  }
+  return layoutStyles(attrs, "column");
 }
 
 function panelStyles(attrs) {

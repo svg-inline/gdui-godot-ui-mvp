@@ -191,3 +191,57 @@ test("two gd-textures with the same res:// path share one ExtResource", () => {
   const matches = result.tscn.match(/\[ext_resource type="Texture2D"/g) || [];
   assert.equal(matches.length, 1);
 });
+
+// v1.1 - Listas declarativas
+
+test("gd-list compiles to native VBoxContainer with list metadata", () => {
+  const result = compileSource(`
+    <gd-screen name="Main">
+      <gd-list name="QuestList" items="quests.active" item-name="quest" key="id" gap="8" empty-text="Empty">
+        <gd-card name="QuestItem">
+          <gd-label name="Title" bind:text="quest.title" />
+        </gd-card>
+      </gd-list>
+    </gd-screen>
+  `);
+
+  assert.match(
+    result.tscn,
+    /\[node name="QuestList" type="VBoxContainer" parent="\."\]/,
+  );
+  assert.match(result.tscn, /theme_override_constants\/separation = 8/);
+  assert.match(
+    result.tscn,
+    /metadata\/gdui_list = "\{\\\"items\\\":\\\"quests\.active\\\",\\\"itemName\\\":\\\"quest\\\",\\\"key\\\":\\\"id\\\",\\\"emptyText\\\":\\\"Empty\\\"\}"/,
+  );
+  assert.match(
+    result.tscn,
+    /\[node name="QuestItem" type="PanelContainer" parent="QuestList"\]/,
+  );
+});
+
+test("gd-list can map to GridContainer for grid lists", () => {
+  const result = compileSource(`
+    <gd-screen name="Main">
+      <gd-list name="InventoryList" items="inventory.items" layout="grid" columns="3" gap="12">
+        <gd-button name="Slot" text="Item" />
+      </gd-list>
+    </gd-screen>
+  `);
+
+  assert.match(
+    result.tscn,
+    /\[node name="InventoryList" type="GridContainer" parent="\."\]/,
+  );
+  assert.match(result.tscn, /columns = 3/);
+  assert.match(result.tscn, /theme_override_constants\/h_separation = 12/);
+  assert.match(result.tscn, /theme_override_constants\/v_separation = 12/);
+});
+
+test("gd-list warns when items metadata is missing", () => {
+  const result = compileSource(
+    '<gd-screen name="Main"><gd-list name="Rows"><gd-label text="Static" /></gd-list></gd-screen>',
+  );
+
+  assert.match(result.warnings.join("\n"), /gd-list should declare items/);
+});

@@ -38,7 +38,7 @@ test('studio diagnostics report unsupported attributes and compiler warnings', (
   assert.equal(diagnostics.ok, true);
   assert.match(
     diagnostics.warnings.map((warning) => warning.message).join('\n'),
-    /unsupported attribute "onclick"/,
+    /unsupported attribute "onclick".*Use action="domain\.intent"/,
   );
   assert.match(
     diagnostics.warnings.map((warning) => warning.message).join('\n'),
@@ -48,6 +48,18 @@ test('studio diagnostics report unsupported attributes and compiler warnings', (
     diagnostics.comparison.map((item) => item.message).join('\n'),
     /Godot output: .* native node/,
   );
+});
+
+test('studio diagnostics suggest Godot alternatives for unsupported props', () => {
+  const diagnostics = collectMarkupDiagnostics(`
+    <gd-screen name="Main">
+      <gd-label text="Docs" style="color:red" href="/docs" />
+    </gd-screen>
+  `, { compileSource, parseMarkup });
+
+  const warnings = diagnostics.warnings.map((warning) => warning.message).join('\n');
+  assert.match(warnings, /style.*Use supported props/);
+  assert.match(warnings, /href.*Use a gd-button action/);
 });
 
 test('studio diagnostics report parse errors', () => {
@@ -62,6 +74,7 @@ test('studio diagnostics compare web preview with Godot-only behavior', () => {
     <gd-screen name="Main" theme="res://scenes/theme.tres">
       <gd-grid columns="2" lg:columns="4">
         <gd-button text="Play" action="menu.play" bind:disabled="screen.locked" />
+        <gd-list items="inventory.items"><gd-label text="Item" /></gd-list>
         <gd-texture src="res://icon.svg" />
       </gd-grid>
     </gd-screen>
@@ -72,6 +85,7 @@ test('studio diagnostics compare web preview with Godot-only behavior', () => {
   assert.match(comparison, /lg:columns is applied by responsive_runtime\.gd/);
   assert.match(comparison, /action="menu\.play" is exported as metadata\/action/);
   assert.match(comparison, /bind:disabled is exported as gdui_bindings metadata/);
+  assert.match(comparison, /gd-list exports native container nodes plus metadata\/gdui_list/);
   assert.match(comparison, /gd-texture is metadata-only/);
 });
 

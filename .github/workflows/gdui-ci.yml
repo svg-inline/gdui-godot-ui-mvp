@@ -33,7 +33,7 @@ jobs:
 
       - name: Regenerate scenes and theme
         run: |
-          npm run compile:all
+          npm run compile
           npm run compile:theme
 
       - name: Install Godot
@@ -46,20 +46,8 @@ jobs:
           chmod +x .godot-bin/godot
           echo "$PWD/.godot-bin" >> "$GITHUB_PATH"
 
-      - name: Run Godot scene smoke test
+      - name: Run Godot smoke tests
         run: npm run test:godot
-
-      - name: Run responsive runtime smoke test
-        run: npm run test:responsive
-
-      - name: Run action router smoke test
-        run: npm run test:actions
-
-      - name: Run binding runtime smoke test
-        run: npm run test:bindings
-
-      - name: Run Studio controller smoke test
-        run: npm run test:studio
 
       - name: Upload Godot smoke log
         if: always()

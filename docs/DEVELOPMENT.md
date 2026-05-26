@@ -8,11 +8,7 @@
 | `npm run compile:theme` | Gera `scenes/theme.tres`. |
 | `npm run build:addon` | Gera o bundle em `addons/gdui/compiler/`. |
 | `npm test` | Roda testes Node. |
-| `npm run test:godot` | Valida cenas e Theme no Godot headless. |
-| `npm run test:responsive` | Valida runtime responsivo. |
-| `npm run test:actions` | Valida action router. |
-| `npm run test:bindings` | Valida binding runtime. |
-| `npm run test:studio` | Valida ciclo do Studio local. |
+| `npm run test:godot` | Valida cenas, Theme, runtimes e Studio controller no Godot headless. |
 
 ## Regra para features novas
 
@@ -41,16 +37,28 @@ O Studio local pode renderizar preview web auxiliar, mas esse preview nao e font
 
 Quando houver divergencia entre preview e Godot, a documentacao e os diagnosticos devem apontar o comportamento Godot como canonico.
 
+Limites atuais do preview web auxiliar:
+
+- Nao executa actions, bindings ou runtime de listas.
+- Nao valida recursos `res://` carregados pelo editor Godot.
+- Aproxima layout visual com HTML/CSS simples apenas para autoria rapida.
+- Nao representa Theme `.tres` com fidelidade total.
+- Nao deve ser usado como criterio final de aceitacao visual.
+
 ## Validacao recomendada
 
 Antes de fechar uma mudanca:
 
 ```bash
 npm test
-npm run compile:all
+npm run compile
 npm run compile:theme
 npm run test:godot
+npm run validate:addon
 ```
 
-Para mudancas de runtime, rode tambem o smoke especifico.
+Para diagnosticar um smoke especifico, chame o runner diretamente:
 
+```bash
+node tools/godot/run-smoke.js tools/godot/test_responsive_runtime.gd
+```

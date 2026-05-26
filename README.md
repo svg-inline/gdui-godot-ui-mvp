@@ -17,6 +17,7 @@ A documentacao tecnica fica em `docs/`:
 - `docs/COMPONENTS.md`
 - `docs/DEVELOPMENT.md`
 - `docs/ROADMAP.md`
+- `docs/RELEASE.md`
 
 Documentos historicos da v1.0 ficam em `docs/v1/`.
 
@@ -35,6 +36,7 @@ npm install
 npm test
 npm run compile
 npm run compile:theme
+npm run test:godot
 npm run build:addon
+npm run validate:addon
 ```
-

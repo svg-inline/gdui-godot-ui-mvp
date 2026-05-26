@@ -13,6 +13,7 @@ export const SUPPORTED_TAGS = new Map([
   ["gd-progress", { type: "ProgressBar", defaultName: "Progress" }],
   ["gd-slider", { type: "HSlider", defaultName: "Slider" }],
   ["gd-scroll", { type: "ScrollContainer", defaultName: "Scroll" }],
+  ["gd-list", { type: "VBoxContainer", defaultName: "List" }],
   ["gd-grid", { type: "GridContainer", defaultName: "Grid" }],
   ["gd-texture", { type: "TextureRect", defaultName: "Texture" }],
   ["gd-spacer", { type: "Control", defaultName: "Spacer" }],
