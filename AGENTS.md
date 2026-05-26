@@ -16,11 +16,13 @@ Não é objetivo converter HTML/CSS genérico da web.
 
 Antes de mudar escopo, consultar:
 
-- `docs/00-research-synthesis.md`
-- `docs/PREVIA.md`
-- `docs/MERCADO-ATUAL.md`
-- `docs/HTML-→-Godot-(REATIVIDADE)-1-1.md`
-- `docs/Análise-Completa-do-GTML-https-github.com-Niekvdm-godot-plugins-gtml.md`
+- `docs/README.md`
+- `docs/ROADMAP.md`
+- `docs/v1/00-research-synthesis.md`
+- `docs/v1/PREVIA.md`
+- `docs/v1/MERCADO-ATUAL.md`
+- `docs/v1/HTML-ÔåÆ-Godot-(REATIVIDADE)-1-1.md`
+- `docs/v1/Analise-Completa-do-GTML-https-github.com-Niekvdm-godot-plugins-gtml.md`
 
 Esses documentos reforçam o posicionamento: o produto deve ser mais previsível que HTML/CSS genérico e ter `.tscn` editável como diferencial.
 
@@ -37,6 +39,16 @@ Esses documentos reforçam o posicionamento: o produto deve ser mais previsível
 - Todo estilo visual deve futuramente migrar para Theme `.tres`.
 - Toda feature precisa ter exemplo em `examples/`.
 - Toda feature nova precisa ter teste.
+
+## Tasks
+
+Tasks novas devem ser criadas sempre em pasta versionada do plugin:
+
+```text
+tasks/vX.Y/TASKS.md
+```
+
+O arquivo `TASKS.md` na raiz e apenas um indice. O historico fechado da v1.0 fica em `tasks/v1.0/TASKS.md`.
 
 ## Arquitetura obrigatória
 
