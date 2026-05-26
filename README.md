@@ -27,7 +27,8 @@ Tasks sao versionadas por release do plugin:
 
 - `TASKS.md`: indice.
 - `tasks/v1.0/TASKS.md`: historico v1.0.
-- `tasks/v1.1/TASKS.md`: proximos passos planejados.
+- `tasks/v1.1/TASKS.md`: historico v1.1.
+- `tasks/v1.2/TASKS.md`: proximos passos planejados.
 
 ## Comandos rapidos
 

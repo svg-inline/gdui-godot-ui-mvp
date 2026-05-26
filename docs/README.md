@@ -24,7 +24,7 @@ O projeto nao e um conversor de HTML/CSS generico. O contrato publico e um subco
 | `docs/ARCHITECTURE.md` | Arquitetura, pacotes e fluxo de compilacao. |
 | `docs/COMPONENTS.md` | Componentes suportados, props e limites. |
 | `docs/DEVELOPMENT.md` | Como desenvolver, testar e validar mudancas. |
-| `docs/ROADMAP.md` | Estado atual e direcao de v1.1+. |
+| `docs/ROADMAP.md` | Estado atual e direcao de v1.2+. |
 | `docs/RELEASE.md` | Checklist de empacotamento e submissao do addon. |
 
 ## Historico

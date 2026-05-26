@@ -8,6 +8,8 @@ tasks/
     TASKS.md
   v1.1/
     TASKS.md
+  v1.2/
+    TASKS.md
 ```
 
 Ao iniciar uma nova versao:
@@ -19,4 +21,3 @@ Ao iniciar uma nova versao:
 5. Atualize o indice raiz `TASKS.md`.
 
 Nenhuma feature nova deve viver apenas em comentario, README ou issue solta.
-

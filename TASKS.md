@@ -13,7 +13,8 @@ Regra:
 | Versao | Arquivo | Estado |
 | --- | --- | --- |
 | v1.0 | `tasks/v1.0/TASKS.md` | Fechada |
-| v1.1 | `tasks/v1.1/TASKS.md` | Planejada |
+| v1.1 | `tasks/v1.1/TASKS.md` | Fechada |
+| v1.2 | `tasks/v1.2/TASKS.md` | Planejada |
 
 ## Status
 
@@ -21,4 +22,3 @@ Regra:
 - `Partial`: existe implementacao, mas falta teste, validacao Godot ou acabamento.
 - `Planned`: especificado, ainda nao implementado.
 - `Deferred`: adiado de proposito por risco ou mudanca de direcao.
-
