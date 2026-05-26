@@ -43,7 +43,7 @@ Após ativar o plugin, o dock **Gdui** oferece:
 - **Compile UI** — compila os `.gdui.html` do `inputDir` para `.tscn`.
 - **Compile Theme** — gera `theme.tres` a partir de `theme.gdui.json`.
 - **Auto** (checkbox) — ativa auto-compilação ao salvar `.gdui.html` (watcher com guard de loop).
-- **Start / Open / Stop Studio** — servidor local de autoria no navegador.
+- **Start / Open / Restart / Stop Studio** — servidor local de autoria no navegador.
 - **Project Config** — edita `inputDir` e `outputDir` sem abrir JSON.
 - **Init Project** — recria `gdui.config.json` e `theme.gdui.json` se necessário.
 
@@ -87,6 +87,7 @@ npm run studio
 | `npm run test:responsive` | Usa Godot headless para validar o runtime responsivo.                              |
 | `npm run test:actions`    | Usa Godot headless para validar `metadata/action` com `action_router.gd`.          |
 | `npm run test:bindings`   | Usa Godot headless para validar `metadata/gdui_bindings` com `binding_runtime.gd`. |
+| `npm run test:studio`     | Usa Godot headless para validar Start/Open/Restart/Stop do Studio local.           |
 
 ### Gerando o script auxiliar de actions
 
@@ -125,6 +126,7 @@ npm run test:godot
 npm run test:responsive
 npm run test:actions
 npm run test:bindings
+npm run test:studio
 ```
 
 Ele baixa versões alvo do Godot 4.x no runner Linux e publica o log headless como artefato quando houver execução.

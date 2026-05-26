@@ -20,6 +20,7 @@
     "test:responsive": "node tools/godot/run-smoke.js tools/godot/test_responsive_runtime.gd",
     "test:actions": "node tools/godot/run-smoke.js tools/godot/test_action_router.gd",
     "test:bindings": "node tools/godot/run-smoke.js tools/godot/test_binding_runtime.gd",
+    "test:studio": "node tools/godot/run-smoke.js tools/godot/test_studio_controller.gd",
     "build:addon": "node tools/build-addon.js"
   },
   "engines": {

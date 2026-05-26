@@ -9,6 +9,7 @@ var studio_label: Label
 var log_output: TextEdit
 var start_studio_button: Button
 var open_studio_button: Button
+var restart_studio_button: Button
 var stop_studio_button: Button
 var input_dir_field: LineEdit
 var output_dir_field: LineEdit
@@ -67,6 +68,12 @@ func _ready() -> void:
 	open_studio_button.tooltip_text = "Open Gdui Studio in the browser."
 	open_studio_button.pressed.connect(_on_open_studio_pressed)
 	studio_row.add_child(open_studio_button)
+
+	restart_studio_button = Button.new()
+	restart_studio_button.text = "Restart"
+	restart_studio_button.tooltip_text = "Restart the local Gdui Studio server."
+	restart_studio_button.pressed.connect(_on_restart_studio_pressed)
+	studio_row.add_child(restart_studio_button)
 
 	stop_studio_button = Button.new()
 	stop_studio_button.text = "Stop"
@@ -151,6 +158,8 @@ func set_studio_running(running: bool, url: String) -> void:
 		start_studio_button.disabled = running
 	if open_studio_button:
 		open_studio_button.disabled = not running
+	if restart_studio_button:
+		restart_studio_button.disabled = not running
 	if stop_studio_button:
 		stop_studio_button.disabled = not running
 
@@ -184,6 +193,10 @@ func _on_start_studio_pressed() -> void:
 func _on_open_studio_pressed() -> void:
 	if plugin and plugin.has_method("open_studio"):
 		plugin.call("open_studio")
+
+func _on_restart_studio_pressed() -> void:
+	if plugin and plugin.has_method("restart_studio"):
+		plugin.call("restart_studio")
 
 func _on_stop_studio_pressed() -> void:
 	if plugin and plugin.has_method("stop_studio"):

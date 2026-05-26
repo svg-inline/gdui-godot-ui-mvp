@@ -63,6 +63,7 @@ Status:
 | GDUI-054 | Done     | Mostrar warnings no editor.                           | Dock mostra output/warnings do compilador.                   |
 | GDUI-055 | Deferred | Reimportar cena automaticamente quando arquivo mudar. | Adiado ate existir contrato seguro sem loop.                 |
 | GDUI-056 | Done     | Criar dock Godot para status, logs e comandos.        | `addons/gdui/dock.gd`                                        |
+| GDUI-057 | Done     | Testar ciclo de vida do Studio local.                 | `studio_controller.gd` cobre Start/Open/Restart/Stop via `npm run test:studio`. |
 
 ## v0.6 - Reatividade
 

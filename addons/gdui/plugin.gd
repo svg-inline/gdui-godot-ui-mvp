@@ -3,6 +3,7 @@ extends EditorPlugin
 
 const IMPORT_PLUGIN := preload("res://addons/gdui/import_plugin.gd")
 const DOCK_SCRIPT := preload("res://addons/gdui/dock.gd")
+const STUDIO_CONTROLLER := preload("res://addons/gdui/studio_controller.gd")
 const STUDIO_PORT := 39147
 const STUDIO_URL := "http://127.0.0.1:%d" % STUDIO_PORT
 const ENABLE_EXPERIMENTAL_IMPORTER := false
@@ -29,7 +30,7 @@ func _get_default_theme() -> Dictionary:
 
 var import_plugin: EditorImportPlugin
 var dock: GduiDock
-var studio_pid := -1
+var studio_controller: GduiStudioController
 
 # ── GDUI-094: File watcher with loop guard ────────────────────────────────────
 var _watch_enabled := false
@@ -49,6 +50,7 @@ func _enter_tree() -> void:
 	add_tool_menu_item("Gdui: Compile Theme", Callable(self , "_compile_theme"))
 	add_tool_menu_item("Gdui: Start Studio", Callable(self , "_start_studio"))
 	add_tool_menu_item("Gdui: Open Studio", Callable(self , "_open_studio"))
+	add_tool_menu_item("Gdui: Restart Studio", Callable(self , "_restart_studio"))
 	add_tool_menu_item("Gdui: Stop Studio", Callable(self , "_stop_studio"))
 	print("[Gdui] Plugin enabled. Importer auto is disabled; use Project > Tools > Gdui: Compile all UI or Gdui: Start Studio.")
 	_set_status("Ready")
@@ -61,6 +63,7 @@ func _exit_tree() -> void:
 	set_watcher_enabled(false)
 	stop_studio()
 	remove_tool_menu_item("Gdui: Stop Studio")
+	remove_tool_menu_item("Gdui: Restart Studio")
 	remove_tool_menu_item("Gdui: Open Studio")
 	remove_tool_menu_item("Gdui: Start Studio")
 	remove_tool_menu_item("Gdui: Compile Theme")
@@ -149,6 +152,9 @@ func _start_studio() -> void:
 func _open_studio() -> void:
 	open_studio()
 
+func _restart_studio() -> void:
+	restart_studio()
+
 func _stop_studio() -> void:
 	stop_studio()
 
@@ -194,40 +200,43 @@ func compile_theme() -> void:
 	_log("[Gdui] Theme compile finished.")
 
 func start_studio() -> void:
-	if _is_studio_running():
-		open_studio()
+	var result := _get_studio_controller().start()
+	if not result.get("ok", false):
+		_report_error(result.get("error", "[Gdui] Could not start Gdui Studio."))
 		return
-
-	var root := ProjectSettings.globalize_path("res://")
-	var server := root.path_join("addons/gdui/server/studio-server.js")
-
-	if not FileAccess.file_exists(server):
-		_report_error("[Gdui] Studio server not found: " + server)
-		return
-
-	studio_pid = OS.create_process("node", [server, "--root", root, "--port", str(STUDIO_PORT)], false)
-	if studio_pid <= 0:
-		_report_error("[Gdui] Could not start Gdui Studio. Check if Node is installed and available in PATH.")
-		studio_pid = -1
-		return
-
-	_log("[Gdui] Studio started at " + STUDIO_URL)
+	_log_result_messages(result)
 	_set_status("Studio running.")
 	_update_studio_status()
-	open_studio()
 
 func open_studio() -> void:
-	OS.shell_open(STUDIO_URL)
+	_get_studio_controller().open()
+
+func restart_studio() -> void:
+	var result := _get_studio_controller().restart()
+	if not result.get("ok", false):
+		_report_error(result.get("error", "[Gdui] Could not restart Gdui Studio."))
+		return
+	_log_result_messages(result)
+	_set_status("Studio running.")
+	_update_studio_status()
 
 func stop_studio() -> void:
-	if _is_studio_running():
-		OS.kill(studio_pid)
-		_log("[Gdui] Studio stopped.")
-	studio_pid = -1
+	var result := _get_studio_controller().stop()
+	_log_result_messages(result)
 	_update_studio_status()
 
 func _is_studio_running() -> bool:
-	return studio_pid > 0 and OS.is_process_running(studio_pid)
+	return _get_studio_controller().is_running()
+
+func _get_studio_controller() -> GduiStudioController:
+	if studio_controller == null:
+		studio_controller = STUDIO_CONTROLLER.new()
+	studio_controller.setup(ProjectSettings.globalize_path("res://"), STUDIO_PORT)
+	return studio_controller
+
+func _log_result_messages(result: Dictionary) -> void:
+	for message in result.get("messages", []):
+		_log(String(message))
 
 func _run_node_command(args: Array, label: String) -> bool:
 	var output: Array = []

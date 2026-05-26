@@ -58,6 +58,9 @@ jobs:
       - name: Run binding runtime smoke test
         run: npm run test:bindings
 
+      - name: Run Studio controller smoke test
+        run: npm run test:studio
+
       - name: Upload Godot smoke log
         if: always()
         uses: actions/upload-artifact@v4
